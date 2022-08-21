@@ -1,0 +1,29 @@
+@import "~swiper/css";
+@import "~swiper/css/pagination";
+@import "~swiper/css/navigation";
+
+.wrap-viewed {
+    position: relative;
+    margin-bottom: 30px;
+    margin-top: 20px;
+    .title {
+        color: rgb(68, 68, 68);
+        text-align: center;
+        font-weight: bold;
+        font-style: normal;
+        font-size: 25px;
+        padding: 10px 20px 20px 20px;
+    }
+
+    .swiper-viewed {
+         position: unset;
+         .swiper-pagination.swiper-pagination-bullets.swiper-pagination-horizontal{
+             text-align: left;
+             top: 100%;
+             margin-top: 20px;
+         }
+        
+    }
+
+
+}

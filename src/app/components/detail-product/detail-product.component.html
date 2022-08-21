@@ -1,0 +1,259 @@
+<app-breadcrumb [name]="detailProduct.name">
+</app-breadcrumb>
+
+<div class="details-product-container" id="details-product-container" fxLayout="row" fxLayoutAlign="center center">
+    <div fxFlex="87" fxFlex.sm="98" fxFlex.xs="97">
+
+        <div class="details-product" fxLayout="row wrap " fxLayoutAlign="space-around  start">
+
+            <div fxFlex="75" fxFlex.sm="100" fxFlex.xs="100">
+                <div fxLayout="row wrap" fxLayoutAlign="space-around  start">
+
+                    <div class="product-images" fxFlex="40" fxFlex.sm="50" fxFlex.xs="100">
+                        <swiper [spaceBetween]="10" [navigation]="true" [thumbs]="{ swiper: thumbsSwiper }" [zoom]="true" class="mySwiper2">
+                            <ng-template swiperSlide *ngFor="let img of detailProduct?.urlImgs| slice:0:8;">
+                                <img src="{{'http://localhost:3000/FileUpload/files/'+img}}" />
+                            </ng-template>
+
+                        </swiper>
+                        <swiper (swiper)="thumbsSwiper = $event" [spaceBetween]="10" [slidesPerView]="3" [freeMode]="true" [watchSlidesProgress]="true" class="mySwiper">
+                            <ng-template swiperSlide *ngFor="let img of detailProduct?.urlImgs| slice:0:8;">
+                                <img src="{{'http://localhost:3000/FileUpload/files/'+img}}" />
+                            </ng-template>
+
+                        </swiper>
+                    </div>
+
+                    <div class="info-product" fxFlex="60" fxFlex.sm="50" fxFlex.xs="100">
+                        <h1 class="title-product">
+                            {{detailProduct.name}}
+                        </h1>
+                        <div class="review-result">
+                            <i class="material-icons">star</i>
+                            <i class="material-icons">star</i>
+                            <i class="material-icons">star</i>
+                            <i class="material-icons">star</i>
+                            <i class="material-icons">star</i>
+                            <span class="total-review" id="pos-review">là người đầu tiên đánh giá</span>
+                        </div>
+
+                        <div class="product-description">
+                            <div class="status">
+                                <span class="first_status">Thương hiệu:
+                                    <span class="status_name">{{detailProduct.brand}}</span>
+                                </span>
+                                <span class="first_status"> &nbsp;|&nbsp; Tình trạng:
+                                    <span class="status_name availabel" *ngIf="detailProduct.quantity && detailProduct.quantity > 0; else outOfStock">
+                                        Còn hàng
+                                    </span>
+                                <ng-template #outOfStock>
+                                    <span class="status_name">
+                                            Hết hàng
+                                        </span>
+                                </ng-template>
+                                </span>
+                            </div>
+                            <div class="price">
+                                <span class="special-price">
+                                    {{ formatPrice(detailProduct.price - detailProduct.price*detailProduct.discount/100) }}<sup>đ</sup>
+
+                                </span>
+                                <span class="old-price">
+                                    {{ formatPrice(detailProduct.price)}}<sup>đ</sup>
+
+                                </span>
+                            </div>
+                            <div class="description">
+                                <ul>
+                                    <li *ngFor="let description of detailProduct?.description">
+                                        <i class="material-icons">check_circle</i> {{description}}
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="quantity">
+                                <p class="label">Số Lượng</p>
+                                <div class="group-input">
+                                    <button (click)="removeItem()">
+                                        <i class="material-icons">remove</i>
+                                    </button>
+                                    <input type="text " class="input" [(ngModel)]="quantity">
+                                    <button>
+                                        <i class="material-icons" (click)="addItem()">add</i>
+                                    </button>
+                                </div>
+                                <p id="alert-quantity">Sản phẩm không đủ số lượng</p>
+                            </div>
+
+                            <div class="button-actions">
+                                <button [disabled]="!(detailProduct.quantity && detailProduct.quantity > 0)" (click)="addToCart()">
+                                    <span>MUA NGAY</span>
+                                    <span>Giao hàng miễn phí tận nơi</span>
+                                </button>
+                            </div>
+
+
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="description-full">
+                    <div class="title">Mô tả sản phẩm</div>
+                    <div class="content">
+                        <div class="product-info">
+                            <div id="show-less" *ngIf="!textFull">
+                                {{detailProduct.description_short}}
+                                <p>
+                                    <strong>{{detailProduct.name}}</strong> {{detailProduct.description_short}}
+                                </p>
+                                <p>
+                                    <img *ngIf="detailProduct.urlImgs==null||detailProduct.urlImgs.length==0" style="width: 100%;" src="http://localhost:3000/FileUpload/files/image.jpg" alt="Photo of a Shiba Inu">
+                                    <img *ngIf="detailProduct.urlImgs!=null||detailProduct.urlImgs.length > 0" style="width: 100%" src="{{'http://localhost:3000/FileUpload/files/'+detailProduct.urlImgs[detailProduct.urlImgs.length-1]}}" alt="Photo of a Shiba Inu">
+                                </p>
+                            </div>
+                            <div *ngIf="!textFull" class="hidden-less"></div>
+                            <div id="show-more"></div>
+                            <div id="show-more-btn">
+                                <a (click)="showMore()" style="cursor:pointer">
+                                    <span *ngIf="!textFull">Xem đầy đủ</span>
+                                    <span *ngIf="textFull">Thu gọn</span>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="review" id="review-container">
+                    <h3>KHÁCH HÀNG NHẬN XÉT</h3>
+                    <div class="review-summary" fxLayout="row wrap" fxLayoutAlign="space-around start">
+                        <div fxFlex="33,3%" fxFlex.sm="100" fxFlex.xs="100">
+                            <div class="alert-warning" *ngIf="comments.length==0;else review">Chưa có đánh giá, hãy là người đầu tiên</div>
+                            <ng-template #review>
+                                <p>Đánh giá</p>
+                                <p style="color: rgb(183, 32, 32); font-weight: 700; font-size: 30px; ">{{average}}/5</p>
+                                <div>({{comments.length}} đánh giá)</div>
+                            </ng-template>
+                        </div>
+                        <div fxFlex="33,3%" fxFlex.sm="100" fxFlex.xs="100" class="progress-star">
+                            <div class="percent_{{i+1}}" *ngFor="let value of percentComments; let i = index" class="progress-line">
+
+                                <label>
+                                    {{i+1}}
+                                </label>
+                                <i class="material-icons">star</i>
+                                <mat-progress-bar mode="determinate" value="{{value}}"></mat-progress-bar> {{value}}%
+                            </div>
+                        </div>
+                        <div fxFlex="33,3%" fxFlex.sm="100" fxFlex.xs="100">
+                            <div>Chia sẻ nhận xét về sản phẩm</div>
+                            <button style="cursor:pointer" class="btn btn-sm btn-danger" id="btn-openform" (click)="this.openFormReview =!this.openFormReview;">
+                                <span *ngIf="!openFormReview">Viết đánh giá của bạn</span>
+                                <span *ngIf="openFormReview">Đóng</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <form class="form-review" [formGroup]="reviewForm" (ngSubmit)="onSubmitReview()" *ngIf="openFormReview">
+                    <h3 class="title">
+                        Đánh giá, bình luận về <br><strong>{{detailProduct.name}}</strong>
+                    </h3>
+                    <div class="rate">
+                        <label>B1. Chọn đánh giá của bạn</label>
+                        <input hidden type="text" class="star" id="number-star" [(ngModel)]="number_star" formControlName="numberStar">
+                        <ul class="list-star">
+                            <li *ngFor="let item of star_title">
+                                <i class="material-icons" (click)="setReviewStar(item.id)">star</i>
+                                <span id="title_{{item.id}}" class="alert-star">{{item.title}}</span>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="detail-review" fxLayout="row wrap" fxLayoutAlign="start start">
+                        <div fxFlex="100" fxFlex.sm="100" fxFlex.xs="100" style="margin-top: 10px;">
+                            <label for="txt-comment">B2. Nhập đánh giá về sản phẩm(*):</label>
+                            <textarea maxlength="1000" class="aer-input aer-content" id="txt-comment" formControlName="content" rows="4"></textarea>
+                        </div>
+                        <div fxFlex="25" fxFlex.sm="25" fxFlex.xs="100">
+                            <div class="form-group">
+                                <label for="full_name">B3. Họ và tên của bạn (*)</label>
+                                <input type="text" class="form-control aer-input full-name" formControlName="fullName" id="full_name" placeholder="">
+                            </div>
+                        </div>
+                        <div fxFlex="25" fxFlex.sm="25" fxFlex.xs="100">
+                            <div class="form-group">
+                                <label for="phone">B4. Số điện thoại</label>
+                                <input type="text" id="phone" class="form-control aer-input phone" formControlName="phone" placeholder="">
+                            </div>
+                        </div>
+                        <div fxFlex="100" fxFlex.sm="100" fxFlex.xs="100">
+                            <div>
+                                <label>B5. Thêm hình sản phẩm nếu có (Tối đa 5 hình):
+                                </label>
+                                <p>
+                                    <button pButton type="button" label="Browser" (click)="fileInput.click()" class="p-button-outlined"></button>
+                                </p>
+
+                                <input type="hidden" formControlName="imgFiles" value="">
+
+                                <input #fileInput style="display: none;" (change)="uploadFile($event)" type="file" maxSi id="aer-files" multiple accept="image/png, image/jpeg">
+                            </div>
+                            <div id="list-image-upload">
+                                <ng-container *ngFor="let url of urls; let i = index">
+                                    <span [style.margin-right.px]="15">
+                                        <p-image [src]="url" alt="Image" width="150"  [preview]="true"></p-image>
+                                        <button (click)="removeImage(i)" pButton type="button" icon="pi pi-times" class="p-button-danger p-button-outlined p-button-rounded" [style.margin-left.px]="-10"></button>
+                                    </span>
+                                </ng-container>
+
+                            </div>
+                        </div>
+                        <div fxFlex="25" fxFlex.sm="25" fxFlex.xs="100">
+                            <button style="cursor:pointer" class="btn btn-sm btn-danger" id="btn-send" type="submit" [disabled]="reviewForm.invalid">Gửi đánh giá</button>
+                        </div>
+                    </div>
+                </form>
+                <div class="filter-review">
+                    <label><small>Chọn xem đánh giá</small></label>
+                    <select id="ddr-image">
+                        <option value="">Tất cả</option>
+                        <option value="1">Có ảnh</option>
+                        <option value="2">Không có ảnh</option>
+                    </select>
+                    <select id="ddr-star">
+                        <option value="">Tất cả ★</option>
+                        <option value="5">Có 5 ★</option>
+                        <option value="4">Có 4 ★</option>
+                        <option value="3">Có 3 ★</option>
+                        <option value="2">Có 2 ★</option>
+                        <option value="1">Có 1 ★</option>
+                    </select>
+                </div>
+                <div class="list-review">
+                    <!-- <div *ngIf="" class="alert alert-warning" role="alert">Chưa có đánh giá</div> -->
+                    <div *ngIf="!newComment && comments.length<=0" class="alert alert-warning" role="alert">Chưa có đánh giá</div>
+
+                    <div>
+                        <app-comment *ngIf="newComment" [comment]="newComment"></app-comment>
+                    </div>
+
+                    <div *ngFor="let item of comments">
+                        <app-comment *ngIf="item" [comment]="item"></app-comment>
+                    </div>
+
+                    <p-paginator [rows]="1" [totalRecords]="totalPages" [first]="currentPage" (onPageChange)="onPageChange($event)"></p-paginator>
+                </div>
+
+
+            </div>
+
+
+
+            <div fxFlex="100" fxFlex.sm="100" fxFlex.xs="100">
+                <!-- <app-related-products [category]="detailProduct.category"></app-related-products> -->
+
+                <!-- <app-viewed-products></app-viewed-products> -->
+            </div>
+
+        </div>
+
+    </div>
+</div>

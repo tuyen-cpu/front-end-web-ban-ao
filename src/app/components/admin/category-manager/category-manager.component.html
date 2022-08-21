@@ -1,0 +1,92 @@
+<div class="col-12" style="min-height: 700px;">
+    <div class="card">
+        <h3 class="m-0" style="font-size: 20px;">
+            <p>Manage categories</p>
+        </h3>
+        <p-toast></p-toast>
+        <p-table #dt [globalFilterFields]="['name','status','id']" [value]="categories" dataKey="id" [expandedRowKeys]="expandedRows" responsiveLayout="scroll">
+            <ng-template pTemplate="summary">
+                <div class="page">
+                    <p-paginator [rows]="size" [rowsPerPageOptions]="[5,10,15,30]" [totalRecords]="totalRecords" [first]="currentPage" (onPageChange)="onPageChange($event)"></p-paginator>
+                </div>
+
+            </ng-template>
+            <ng-template pTemplate="caption">
+                <span class="mr-2 ml-2" style="line-height: 40px; white-space: nowrap ; ">Manage Categories</span>
+                <span class=" mt-2 mr-2 md:mt-0 p-input-icon-left">
+                    <i class="pi pi-search"></i>
+                    <input pInputText type="text" (input)="applyFilterGlobal($event, 'contains')" placeholder="Search..." />
+                </span>
+
+                <button pButton pRipple label="New category" icon="pi pi-plus" class="p-button-success mr-2 ml-2" (click)="openNewCategory()"></button>
+
+
+            </ng-template>
+            <ng-template pTemplate="header" let-columns>
+                <tr>
+                    <th style="width: 3rem"></th>
+                    <th pSortableColumn="id">Id
+                        <p-sortIcon field="id"></p-sortIcon>
+                    </th>
+                    <th pSortableColumn="name">Category name
+                        <p-sortIcon field="name"></p-sortIcon>
+                    </th>
+                    <th pSortableColumn="status">Status
+                        <p-sortIcon field="status"></p-sortIcon>
+                    </th>
+                    <th>Action</th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-category let-expanded="expanded">
+                <tr>
+                    <td>
+                        <button type="button" pButton pRipple [pRowToggler]="category" class="p-button-text p-button-rounded p-button-plain"></button>
+                    </td>
+                    <td>{{category.id}}</td>
+                    <td>{{category.name}}</td>
+                    <td>{{category.status}}</td>
+                    <td>
+                        <div class="flex">
+                            <button title="Edit category" pButton pRipple icon="pi pi-pencil" class="p-button-raised p-button-outlined p-button-rounded p-button-infor mr-2" (click)="editCategory(category)"></button>
+                            <button pButton pRipple icon="pi pi-bookmark" class="p-button-raised p-button-rounded p-button-outlined p-button-danger mr-2" title="Inactive category" (click)="deleteCategory(category)"></button>
+                            <button pButton pRipple icon="pi pi-bookmark-fill" class="p-button-raised p-button-rounded p-button-outlined p-button-success" title="Active category" (click)="activeCategory(category)"></button>
+                        </div>
+                    </td>
+                </tr>
+            </ng-template>
+
+        </p-table>
+    </div>
+
+
+
+    <p-dialog [(visible)]="categoryDialog" [style]="{width: '450px'}" header="Category Details" [modal]="true" styleClass="p-fluid">
+        <ng-template pTemplate="content">
+            <div class="field" fxLayout="row wrap">
+                <div fxFlex="30" style="text-align: right;line-height: 40px;">Status</div>
+                <div fxFlex="5"></div>
+                <div fxFlex="60" style="text-align: left;">
+                    <p-dropdown [options]="listStatuses" [(ngModel)]="category.status" optionLabel="label" optionValue="value" [style]="{'width': '150px'}"></p-dropdown>
+                </div>
+            </div>
+            <div class="field" fxLayout="row wrap">
+                <div fxFlex="30" style="text-align: right;line-height: 40px;">Category name</div>
+                <div fxFlex="5"></div>
+                <div fxFlex="60" style="text-align: left;">
+                    <input type="text" pInputText id="name" (input)="existsCategoryName(category.name)" [(ngModel)]="category.name" required autofocus [ngClass]="{'ng-invalid ng-dirty' : submitted && !category.name}" />
+                    <small class="ng-dirty ng-invalid red" *ngIf="submitted && !category.name">Category name is
+                        required.</small>
+                    <small class="ng-dirty ng-invalid red" *ngIf="existedCategory">Category name existed.</small>
+                </div>
+            </div>
+        </ng-template>
+        <ng-template pTemplate="footer">
+            <button pButton pRipple label="Cancel" icon="pi pi-times" class="p-button-text" (click)="hideDialogCategory()"></button>
+            <button pButton pRipple label="Save" icon="pi pi-check" [disabled]="existedCategory" class="p-button-text" (click)="saveCategory()"></button>
+        </ng-template>
+    </p-dialog>
+
+
+    <p-dialog header="Loading" [(visible)]="isLoading" [modal]="true" [style]="{width: '500px'}" [draggable]="false" [resizable]="false">
+        <p-progressBar mode="indeterminate" [style]="{'height': '6px'}"></p-progressBar>
+    </p-dialog>

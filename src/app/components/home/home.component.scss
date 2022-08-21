@@ -1,0 +1,37 @@
+.banner-slide {
+    margin-top: 20px;
+    margin-bottom: 60px;
+    .main-banner,
+    .sub-banner {
+        padding: 0 5px;
+    }
+    .main-banner {}
+    .sub-banner {
+        .banner-1 {
+            margin-bottom: 10px;
+        }
+        img {
+            max-width: 100%;
+            width: 100%;
+        }
+    }
+    @media screen and (max-width: 599px) {}
+    @media screen and (min-width: 600px) and (max-width: 959px) {}
+    @media screen and (min-width: 960px) and (max-width: 1279px) {}
+}
+
+.banner-category {
+    .banner-sub {
+        &:hover {
+            img {
+                opacity: .6;
+                -webkit-transform: scale3d(1.05, 1.05, 1);
+                transform: scale3d(1.05, 1.05, 1);
+            }
+        }
+    }
+    img {
+        width: 100%;
+        transition: opacity .35s, transform .35s;
+    }
+}

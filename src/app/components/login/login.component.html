@@ -1,0 +1,73 @@
+<app-breadcrumb [name] = "'Đăng nhập tài khoản'"></app-breadcrumb>
+<div class="form-container" fxLayout="row" fxLayoutAlign="center center" [ngClass]="{'loading-bg': displayLoading}">
+    <div class="plr-15" fxFlex="87" fxFlex.sm="98" fxFlex.xs="97">
+        <h2 class="title-head">
+            <a href="#">Đăng nhập tài khoản</a>
+        </h2>
+        <div fxLayout="row wrap " fxLayoutAlign="center start">
+            <div class="login-form" fxFlex="50%" fxFlex.xs="100%" fxFlex.sm="100%" fxFlexFill>
+                <p class="notice-form">Nếu đã có tài khoản, vui lòng đăng nhập tại đây</p>
+                <form [formGroup]="loginForm" (ngSubmit)="onSubmitLogin()" class="form">
+                    <div class="form-group">
+                        <div
+                          class="alert alert-danger message"
+                          role="alert"
+                          *ngIf="submitted && isLoginFailed"
+                        >
+                          <strong>Đăng nhập không thành công!</strong> <br>
+                          Tên tài khoản hoặc mật khẩu không đúng!
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="username">
+                            Tên tài khoản *
+                        </label>
+                        <input id="username" type="text" formControlName="username" class="form-control">
+                        <div *ngIf=" fLogin['username'].errors?.['required'] && fLogin['username'].touched
+                        || fLogin['username'].errors?.['required'] && submitted" class="alert">Tên tài khoản bắt buộc phải nhập</div>
+                    </div>
+                    <div class="form-group">
+                        <label for="password">
+                            Mật khẩu*
+                        </label>
+                        <input id="password" type="password" formControlName="password" class="form-control">
+                        <div *ngIf=" fLogin['password'].errors?.['required'] && fLogin['password'].touched
+                        || fLogin['password'].errors?.['required'] && submitted" class="alert">Mật khẩu bắt buộc phải nhập</div>
+                        <div *ngIf=" fLogin['password'].errors?.['minlength']" class="alert">Mật khẩu phải có ít nhất 6 kí tự</div>
+                        <div *ngIf=" fLogin['password'].errors?.['maxLength']" class="alert">Mật khẩu phải chỉ tối đa 40 kí tự</div>
+                    </div>
+                    <div class="form-buttons">
+                        <button class="button" type="submit" [disabled]="loginForm.invalid" >Đăng nhập</button>
+                        <a routerLink="/register" routerLinkActive="active">Đăng kí</a>
+                    </div>
+                </form>
+            </div>
+            <div class="recover-password" fxFlex="50%" fxFlex.xs="100%" fxFlex.sm="100%" fxFlexFill>
+                <p class="notice-form">Bạn quên mật khẩu? Nhập địa chỉ email để lấy lại mật khẩu qua email.</p>
+                <div class="center" *ngIf="isLoadingForgotPwd">
+                    <p-progressSpinner 
+                    [style]="{width: '50px', height: '50px', color: 'green'}" 
+                    styleClass="custom-spinner" strokeWidth="8" 
+                    fill="var(--surface-ground)" animationDuration=".5s"></p-progressSpinner>
+                </div>
+                <form [formGroup]="rePwdForm" (ngSubmit)="onSubmitRePwd()" class="form">
+                    <div class="form-group">
+                        <label for="email">
+                            Email *
+                        </label>
+                        <input id="email" type="email" formControlName="email" class="form-control" (input)="checkEmail($event)">
+                        <div *ngIf=" fPwd['email'].errors?.['required'] && fPwd['email'].touched
+                        || fPwd['email'].errors?.['required'] && submittedForget" class="alert">Email bắt buộc phải nhập</div>
+                        <div *ngIf=" fPwd['email'].errors?.['email']" class="alert">Email không hợp lệ</div>
+                        <div class="alert" *ngIf="!existEmail">Email này chưa được đăng ký</div>
+                    </div>
+                    <div class="form-buttons">
+                        <button class="button" type="submit" [disabled]="rePwdForm.invalid||!existEmail||isLoadingForgotPwd" >Lấy lại mật khẩu</button>
+                    </div>
+                </form>
+                <p-messages [(value)]="msgs1" [enableService]="false"></p-messages>
+            </div>
+        </div>
+    </div>
+</div>
+<div *ngIf="displayLoading" id="loading"></div>

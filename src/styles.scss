@@ -1,0 +1,80 @@
+/* You can add global styles to this file, and also import other style files */
+
+// @import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@500;600;700&family=Poppins:wght@100;200;300;400;500;600;700;800;900&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300&family=Rubik:wght@400;500;700&display=swap');
+*,
+*::before,
+s *::after {
+    box-sizing: border-box;
+}
+
+body::-webkit-scrollbar-track {
+    background-color: #F5F5F5;
+}
+
+body::-webkit-scrollbar {
+    width: 2px;
+    background-color: #F5F5F5;
+}
+
+body::-webkit-scrollbar-thumb {
+    background-color: var(--main-color);
+}
+
+html,
+body {
+    height: 100%;
+    font-family: sans-serif;
+    font-weight: 400;
+    font-size: 14px;
+}
+
+body {
+    margin: 0;
+    //font-family: Roboto, "Helvetica Neue", sans-serif;
+    overflow-x: hidden;
+}
+
+:root {
+    --main-color: #008744;
+}
+
+a {
+    transition: all 150ms ease-in-out;
+}
+
+img {
+    vertical-align: middle;
+}
+
+button {
+    transition: background-color .1s ease-in;
+}
+
+.main-btn {
+    background: var(--main-color);
+    color: #fff;
+    border-radius: 3px;
+    font-size: 14px;
+    font-family: roboto, helveticaneue, helvetica neue, sans-serif;
+    border: 1px solid transparent;
+    height: 40px;
+    line-height: 39px;
+    padding: 0 20px;
+    text-align: center;
+    white-space: nowrap;
+    outline: none !important;
+    cursor: pointer;
+    font-weight: 400;
+    letter-spacing: 0;
+    transition: background-color .1s ease-in;
+    &:hover {
+        background: #fff;
+        color: var(--main-color);
+        border: 1px solid var(--main-color);
+    }
+}
+
+button:disabled {
+    cursor: no-drop;
+    opacity: 0.7;
+}

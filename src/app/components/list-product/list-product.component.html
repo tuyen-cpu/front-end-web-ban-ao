@@ -1,0 +1,166 @@
+<app-breadcrumb [name]="categoryId">
+</app-breadcrumb>
+
+<div class="list-product-container" id="list-product-container" fxLayout="row" fxLayoutAlign="center center">
+    <div fxFlex="87" fxFlex.sm="98" fxFlex.xs="97">
+
+        <div class="list-product" fxLayout="row wrap " fxLayoutAlign="space-around  start">
+
+            <div fxFlex="25" fxHide.sm fxHide.xs>
+                <div class="filter">
+
+
+                    <div class="item">
+                        <div class="title">
+                            GIÁ SẢN PHẨM
+                        </div>
+                        <div class="content">
+                            <ngx-slider [(value)]="minValue" [(highValue)]="maxValue" [options]="options" (userChangeEnd)="onUserChangeEnd($event)">
+                            </ngx-slider>
+                            <div class="price-input">
+                                <input type="text" id="min-price" disabled value="0" [ngModel]="formatPrice(minValue)">
+                                <input type="text" id="max-price" disabled value="110.000.000₫" [ngModel]="formatPrice(maxValue)">
+                            </div>
+                            <div class="price-btn">
+                                <a class="filter-price" (click)="onFilterPrice()">Lọc giá</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- <div class="item" *ngFor="let attribute of attributes">
+                        <div class="title">
+                            {{attribute.name}}
+                        </div>
+                        <div class="content">
+                            <ul>
+                                <li class="filter-item" *ngFor="let v of attribute.values">
+                                    <label>
+                                        <input (change)="attributesChange($event,attribute.name)"  type="checkbox"  [value]="v" >
+                                        {{v}}
+                                    </label>
+                                </li>
+                            </ul>
+                        </div>
+                    </div> -->
+
+                </div>
+            </div>
+
+            <div fxFlex="75" fxFlex.sm="100" fxFlex.xs="100">
+                <section class="main-container collection">
+                    <div class="category-products products">
+                        <div class="sortPagiBar" *ngIf="products.length!==0">
+                            <div fxLayout="row " fxLayoutAlign="start  center">
+                                <div fxFlex="50">
+                                    <h1 class="title-head">Sản phẩm</h1>
+                                </div>
+                                <div fxFlex="50">
+                                    <div class="mode">
+                                        <div class="view-mode">
+                                            <a (click)="view_list=true;" [ngClass]="{'active': view_list}">
+                                                <i class="material-icons">format_list_bulleted</i>
+                                            </a>
+                                            <a (click)="view_list=false;" [ngClass]="{'active': !view_list}">
+                                                <i class="material-icons">grid_on</i>
+                                            </a>
+                                        </div>
+                                        <div id="sort-by">
+                                            <ul>
+                                                <li class="lv1"><span class="val" id="selected-sort">Mặc định</span>
+                                                    <ul class="ul_2">
+                                                        <li><a (click)="sortBy('default')">Mặc định</a></li>
+                                                        <li><a (click)="sortBy('AZ')">A → Z</a></li>
+                                                        <li><a (click)="sortBy('ZA')">Z → A</a></li>
+                                                        <li><a (click)="sortBy('increase')">Giá tăng dần</a></li>
+                                                        <li><a (click)="sortBy('decrease')">Giá giảm dần</a></li>
+                                                        <li><a (click)="sortBy('new')">Hàng mới nhất</a></li>
+                                                        <li><a (click)="sortBy('old')">Hàng cũ nhất</a></li>
+                                                    </ul>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <p-dialog header="Loading" [(visible)]="isLoading" [modal]="true" [style]="{width: '500px'}" [draggable]="false" [resizable]="false">
+                            <p-progressBar mode="indeterminate" [style]="{'height': '6px'}"></p-progressBar>
+                        </p-dialog>
+
+                        <section class="products-view products-view-list" [hidden]="!view_list">
+                            <div fxLayout="row" fxLayoutAlign="center center">
+                                <div fxFlex="97">
+                                    <div class="item-list" *ngFor="let product of products">
+                                        <div fxLayout="row" fxLayoutAlign="center center">
+                                            <div fxFlex="35" fxFlex.xs="97">
+                                                <div class="product-thumbnail">
+                                                    <a href="" class="img-link">
+                                                        <img src="http://localhost:3000/FileUpload/files/{{product.urlImg}}" alt="">
+                                                    </a>
+                                                </div>
+                                            </div>
+                                            <div fxFlex="65" fxFlex.xs="97">
+                                                <div class="product-info">
+                                                    <h3 class="product-name">
+                                                        <a href="">{{product.name}}</a>
+                                                    </h3>
+                                                    <div class="price-box">
+                                                        <div class="special-price">
+                                                            {{formatPrice(product.price - product.price*product.discount/100) }}
+                                                        </div>
+                                                        <div class="old-price">
+                                                            {{formatPrice(product.price)}}
+                                                        </div>
+                                                    </div>
+                                                    <div class="product-summary">{{product.desc}}</div>
+                                                    <div class="product-action">
+                                                        <button class="btn-cart">
+                                                            <i class="material-icons">shopping_cart_checkout</i>
+                                                            <span> Mua ngay</span>
+                                                        </button>
+                                                        <a (click)="openDialogProduct(product)" class="quick-view">
+                                                            <i class="material-icons">remove_red_eye</i>
+                                                        </a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+
+                        <section class="products-view products-view-grid" [hidden]="view_list">
+                            <div class="text-center" *ngIf="products.length===0">Không có sản phẩm nào phù hợp</div>
+                            <div *ngIf="!!products" fxLayout="row wrap" fxLayoutAlign="start center">
+                                <div class="item-list" fxFlex="24" fxFlex.sm="33" fxFlex.xs="49" *ngFor="let product of products;trackBy: trackById">
+                                    <ng-container>
+                                        <app-item-product [productItem]="product" [textHere]="'ha'"></app-item-product>
+                                    </ng-container>
+                                </div>
+                            </div>
+                        </section>
+                    </div>
+                </section>
+
+                <!-- <div class="pagination">
+                    <a href="#">&laquo;</a>
+                    <a href="#">1</a>
+                    <a class="active" href="#">2</a>
+                    <a href="#">3</a>
+                    <a href="#">4</a>
+                    <a href="#">5</a>
+                    <a href="#">6</a>
+                    <a href="#">&raquo;</a>
+                </div> -->
+                <div *ngIf="!isLoading" class="pagination">
+                    <p-paginator [rows]="1" [totalRecords]="totalPages" [first]="page" (onPageChange)="onPageChange($event)"></p-paginator>
+                </div>
+            </div>
+        </div>
+
+        <!-- <app-viewed-products></app-viewed-products> -->
+
+    </div>
+</div>

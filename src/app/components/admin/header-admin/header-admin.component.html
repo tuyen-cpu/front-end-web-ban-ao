@@ -1,0 +1,16 @@
+<div class="topbar">
+    <div class="">
+        <a (click)="addClassToParent()" class="p-link menu-button topbar-button"><i class="pi pi-bars"></i></a>
+    </div>
+    <div appDropdown class="user-link" fxLayout="row" fxLayoutAlign="center center">
+        <span>
+            <p-avatar label="V" styleClass="mr-2" size="large" [style]="{'background-color':'#2196F3', 'color': '#ffffff'}" shape="circle"></p-avatar>
+        </span>
+        <span class="user-name">Hello, {{ currentUser.username }}</span>
+        <div class="dropdown-user-name">
+            <a class="dropdown-user-name__item" (click)="logout()"><i class="pi pi-sign-out"></i><span>Logout</span></a>
+            <a class="dropdown-user-name__item" routerLink=""><i class="pi pi-desktop"></i><span>Website</span></a>
+        </div>
+    </div>
+
+</div>

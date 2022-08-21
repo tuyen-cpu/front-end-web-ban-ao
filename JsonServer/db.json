@@ -1,0 +1,50 @@
+{
+    "posts": [
+        {
+            "id": 1,
+            "title": "json-server",
+            "author": "typicode"
+        }
+    ],
+    "comments": [
+        {
+            "id": 1,
+            "body": "some comment",
+            "postId": 1
+        },
+        {
+            "id": 2,
+            "body": "some comment",
+            "postId": 1
+        },
+        {
+            "id": 3,
+            "body": "some comment",
+            "postId": 1
+        }
+    ],
+    "profile": {
+        "name": "typicode"
+    },
+    "product": [
+        {
+            "id": 1,
+            "name": "Laptop Gaming Gigabyte AORUS 17 XE5-73VN534GH (i7-12700H, RTX 3070 Ti 8GB, Ram 16GB DDR5, SSD 1TB, 17.3 Inch IPS 360Hz FHD)",
+            "desc": "CPU: i7-12700H (Up to 4.7GHz) 14 Cores 20 Threads VGA: GeForce RTX 3070 Ti 8GB Ram: 16GB (2x8GB) DDR5 4800MHz SSD: 1TB SSD M.2 PCIe Gen4 x4 Màn hình: 17.3'' IPS 360Hz FHD BẢO HÀNH 2 năm",
+            "brand": "Gigabyte",
+            "price": 60990000,
+            "discount":10,
+            "urlImg": "https://bizweb.sapocdn.net/thumb/1024x1024/100/329/122/products/laptop-gaming-gigabyte-aorus-17-xe5-73vn534gh.png?v=1648702456317"
+        },
+        {
+            "id": 1,
+            "name": "Laptop Gaming Gigabyte AORUS 17 XE5-73VN534GH (i7-12700H, RTX 3070 Ti 8GB, Ram 16GB DDR5, SSD 1TB, 17.3 Inch IPS 360Hz FHD)",
+            "desc": "CPU: i7-12700H (Up to 4.7GHz) 14 Cores 20 Threads VGA: GeForce RTX 3070 Ti 8GB Ram: 16GB (2x8GB) DDR5 4800MHz SSD: 1TB SSD M.2 PCIe Gen4 x4 Màn hình: 17.3'' IPS 360Hz FHD BẢO HÀNH 2 năm",
+            "brand": "Gigabyte",
+            "price": 60990000,
+            "discount":10,
+            "urlImg": "https://bizweb.sapocdn.net/thumb/1024x1024/100/329/122/products/laptop-gaming-gigabyte-aorus-17-xe5-73vn534gh.png?v=1648702456317"
+        }
+        
+    ]
+}

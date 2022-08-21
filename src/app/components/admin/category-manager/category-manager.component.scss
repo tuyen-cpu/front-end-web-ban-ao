@@ -1,0 +1,41 @@
+:host ::ng-deep  .p-frozen-column {
+    font-weight: bold;
+}
+:host ::ng-deep .p-datatable-frozen-tbody {
+    font-weight: bold;
+}
+:host ::ng-deep .p-progressbar {
+    height:.5rem;
+}
+.card {
+    background-color: var(--surface-card);
+    padding: 1.5rem;
+    margin-bottom: 1rem;
+    border-radius: 12px;
+    box-shadow: 0 3px 5px #00000005, 0 0 2px #0000000d, 0 1px 4px #00000014!important;
+}
+
+.box{
+    box-shadow: rgba(0, 0, 0, 0.05) 0px 6px 24px 0px, rgba(0, 0, 0, 0.08) 0px 0px 0px 1px;
+}
+.border-tb{
+    border-bottom: 1px solid #3f73a8 !important;
+    background: #dce5fb !important;
+}
+.pupple{
+    background: #687bd7;
+}
+.card {
+    background-color: var(--surface-card);
+    padding: 1.5rem;
+    margin-bottom: 1rem;
+    border-radius: 12px;
+    box-shadow: 0 3px 5px #00000005, 0 0 2px #0000000d, 0 1px 4px #00000014!important;
+}
+.red{
+    color: red;
+}
+
+.page{
+    background: initial;
+}

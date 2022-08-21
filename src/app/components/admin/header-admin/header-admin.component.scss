@@ -1,0 +1,87 @@
+.topbar {
+    position: fixed;
+    height: 5em;
+    z-index: 40;
+    left: 0;
+    top: 0;
+    width: 100%;
+    padding: 0 2rem;
+    background-color: var(--surface-card);
+    transition: left .2s;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 3px 5px #00000005, 0 0 2px #0000000d, 0 1px 4px #00000014;
+    font-size: 14px;
+    .topbar-button {
+        display: inline-flex;
+        justify-content: center;
+        align-items: center;
+        position: relative;
+        color: var(--text-color-secondary);
+        border-radius: 50%;
+        width: 3rem;
+        height: 3rem;
+        cursor: pointer;
+        transition: background-color .3s;
+        i {
+            font-size: 1.5em;
+        }
+        &:focus {
+            outline: 0 none;
+            outline-offset: 0;
+            transition: box-shadow .2s;
+            box-shadow: var(--focus-ring);
+        }
+        &:hover {
+            color: var(--text-color);
+            background-color: var(--surface-hover);
+        }
+    }
+    .user-link {
+        cursor: pointer;
+        position: relative;
+        &.open {
+            .dropdown-user-name {
+                display: block;
+            }
+        }
+        .dropdown-user-name {
+            display: none;
+            position: absolute;
+            top: 100%;
+            margin-left: 0;
+            flex-direction: column;
+            background-color: var(--surface-overlay);
+            box-shadow: 0 3px 5px #00000005, 0 0 2px #0000000d, 0 1px 4px #00000014;
+            border-radius: 12px;
+            padding: 1rem;
+            top: 5rem;
+            min-width: 10rem;
+            animation: scalein .15s linear;
+            &__item {
+                color: var(--text-color-secondary);
+                margin-left: 0;
+                display: flex;
+                width: 100%;
+                height: auto;
+                justify-content: flex-start;
+                border-radius: 12px;
+                padding: 1rem;
+                text-decoration: none;
+                & i {
+                    font-size: 1.4rem;
+                    margin-right: 0.6rem;
+                }
+                &:hover {
+                    color: red;
+                }
+            }
+        }
+    }
+    .user-name {
+        margin-left: 4px;
+        width: 7em;
+        color: var(--text-color-secondary);
+    }
+}

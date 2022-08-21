@@ -1,0 +1,136 @@
+
+<div class="grid" style="min-height: 700px;">
+    <div class="col-12">
+        <div class="card">
+            <p-toolbar styleClass="mb-4">
+                <ng-template pTemplate="left">
+                    <button pButton pRipple label="Delete" icon="pi pi-trash" class="p-button-danger"
+                        title="Delete comments" (click)="deleteSelectedComments()"
+                        [disabled]="!selectedComments || !selectedComments.length"></button>
+                </ng-template>
+
+                <ng-template pTemplate="right">
+                    <p-fileUpload mode="basic" accept="image/*" [maxFileSize]="1000000" label="Import"
+                        chooseLabel="Import" class="mr-2 inline-block"></p-fileUpload>
+                    <button pButton pRipple label="Export" icon="pi pi-upload" class="p-button-help"
+                        (click)="dt.exportCSV()"></button>
+                </ng-template>
+            </p-toolbar>
+            <p-toast></p-toast>
+            <p-table #dt [value]="comments" [columns]="cols" responsiveLayout="scroll" [rows]="10" 
+                [globalFilterFields]="['contents','phone','star','fullname','id']" [rows]="10" [showCurrentPageReport]="true"
+                [(selection)]="selectedComments" selectionMode="multiple" [rowHover]="true" dataKey="id">
+                <ng-template pTemplate="summary">
+                    <div class="page">
+                        <p-paginator [rows]="size" [rowsPerPageOptions]="[5,10,15,30]" [totalRecords]="totalRecords"
+                            [first]="currentPage" (onPageChange)="onPageChange($event)"></p-paginator>
+                    </div>
+                </ng-template>
+                <ng-template pTemplate="caption">
+                    <div class="flex flex-column md:flex-row md:justify-content-between md:align-items-center">
+                        <h3 class="m-0">Manage Comments</h3>
+                        <span style="display: flex;">
+                            <span class="block mt-2 md:mt-0 p-input-icon-left">
+                                <i class="pi pi-search"></i>
+                                <input pInputText type="text" (input)="applyFilterGlobal($event, 'contains')"
+                                    placeholder="Search..." />
+                            </span>
+                        </span>
+
+                    </div>
+                </ng-template>
+                <ng-template pTemplate="header" let-columns>
+                    <tr>
+                        <th style="width: 3rem">
+                            <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+                        </th>
+                        <th pSortableColumn="id">ID
+                            <p-sortIcon field="id"></p-sortIcon>
+                        </th>
+                        <th pSortableColumn="fullname">Fullname
+                            <p-sortIcon field="fullname"></p-sortIcon>
+                        </th>
+                        <th pSortableColumn="content">Content
+                            <p-sortIcon field="content"></p-sortIcon>
+                        </th>
+                        <th pSortableColumn="urlImg">Image
+                            <p-sortIcon field="urlImg"></p-sortIcon>
+                        </th>
+                        <th pSortableColumn="userId">User ID
+                            <p-sortIcon field="userId"></p-sortIcon>
+                        </th>
+                        <th pSortableColumn="productId">Product ID
+                            <p-sortIcon field="productId"></p-sortIcon>
+                        </th>
+                        <th pSortableColumn="status">Status
+                            <p-sortIcon field="status"></p-sortIcon>
+                        </th>
+                        <th pSortableColumn="star">Star
+                            <p-sortIcon field="star"></p-sortIcon>
+                        </th>
+                        <th pSortableColumn="createdDate">Created date
+                            <p-sortIcon field="createdDate"></p-sortIcon>
+                        </th>
+                        <th>Action</th>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-comment let-columns="columns">
+                    <tr>
+                        <td>
+                            <p-tableCheckbox [value]="comment"></p-tableCheckbox>
+                        </td>
+                        <td style="width:6%;text-align: left ; "><span class="p-column-title">ID</span> {{comment.id}}
+                        </td>
+                        <td style="width:10%;text-align: left ;">{{comment.fullname}}
+                        </td>
+                        <td style="width:15%; text-align: left ;">
+                            {{comment.content}}
+                        </td>
+                        <td style="width:10%; text-align: left ;">
+                            <ng-container *ngFor="let url of getImgs(comment.urlImg)">
+                                <p-image [src]="'http://localhost:3000/FileUpload/files/'+url" alt="Image" width="40"  [preview]="true"></p-image>
+                            </ng-container>
+                        </td>
+                        <td style="width:6%;text-align: center;">
+                            {{comment.userId}}
+                        </td>
+                        <td style="width:6%; text-align: center;">
+                            {{comment.productId }}
+                        </td>
+                        <td style="width:10%; text-align: left ;" id="status-user-{{comment.id}}">
+                            <span *ngIf="comment.status==1;else inactive" style="color: green;">
+                                Hoạt động
+                            </span>
+                            <ng-template #inactive> 
+                                <span style="color: rgb(242, 43, 69);" >Đã hủy</span> 
+                            </ng-template>
+                        </td>
+                        <td style="width:6%; text-align: center;">
+                            {{comment.star }}
+                        </td>
+                        <td style="width:7%;text-align: left;">
+                            {{comment.createdDate| date: 'dd/MM/yyyy hh:mm'}}
+                        </td>
+                        <td>
+                            <div class="flex">
+                                <button title="Delete comment" pButton pRipple icon="pi pi-trash"
+                                    class="p-button-outlined p-button-rounded p-button-danger mr-2"
+                                    (click)="deleteComment(comment)"></button>
+                                <button pButton pRipple icon="pi pi-bookmark"
+                                    class="p-button-rounded p-button-outlined p-button-warning mr-2" title="Inactive comment"
+                                    (click)="inactiveComment(comment)"></button>
+                                <button pButton pRipple icon="pi pi-bookmark-fill"
+                                    class="p-button-rounded p-button-outlined p-button-success" title="Active comment"
+                                    (click)="activeComment(comment)"></button>
+                            </div>
+                        </td>
+                    </tr>
+                </ng-template>
+            </p-table>
+        </div>
+        <p-confirmDialog [style]="{width: '450px'}"></p-confirmDialog>
+    </div>
+</div>
+<p-dialog header="Loading" [(visible)]="isLoading" [modal]="true" [style]="{width: '500px'}" [draggable]="false" [resizable]="false">
+    <p-progressBar mode="indeterminate" [style]="{'height': '6px'}"></p-progressBar>
+</p-dialog>

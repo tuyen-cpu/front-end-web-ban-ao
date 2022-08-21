@@ -1,0 +1,129 @@
+.product-item {
+    position: relative;
+    height: 100%;
+    .wrapper-img {
+        display: block;
+        .img {
+            vertical-align: middle;
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+    }
+    mat-card-content {
+        margin: 16px 0 10px 0;
+        display: block;
+        .name {
+            text-decoration: none;
+            color: #444;
+            font-size: 14px;
+            overflow: hidden;
+            display: -webkit-box;
+            -webkit-line-clamp: 3!important;
+            -webkit-box-orient: vertical;
+            min-height: 60px;
+        }
+    }
+    .discount-tag {
+        --height: 45px;
+        background-image: url('../../../assets/img/discount-tag.webp');
+        position: absolute;
+        top: 10px;
+        height: var(--height);
+        width: 44px;
+        z-index: 9;
+        background-size: contain;
+        background-repeat: no-repeat;
+        text-align: center;
+        .value {
+            color: #fff;
+            font-size: 14px;
+            line-height: calc(var(--height) - 14px);
+        }
+    }
+    .price-box {
+        .new-price {
+            color: var(--main-color);
+            font-size: 16px;
+            font-weight: 700;
+            font-family: arial, sans-serif;
+            margin-right: 7px;
+        }
+        .old-price {
+            text-decoration: line-through;
+            font-family: arial, sans-serif;
+            font-size: 13px;
+            font-weight: 400;
+            margin: 0;
+            display: inline-block;
+            color: #888;
+        }
+    }
+    .start-review {
+        display: flex;
+        align-items: center;
+        .wrapper-start+.wrapper-start {
+            margin-left: 4px;
+            height: 18px;
+        }
+        .review-count {
+            margin-left: 8px;
+            display: inline-block;
+            font-size: 12px;
+            color: #888;
+        }
+    }
+    .action {
+        --height: 34px;
+        display: flex;
+        visibility: hidden;
+        opacity: 0;
+        position: absolute;
+        top: 100%;
+        align-items: center;
+        will-change: visibility, opacity;
+        transition: all ease 0.5s;
+        .btn {
+            --size: 21px;
+            background: var(--main-color);
+            border-radius: 3px;
+            text-align: center;
+            height: var(--height);
+            transition: background-color .2s ease-in;
+            &:hover {
+                background: #d92b1f;
+            }
+            mat-icon {
+                font-size: var(--size);
+                height: var(--size);
+                width: var(--size);
+            }
+        }
+        .add-cart {
+            width: 120px;
+            margin-right: 6px;
+            mat-icon {
+                padding-right: calc(var(--size) + 4px);
+            }
+        }
+        .quick-view {
+            min-width: 34px;
+            line-height: 34px;
+            padding: 0;
+            mat-icon {
+                transform: scale(0.8);
+            }
+        }
+    }
+    &:hover {
+        .action {
+            opacity: 1;
+            visibility: visible;
+            top: calc(100% - var(--height));
+        }
+        .price-box,
+        .start-review {
+            visibility: hidden;
+        }
+    }
+}

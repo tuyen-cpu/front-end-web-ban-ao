@@ -1,0 +1,252 @@
+
+<div class="grid" style="min-height: 700px;">
+    <div class="col-12">
+        <div class="card">
+            <p-toolbar styleClass="mb-4">
+                <ng-template pTemplate="left">
+                    <button pButton pRipple label="Delete" icon="pi pi-trash" class="p-button-danger"
+                        title="Update status" (click)="deleteSelectedBills()"
+                        [disabled]="!selectedBills || !selectedBills.length"></button>
+                </ng-template>
+
+                <ng-template pTemplate="right">
+                    <p-fileUpload mode="basic" accept="image/*" [maxFileSize]="1000000" label="Import"
+                        chooseLabel="Import" class="mr-2 inline-block"></p-fileUpload>
+                    <button pButton pRipple label="Export" icon="pi pi-upload" class="p-button-help"
+                        (click)="dt.exportCSV()"></button>
+                </ng-template>
+            </p-toolbar>
+            <p-toast></p-toast>
+            <p-table #dt [value]="bills" [columns]="cols" responsiveLayout="scroll" [rows]="10" 
+                [globalFilterFields]="['fullname','phone','address','id']" [rows]="10" [showCurrentPageReport]="true"
+                [(selection)]="selectedBills" selectionMode="multiple" [rowHover]="true" dataKey="id">
+                <ng-template pTemplate="summary">
+                    <div class="page">
+                        <p-paginator [rows]="size" [rowsPerPageOptions]="[5,10,15,30]" [totalRecords]="totalRecords"
+                            [first]="currentPage" (onPageChange)="onPageChange($event)"></p-paginator>
+                    </div>
+                </ng-template>
+                <ng-template pTemplate="caption">
+                    <div class="flex flex-column md:flex-row md:justify-content-between md:align-items-center">
+                        <h3 class="m-0">Manage Bills</h3>
+                        <span style="display: flex;">
+                            <span class="block mt-2 md:mt-0 p-input-icon-left">
+                                <i class="pi pi-search"></i>
+                                <input pInputText type="text" (input)="applyFilterGlobal($event, 'contains')"
+                                    placeholder="Search..." />
+                            </span>
+                        </span>
+
+                    </div>
+                </ng-template>
+                <ng-template pTemplate="header" let-columns>
+                    <tr>
+                        <th style="width: 3rem">
+                            <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+                        </th>
+                        <th pSortableColumn="id">ID
+                            <p-sortIcon field="id"></p-sortIcon>
+                        </th>
+                        <th pSortableColumn="fullname">Customer
+                            <p-sortIcon field="fullname"></p-sortIcon>
+                        </th>
+                        <th pSortableColumn="phone">Phone
+                            <p-sortIcon field="phone"></p-sortIcon>
+                        </th>
+                        <th pSortableColumn="address">Address
+                            <p-sortIcon field="address"></p-sortIcon>
+                        </th>
+                        <th pSortableColumn="updatedDate">Updated date
+                            <p-sortIcon field="updatedDate"></p-sortIcon>
+                        </th>
+                        <th pSortableColumn="voucherCost">Voucher
+                            <p-sortIcon field="voucherCost"></p-sortIcon>
+                        </th>
+                        <th pSortableColumn="total">Total
+                            <p-sortIcon field="total"></p-sortIcon>
+                        </th>
+                        <th pSortableColumn="status">Status
+                            <p-sortIcon field="status"></p-sortIcon>
+                        </th>
+                        <th>Action</th>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-bill let-columns="columns">
+                    <tr>
+                        <td>
+                            <p-tableCheckbox [value]="bill"></p-tableCheckbox>
+                        </td>
+                        <td style="width:5%;text-align: left ; "><span class="p-column-title">ID</span> {{bill.id}}
+                        </td>
+                        <td style="width:10%;text-align: left ;">{{bill.fullname}}
+                        </td>
+                        <td style="width:10%; text-align: left ;">
+                            {{bill.phone}}
+                        </td>
+                        <td style="width:20%; text-align: left ;">
+                            {{bill.address}}
+                        </td>
+                        <td style="width:5%;text-align: left;">
+                            {{bill.updatedDate| date: 'dd/MM/yyyy hh:mm'}}
+                        </td>
+                        <td style="width:10%;text-align: center;">
+                            {{bill.voucherCost| number}}₫
+                        </td>
+                        <td style="width:10%; text-align: center;">
+                            {{bill.total | number}}₫
+                        </td>
+                        <td style="width:10%; text-align: left ;" id="status-user-{{bill.id}}">
+                            <span *ngIf="bill.status==0;else delivered" style="color: green;">
+                                Đang giao
+                            </span>
+                            <ng-template #delivered> 
+                                <span style="color: rgb(29, 26, 239);" *ngIf="bill.status==1;else cancelled">Đã giao</span> 
+                            </ng-template>
+                            <ng-template #cancelled> 
+                                <span style="color: rgb(242, 43, 69);">Đã hủy</span> 
+                            </ng-template>
+                        </td>
+                        <td>
+                            <div class="flex">
+                                <button pButton pRipple icon="pi pi-pencil"
+                                    class="p-button-rounded p-button-success mr-2" (click)="editBill(bill)"></button>
+                                <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-warning"
+                                    title="Update status" (click)="deleteBill(bill)"></button>
+                            </div>
+                        </td>
+                    </tr>
+                </ng-template>
+            </p-table>
+        </div>
+
+        <p-dialog [(visible)]="deleteBillDialog" header="Confirm" [modal]="true" [style]="{width:'450px'}">
+            <div class="flex align-items-center justify-content-center">
+                <i class="pi pi-exclamation-triangle mr-3" style="font-size: 2rem"></i>
+                <span *ngIf="bill">Are you sure you want to delete bill number <b>{{bill.id}}</b>?</span>
+            </div>
+            <ng-template pTemplate="footer">
+                <button pButton pRipple icon="pi pi-times" class="p-button-text" label="No"
+                    (click)="deleteBillDialog = false"></button>
+                <button pButton pRipple icon="pi pi-check" class="p-button-text" label="Yes"
+                    (click)="confirmDelete()"></button>
+            </ng-template>
+        </p-dialog>
+
+        <p-dialog [(visible)]="deleteBillsDialog" header="Confirm" [modal]="true" [style]="{width:'450px'}">
+            <div class="flex align-items-center justify-content-center">
+                <i class="pi pi-exclamation-triangle mr-3" style="font-size: 2rem"></i>
+                <span>Are you sure you want to delete selected bills?</span>
+            </div>
+            <ng-template pTemplate="footer">
+                <button pButton pRipple icon="pi pi-times" class="p-button-text" label="No"
+                    (click)="deleteBillsDialog = false"></button>
+                <button pButton pRipple icon="pi pi-check" class="p-button-text" label="Yes"
+                    (click)="confirmDeleteSelected()"></button>
+            </ng-template>
+        </p-dialog>
+
+        <p-dialog [(visible)]="billDialog" [style]="{width: '500px'}" header="Detail Bill" [modal]="true"
+            class="p-fluid">
+            <ng-template pTemplate="content">
+                
+                <div class="field" fxLayout="row wrap">
+                    <div fxFlex="30" style="text-align: right;line-height: 50px;">Status</div>
+                    <div fxFlex="5"></div>
+                    <div fxFlex="60" style="text-align: left;">
+                        <p-dropdown [options]="listStatuses" [(ngModel)]="selectedStatus" optionLabel="label" optionValue="value" [style]="{'width': '150px'}"></p-dropdown>
+                    </div>
+                </div>
+
+                <div class="field" fxLayout="row wrap">
+                    <div fxFlex="30" style="text-align: right;">Bill number</div>
+                    <div fxFlex="5"></div>
+                    <div fxFlex="60" style="text-align: left;"><b>{{bill.id}}</b></div>
+                </div>
+
+                <div class="field" fxLayout="row wrap">
+                    <div fxFlex="30" style="text-align: right;">Fullname</div>
+                    <div fxFlex="5"></div>
+                    <div fxFlex="60" style="text-align: left;"><b>{{bill.fullname}}</b></div>
+                </div>
+
+                <div class="field" fxLayout="row wrap">
+                    <div fxFlex="30" style="text-align: right;">Phone</div>
+                    <div fxFlex="5"></div>
+                    <div fxFlex="60" style="text-align: left;"><b>{{bill.phone}}</b></div>
+                </div>
+
+                <div class="field" fxLayout="row wrap">
+                    <div fxFlex="30" style="text-align: right;">Address</div>
+                    <div fxFlex="5"></div>
+                    <div fxFlex="60" style="text-align: left;"><b>{{bill.address}}</b></div>
+                </div>
+
+                <div class="field" fxLayout="row wrap">
+                    <div fxFlex="30" style="text-align: right;">Created date</div>
+                    <div fxFlex="5"></div>
+                    <div fxFlex="60" style="text-align: left;"><b>{{bill.createdDate| date: 'dd/MM/yyyy hh:mm:ss a'}}</b></div>
+                </div>
+
+                <div class="field" fxLayout="row wrap">
+                    <div fxFlex="30" style="text-align: right;">Updated date</div>
+                    <div fxFlex="5"></div>
+                    <div fxFlex="60" style="text-align: left;"><b>{{bill.updatedDate| date: 'dd/MM/yyyy hh:mm:ss a'}}</b></div>
+                </div>
+
+                <div class="field" fxLayout="row wrap">
+                    <div fxFlex="30" style="text-align: right;">Method shipping</div>
+                    <div fxFlex="5"></div>
+                    <div fxFlex="60" style="text-align: left;"><b>{{bill.method}}</b></div>
+                </div>
+
+                <div class="field" fxLayout="row wrap">
+                    <div fxFlex="30" style="text-align: right;">Shipping time</div>
+                    <div fxFlex="5"></div>
+                    <div fxFlex="60" style="text-align: left;"><b>{{bill.shippingTime}}</b></div>
+                </div>
+
+                <div class="field" fxLayout="row wrap">
+                    <div fxFlex="30" style="text-align: right;">Shipping cost</div>
+                    <div fxFlex="5"></div>
+                    <div fxFlex="60" style="text-align: left;"><b>{{bill.shippingCost| number}}₫</b></div>
+                </div>
+
+                <div class="field" fxLayout="row wrap">
+                    <div fxFlex="30" style="text-align: right;">Voucher cost</div>
+                    <div fxFlex="5"></div>
+                    <div fxFlex="60" style="text-align: left;"><b>{{bill.voucherCost| number}}₫</b></div>
+                </div>
+
+                <div class="field" fxLayout="row wrap">
+                    <div fxFlex="30" style="text-align: right;">Company</div>
+                    <div fxFlex="5"></div>
+                    <div fxFlex="60" style="text-align: left;"><b>{{bill.company}}</b></div>
+                </div>
+
+                <div class="field" fxLayout="row wrap">
+                    <div fxFlex="30" style="text-align: right;">Note</div>
+                    <div fxFlex="5"></div>
+                    <div fxFlex="60" style="text-align: left;"><b>{{bill.note}}</b></div>
+                </div>
+
+                <div class="field" fxLayout="row wrap">
+                    <div fxFlex="30" style="text-align: right;">Total</div>
+                    <div fxFlex="5"></div>
+                    <div fxFlex="60" style="text-align: left;"><b>{{bill.total| number}}₫</b></div>
+                </div>
+            </ng-template>
+
+            <ng-template pTemplate="footer">
+                <button pButton pRipple label="Cancel" icon="pi pi-times" class="p-button-rounded p-button-secondary"
+                    (click)="hideDialog()"></button>
+                <button pButton pRipple label="Save" icon="pi pi-check" class="p-button-rounded" 
+                    (click)="saveBill()"> </button>
+            </ng-template>
+        </p-dialog>
+
+    </div>
+</div>
+
+<p-dialog header="Loading" [(visible)]="isLoading" [modal]="true" [style]="{width: '500px'}" [draggable]="false" [resizable]="false">
+    <p-progressBar mode="indeterminate" [style]="{'height': '6px'}"></p-progressBar>
+</p-dialog>

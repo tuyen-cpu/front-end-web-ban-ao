@@ -1,0 +1,80 @@
+.wrap-recommended{
+    margin-left: 20px;
+    margin-bottom: 20px;
+    a{
+        text-decoration: none;
+    }
+    .title{
+        border-bottom: 1px solid #e5e5e5;
+        border-top-right-radius: 3px;
+        border-top-left-radius: 3px;
+        background: #008744;
+        h2{
+            font-size: 20px;
+            line-height: 40px;
+            text-transform: uppercase;
+            color: #fff;
+            padding: 3px 22px;
+            margin: 0;
+            font-weight: 400;
+            a{
+                color: #fff;
+            }
+        }
+    }
+
+    .sale-off{
+        border: 1px solid #e5e5e5;
+        border-top: none;
+        .list-product{
+            .item{
+                padding: 20px 15px;
+                border-bottom: 1px solid #e5e5e5;
+                a{
+                    width: 100px;
+                    margin-right: 10px;
+                    float: left;
+                    img{
+                        width: 100px;
+                        height: 100px;
+                        object-fit: cover;
+                    }
+                }
+                .info {
+                    
+                    h3{
+                        overflow: hidden;
+                        line-height: 18px;
+                        height: 52px;
+                        margin-top: 0;
+                        font-size: 14px;
+                        font-weight: 400;
+                        a{  
+                            height: 52px;
+                            color: #444;
+                        }
+                    }
+                    .box-price{
+                        border: none;
+                        margin-top: 7px;
+                        .special-price{
+                            font-size: 16px;
+                            font-weight: 700;
+                            font-family: arial,sans-serif;
+                            color: #008744;
+                            display: block;
+                            line-height: 24px;
+                        }
+                        .old-price{
+                            font-family: arial,sans-serif;
+                            font-size: 12px;
+                            margin-left: 0;
+                            color: #acacac;
+                            text-decoration: line-through;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

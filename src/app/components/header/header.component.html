@@ -1,0 +1,321 @@
+<header>
+    <!-- nav mobile -->
+    <div id="mySidenav" class="sidenav menu-mobile open-sidebar-menu">
+        <div class="content-memu-mb">
+            <div class="link-list-mobile">
+                <ul class="ct-mobile" (click)="hiddenMenuNav ()">
+                    <li class="level0 level-top parent level_ico" (click)="hiddenMenuNav ()">
+                        <!-- <img src="./../../assets/img/logo.png" alt="logo"> -->
+                        <img src="https://i.ibb.co/XynK8Fr/logo.webp" alt="logo">
+                    </li>
+                    <li class="level0 level-top parent level_ico">
+                        <a routerLink="" routerLinkActive="active">TRANG CHỦ</a>
+
+                    </li>
+
+                    <li class="level0 level-top parent level_ico">
+                        <a href="/huong-dan-thanh-toan">THANH TOÁN</a>
+
+                    </li>
+
+                    <li class="level0 level-top parent level_ico">
+                        <a href="/huong-dan-tra-gop">TRẢ GÓP</a>
+
+                    </li>
+
+                    <li class="level0 level-top parent level_ico">
+                        <a href="/chinh-sach-giao-hang">CHÍNH SÁCH GIAO HÀNG</a>
+
+                    </li>
+
+                    <li class="level0 level-top parent level_ico">
+                        <a href="/lien-he">LIÊN HỆ</a>
+
+                    </li>
+
+                    <li class="level0 level-top parent level_ico">
+                        <a href="/tin-tuc">THƯ VIỆN</a>
+
+                    </li>
+
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div id="bg-nav" (click)="hiddenMenuNav ()"></div>
+    <!-- header top -->
+    <div class="topbar" fxLayout="row" fxLayoutAlign="center center">
+        <div class="container" fxFlex="87" fxFlex.sm="98" fxFlex.xs="97">
+            <div fxLayout="row" fxLayoutAlign="space-between center">
+                <div class="topbar-left" fxFlex="70%" fxShow fxHide.sm fxHide.xs fxLayoutAlign="start center">
+                    Mở cửa: 9h đến 20h, chủ nhật 10h đến 19h
+                </div>
+                <div class="topbar-right" fxFlex="50%" fxFlex.xs="100%" fxFlex.sm="100%" fxLayoutAlign="end center">
+                    <ul ngClass.xs="center">
+                        <li *ngIf="isAdmin">
+                            <a routerLink="/admin" title="Go to admin page">
+                                <mat-icon>person</mat-icon>
+                                Admin page
+                            </a>
+                        </li>
+                        <li class="login-content" *ngIf="currentUser; else loggedOut">
+                            <a routerLink="/account" class="click-account">
+                                <mat-icon>person</mat-icon>
+                                Hi! {{ currentUser.username }}
+                            </a>
+                            <ul class="ul-account">
+                                <li><a routerLink="/account" routerLinkActive="active">{{ currentUser.username }}</a></li>
+                                <li><a (click)="logout()">Đăng xuất</a></li>
+                            </ul>
+                        </li>
+                        <ng-template #loggedOut>
+                            <li class="login-content">
+                                <a routerLink="/login" class="click-account">
+                                    <mat-icon>person</mat-icon>
+                                    Tài khoản
+                                </a>
+                                <ul class="ul-account">
+                                    <li><a routerLink="/login" routerLinkActive="active">Đăng nhập</a></li>
+                                    <li><a routerLink="/register" routerLinkActive="active">Đăng ký</a></li>
+                                </ul>
+                            </li>
+                        </ng-template>
+                        <li fxShow fxHide.xs>
+                            <a href="/san-pham-noi-bat" title="Khuyến mãi hot">
+                                <mat-icon>star</mat-icon>
+                                Khuyến mãi hot
+                            </a>
+                        </li>
+                        <li fxShow fxHide.xs>
+                            <a href="/he-thong" title="Hệ thống cửa hàng">
+                                <mat-icon>location_on</mat-icon>
+                                Hệ thống cửa hàng
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="mid-header" fxLayout="row" fxLayoutAlign="center center">
+        <div class="container" fxFlex="87" fxFlex.sm="98" fxFlex.xs="97">
+
+            <div class="content-header">
+                <div class="header-main" fxLayout="row wrap" fxLayoutAlign="space-between center">
+                    <div class="menu-bar" fxHide fxShow.sm fxShow.xs (click)="showMenuNav()">
+                        <mat-icon>menu</mat-icon>
+                    </div>
+                    <div class="logo" fxFlex="25%" fxFlex.sm="60%" fxFlex.xs="90%" fxLayoutAlign.sm="center center" ngClass.xs="center">
+                        <a routerLink="/">
+                            <!-- <img src="./../../assets/img/logo.png" alt="logo"> -->
+                            <img src="https://i.ibb.co/XynK8Fr/logo.webp" alt="logo">
+                        </a>
+                    </div>
+                    <div class="header-left" fxFlex="40%" fxFlex.xs="100%" fxFlex.sm="100%" fxFlexOrder.sm="2">
+                        <div class="header-search">
+                            <form class="search-bar" (ngSubmit)="onSubmit()" [formGroup]="searchForm">
+                                <input class="search-input" #searchInput formControlName="inputSearch" type="text" appDropdown (keyup)="onSearch($event)" name="search" placeholder="Sản phẩm bạn muốn tìm...">
+                                <span class="btn-wrapper">
+                                    <button type="submit">
+                                        <mat-icon>search</mat-icon>
+                                    </button>
+                                </span>
+                                <div class="result-search">
+                                    <div class="result-title">Sản phẩm<span *ngIf="isLoading" class="loading"><i class="pi pi-spin pi-spinner" style="font-size: 1rem"></i></span></div>
+                                    <ul *ngIf="!isLoading && productList.length>0" class="search-list">
+                                        <li class="search-item" *ngFor="let product of productList">
+                                            <a class="link-item" href="">
+                                                <img src="../../../assets/img/banner_2.webp" alt="">
+                                                <div class="desc">
+                                                    <p class="name-item" [innerHtml]="product.name | highlighter:keySearch:'partial'"></p>
+                                                    <span>{{product.price}}</span>
+                                                </div>
+                                            </a>
+                                        </li>
+                                        <div class="more-item"><a (click)="goSearchProducts()" class="more-link">Xem thêm kết quả cho: {{keySearch}}</a></div>
+                                    </ul>
+                                    <div *ngIf="!isLoading && productList.length===0" class="result-empty">Không tìm thấy sản phẩm nào phù hợp.</div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    <div fxFlex="35%" fxFlex.xs="100%" fxFlex.sm="20%" fxFlexOrder.sm="1">
+                        <div class="header-right" [ngStyle.xs]="{'float': 'none'}">
+                            <div class="hotline-dathang" ngClass.gt-sm="pl-30" fxHide.sm>
+                                <div class="icon">
+                                    <mat-icon>local_phone</mat-icon>
+                                </div>
+                                <div class="content-hotline">
+                                    <div class="hotline">(028) 0123 4567</div>
+                                    <div class="phone"> DĐ:<b> 0909 305 350</b></div>
+                                </div>
+                            </div>
+                            <div class="mini-cart">
+                                <div class="heading-cart">
+                                    <a [routerLink]="['/cart']" title="Giỏ hàng">
+                                        <div class="icon">
+                                            <mat-icon>shopping_cart</mat-icon>
+                                        </div>
+                                    </a>
+                                    <div class="content-cart-header">
+                                        <a [routerLink]="['/cart']" title="Giỏ hàng">
+                                            (<span class="count-item">{{cartItems.length}}</span>)&nbsp;Sản phẩm
+                                            <span class="txt-giohang">Giỏ hàng</span>
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="top-cart-contain">
+                                    <ul id="cart-sidebar" class="mini-products-list" *ngIf="cartItems.length!=0 ; else emptyCart">
+                                        <ul class="list-item-cart">
+                                            <ng-container *ngFor="let item of cartItems">
+                                                <li>
+                                                    <div class="border-list">
+                                                        <a href="" class="product-image">
+                                                            <img [src]="item.img?'http://localhost:3000/FileUpload/files/'+ item.img:'https://icons.iconarchive.com/icons/treetog/i/128/Internet-icon.png'" alt="Image">
+                                                        </a>
+                                                        <div class="detail-item">
+                                                            <p class="product-name">
+                                                                <a class="text2line" [routerLink]="'/product/{{ item.id }}'">{{ item.name }}</a>
+                                                            </p>
+                                                        </div>
+                                                        <div class="product-detail-bottom">
+                                                            <span class="price">{{ item.price | currency: "VND" }}</span>
+                                                            <a (click)="deleteCartItem(item.id)" title="xóa">
+                                                                <i class="material-icons">close</i>
+                                                            </a>
+                                                            <div class="quantity-select">
+                                                                <button class="btn-reduced" (click)="decreaseQuantity(inputElementQuantity, item.id)">  - </button>
+                                                                <input #inputElementQuantity type="text" class="number-sidebar" onkeypress="return event.charCode >= 48 && event.charCode <= 57" maxlength="2" step="1" max="99" min="1" value="{{ item.quantity }}" (change)="updateQuantity(inputElementQuantity, item.id)"
+                                                                />
+                                                                <button class="btn-increase" (click)="increaseQuantity(inputElementQuantity, item.id)"> + </button>
+                                                                <span style="display: none; color: red; font-size: 10px;" id="msg-quantity-{{ item.id }}">
+                                                                    Sản phẩm không đủ số lượng
+                                                                </span>
+                                                                <!-- <button class="btn-reduced " (click)="decreaseQuantity(inputElementQuantity)">-</button>
+                                                                <input #inputElementQuantity type="text" class="number-sidebar" maxlength="12" min="1" value="1" size="4">
+                                                                <button class="btn-increase" (click)="increaseQuantity(inputElementQuantity)">+</button> -->
+                                                            </div>
+                                                        </div>
+
+                                                    </div>
+                                                </li>
+                                            </ng-container>
+                                        </ul>
+                                        <div class="pd">
+                                            <div class="top-subtotal">
+                                                Tổng tiền:
+                                                <span class="price">{{ totalCart | currency: "VND" }}</span>
+                                            </div>
+                                        </div>
+                                        <div class="pd right-ct">
+                                            <a [routerLink]="['checkout']" class="btn btn-primary">
+                                                <span>Tiến hành thanh toán</span>
+                                            </a>
+                                            <a [routerLink]="['cart']" class="btn btn-white">
+                                                <span>Đi đến giỏ hàng</span>
+                                            </a>
+                                        </div>
+                                    </ul>
+                                    <ng-template #emptyCart>
+                                        <ul id="cart-sidebar" class="mini-products-list">
+                                            <div class="no-item">
+                                                <p>Không có sản phẩm nào trong giỏ hàng.</p>
+                                            </div>
+                                        </ul>
+                                    </ng-template>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="wrap-main" fxLayout="row wrap" fxLayoutAlign="center center">
+        <div class="container" fxFlex="87" fxFlex.sm="98" fxFlex.xs="97">
+            <div fxLayout="row" fxLayoutAlign="center center">
+                <div fxFlex="25%" fxFlex.xs="100%" fxFlex.sm="100%">
+                    <div class="menu-mega" (click)="toggleMenuMobile()" [ngClass]="{'pt-100': showMenu}">
+                        <div class="title-menu">
+                            <span class="title">Danh mục sản phẩm</span>
+                            <span class="nav-btn">
+                                <mat-icon>menu</mat-icon>
+                            </span>
+                        </div>
+
+                        <div class="list-menu-header" fxShow fXHide.sm fxHide.xs>
+                            <ul class="ul-menu">
+                                <li class="nav-item lv1" *ngFor="let menu of menus">
+                                    <a routerLink="/list/{{menu.id}}" title="{{menu.categoryName}}">
+                                        {{menu.categoryName}}
+                                    </a>
+
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="list-menu-header-show" *ngIf="showMenu">
+                            <ul class="mobile-menu">
+                                <li class="mb-li">
+                                    <a title="Laptop">
+                                        Laptop
+                                    </a>
+                                </li>
+                                <li class="mb-li">
+                                    <a href="/ram" title="RAM">
+                                        RAM
+                                    </a>
+                                </li>
+                                <li class="mb-li">
+                                    <a href="/usb" title="USB ">
+                                        USB
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div fxFlex="75%" fxHide.xs fxHide.sm>
+                    <div class="bg-header-nav">
+                        <nav class="header-nav">
+                            <ul class="item-big" fxLayoutAlign="space-evenly center">
+                                <li class="nav-item active">
+                                    <a href="/">
+                                        <span>Trang chủ</span>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="#">
+                                        <span>Thanh toán</span>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="#">
+                                        <span>Trả góp</span>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="#">
+                                        <span>Chính sách giao hàng</span>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="#">
+                                        <span>Liên hệ</span>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="#">
+                                        <span>Thư viện</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</header>

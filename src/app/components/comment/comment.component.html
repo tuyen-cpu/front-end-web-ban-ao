@@ -1,0 +1,25 @@
+
+<div class="comment-card" >
+    <p>
+        <i class="pi pi-user comment-icon" ></i>
+        &nbsp; {{comment.fullname}}
+    </p>
+    <div>
+        <span>
+            <p-rating [(ngModel)]="val" [readonly]="true" [stars]="5" [cancel]="false" [style]="{'display': 'inline-block'}"
+                [iconOnStyle]="{'color':'#ffbf00'}" [iconOffStyle]="{'color':'#cacaca'}"></p-rating>
+        </span>
+        <span>
+            &nbsp; {{comment.content}}
+        </span>
+    </div>
+    <div>
+        <ng-container *ngFor="let img of urlImgs">
+            <img class="comment-card-img" src="http://localhost:3000/FileUpload/files/{{img}}" alt="Photo of a Shiba Inu">
+        </ng-container>
+    </div>
+    <div>
+        <button pButton pRipple type="button" label="Trả lời" class=" p-button-text p-button-sm" [style]="{'margin-right': '.5em'}"></button>
+        <span [style]="{'line-height': '34px'}">• <i>{{comment.createdDate |  date: 'dd/MM/yyyy'}}</i> {{comment.createdDate |  date: 'h:mm a'}}</span>
+    </div>
+</div>

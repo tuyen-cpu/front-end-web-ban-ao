@@ -1,0 +1,203 @@
+
+<div class="grid" style="min-height: 700px;">
+    <div class="col-12">
+        <div class="card">
+            <p-toolbar styleClass="mb-4">
+                <ng-template pTemplate="left">
+                    <button pButton pRipple label="Inactive" icon="pi pi-times" class="p-button-danger mr-2"
+                        title="Update status" (click)="inactiveSelectedVouchers()"
+                        [disabled]="!selectedVouchers || !selectedVouchers.length"></button>
+                    <button pButton pRipple label="New" icon="pi pi-plus" class="p-button-success mr-2"
+                        (click)="openNew()"></button>
+                </ng-template>
+
+                <ng-template pTemplate="right">
+                    <p-fileUpload mode="basic" accept="image/*" [maxFileSize]="1000000" label="Import"
+                        chooseLabel="Import" class="mr-2 inline-block"></p-fileUpload>
+                    <button pButton pRipple label="Export" icon="pi pi-upload" class="p-button-help"
+                        (click)="dt.exportCSV()"></button>
+                </ng-template>
+            </p-toolbar>
+            <p-toast></p-toast>
+            <p-table #dt [value]="vouchers" [columns]="cols" responsiveLayout="scroll" [rows]="10" 
+                [globalFilterFields]="['code','cost','status','id']" [rows]="10" [showCurrentPageReport]="true"
+                [(selection)]="selectedVouchers" selectionMode="multiple" [rowHover]="true" dataKey="id">
+                <ng-template pTemplate="summary">
+                    <div class="page">
+                        <p-paginator [rows]="size" [rowsPerPageOptions]="[5,10,15,30]" [totalRecords]="totalRecords"
+                            [first]="currentPage" (onPageChange)="onPageChange($event)"></p-paginator>
+                    </div>
+                </ng-template>
+                <ng-template pTemplate="caption">
+                    <div class="flex flex-column md:flex-row md:justify-content-between md:align-items-center">
+                        <h3 class="m-0">Manage Vouchers</h3>
+                        <span style="display: flex;">
+                            <span class="block mt-2 md:mt-0 p-input-icon-left">
+                                <i class="pi pi-search"></i>
+                                <input pInputText type="text" (input)="applyFilterGlobal($event, 'contains')"
+                                    placeholder="Search..." />
+                            </span>
+                        </span>
+
+                    </div>
+                </ng-template>
+                <ng-template pTemplate="header" let-columns>
+                    <tr>
+                        <th style="width: 3rem">
+                            <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+                        </th>
+                        <th pSortableColumn="id">ID
+                            <p-sortIcon field="id"></p-sortIcon>
+                        </th>
+                        <th pSortableColumn="code">Code
+                            <p-sortIcon field="code"></p-sortIcon>
+                        </th>
+                        <th pSortableColumn="cost">Cost
+                            <p-sortIcon field="cost"></p-sortIcon>
+                        </th>
+                        <th pSortableColumn="startedDate">Started date
+                            <p-sortIcon field="startedDate"></p-sortIcon>
+                        </th>
+                        <th pSortableColumn="endedDate">Ended date
+                            <p-sortIcon field="endedDate"></p-sortIcon>
+                        </th>
+                        <th pSortableColumn="status">Status
+                            <p-sortIcon field="status"></p-sortIcon>
+                        </th>
+                        <th pSortableColumn="billIds">Bill ids
+                            <p-sortIcon field="billIds"></p-sortIcon>
+                        </th>
+                        <th pSortableColumn="time">Times
+                            <p-sortIcon field="time"></p-sortIcon>
+                        </th>
+                        <th>Action</th>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-voucher let-columns="columns">
+                    <tr>
+                        <td>
+                            <p-tableCheckbox [value]="voucher"></p-tableCheckbox>
+                        </td>
+                        <td style="width:10%;text-align: left ; "><span class="p-column-title">ID</span> {{voucher.id}}
+                        </td>
+                        <td style="width:15%;text-align: left ;">{{voucher.code}}
+                        </td>
+                        <td style="width:15%; text-align: left ;">
+                            {{voucher.cost| number}}₫
+                        </td>
+                        <td style="width:10%; text-align: left ;">
+                            {{voucher.startedDate| date: 'dd/MM/yyyy hh:mm'}}
+                        </td>
+                        <td style="width:10%; text-align: left ;">
+                            {{voucher.endedDate| date: 'dd/MM/yyyy hh:mm'}}
+                        </td>
+                        <td style="width:10%; text-align: left ;" id="status-user-{{voucher.id}}">
+                            <span *ngIf="voucher.status==1;else inactive" style="color: green;">
+                                Hoạt động
+                            </span>
+                            <ng-template #inactive> 
+                                <span style="color: rgb(242, 43, 69);" >Đã hủy</span> 
+                            </ng-template>
+                        </td>
+                        <td style="width:10%; text-align: center;">
+                            {{voucher.billIds }}
+                        </td>
+                        <td style="width:10%; text-align: center;">
+                            {{voucher.time }}
+                        </td>
+                        <td>
+                            <div class="flex">
+                                <button pButton pRipple icon="pi pi-pencil"
+                                    class="p-button-rounded p-button-success mr-2" (click)="editVoucher(voucher)"></button>
+                                <button pButton pRipple icon="pi pi-bookmark"
+                                    class="p-button-rounded p-button-outlined p-button-warning mr-2" title="Inactive voucher"
+                                    (click)="inactiveVoucher(voucher)"></button>
+                                <button pButton pRipple icon="pi pi-bookmark-fill"
+                                    class="p-button-rounded p-button-outlined p-button-success" title="Active voucher"
+                                    (click)="activeVoucher(voucher)"></button>
+                            </div>
+                        </td>
+                    </tr>
+                </ng-template>
+            </p-table>
+        </div>
+
+        <p-dialog [(visible)]="voucherDialog" [style]="{width: '450px'}" header="Voucher Details" [modal]="true" styleClass="p-fluid">
+            <ng-template pTemplate="content">
+                
+                <p-dialog header="Loading" [(visible)]="isLoading" [modal]="true" [style]="{width: '500px'}" [draggable]="false" [resizable]="false">
+                    <p-progressBar mode="indeterminate" [style]="{'height': '6px'}"></p-progressBar>
+                </p-dialog>
+
+                <div class="field" fxLayout="row wrap" *ngIf="voucher.id">
+                    <div fxFlex="30" style="text-align: right;">Id</div>
+                    <div fxFlex="5"></div>
+                    <div fxFlex="60" style="text-align: left;"><b>{{voucher.id}}</b></div>
+                </div>
+                <div class="field" fxLayout="row wrap">
+                    <div fxFlex="30" style="text-align: right;line-height: 40px;">Status</div>
+                    <div fxFlex="5"></div>
+                    <div fxFlex="60" style="text-align: left;">
+                        <p-dropdown [options]="listStatuses" [(ngModel)]="voucher.status" optionLabel="label" optionValue="value" [style]="{'width': '150px'}"></p-dropdown>
+                    </div>
+                </div>
+                <div class="field" fxLayout="row wrap">
+                    <div fxFlex="30" style="text-align: right;line-height: 40px;">Code</div>
+                    <div fxFlex="5"></div>
+                    <div fxFlex="60" style="text-align: left;">
+                        <input type="text" pInputText id="name" (input)="existsCode(voucher.code)" [(ngModel)]="voucher.code" required
+                            autofocus [ngClass]="{'ng-invalid ng-dirty' : submitted && !voucher.code}" />
+                        <small class="ng-dirty ng-invalid red" *ngIf="submitted && !voucher.code">Voucher code is required.</small>
+                        <small class="ng-dirty ng-invalid red" *ngIf="existedCode">Voucher code existed.</small>
+                    </div>
+                </div>
+                <div class="field" fxLayout="row wrap">
+                    <div fxFlex="30" style="text-align: right;line-height: 40px;">Cost</div>
+                    <div fxFlex="5"></div>
+                    <div fxFlex="60" style="text-align: left;">
+                        <input type="number" pInputText id="name"  [(ngModel)]="voucher.cost" required
+                            autofocus [ngClass]="{'ng-invalid ng-dirty' : submitted && !voucher.cost}" />
+                        <small class="ng-dirty ng-invalid red" *ngIf="submitted && !voucher.cost">Voucher cost is required.</small>
+                    </div>
+                </div>
+                <div class="field" fxLayout="row wrap">
+                    <div fxFlex="30" style="text-align: right;line-height: 40px;">Started date</div>
+                    <div fxFlex="5"></div>
+                    <div fxFlex="60" style="text-align: left;">
+                        <p-calendar id="birthday"  [showIcon]="true" [showButtonBar]="true"
+                        [(ngModel)]="voucher.startedDate"></p-calendar>
+                    </div>
+                </div>
+                <div class="field" fxLayout="row wrap">
+                    <div fxFlex="30" style="text-align: right;line-height: 40px;">Ended date</div>
+                    <div fxFlex="5"></div>
+                    <div fxFlex="60" style="text-align: left;">
+                        <p-calendar id="birthday" [minDate]="today" [showIcon]="true" [showButtonBar]="true"
+                        [(ngModel)]="voucher.endedDate"></p-calendar>
+                    </div>
+                </div>
+                <div class="field" fxLayout="row wrap" *ngIf="voucher.billIds.length > 0">
+                    <div fxFlex="30" style="text-align: right;">Bill Ids</div>
+                    <div fxFlex="5"></div>
+                    <div fxFlex="60" style="text-align: left;"><b>{{voucher.billIds}}</b></div>
+                </div>
+                <div class="field" fxLayout="row wrap">
+                    <div fxFlex="30" style="text-align: right;line-height: 40px;">Times</div>
+                    <div fxFlex="5"></div>
+                    <div fxFlex="60" style="text-align: left;">
+                        <input type="number" pInputText id="name"  [(ngModel)]="voucher.time" required
+                            autofocus [ngClass]="{'ng-invalid ng-dirty' : submitted && !voucher.time}" />
+                        <small class="ng-dirty ng-invalid red" *ngIf="submitted && !voucher.time">Times is required.</small>
+                    </div>
+                </div>
+            </ng-template>
+        
+            <ng-template pTemplate="footer">
+                <button pButton pRipple label="Cancel" icon="pi pi-times" class="p-button-text" (click)="hideDialog()"></button>
+                <button pButton pRipple label="Save" icon="pi pi-check" class="p-button-text" (click)="saveVoucher()"></button>
+            </ng-template>
+        </p-dialog>        
+
+        <p-confirmDialog [style]="{width: '450px'}"></p-confirmDialog>
+    </div>
+</div>

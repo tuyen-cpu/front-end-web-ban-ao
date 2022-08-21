@@ -1,0 +1,71 @@
+<div class="" fxLayoutAlign="center">
+    <div class="address-wrapper" fxFlex="85" fxLayout="column" fxFlex.xs="95">
+        <div class="title" fxFlex="100" fxLayout.xs="column" fxLayoutAlign.xs="center space-between" fxLayoutAlign="space-between center">Địa chỉ của bạn
+            <a routerLink=".." class="back">
+                <mat-icon>turn_slight_left</mat-icon>
+                Quay lại trang tài khoản
+            </a>
+        </div>
+        <div class="btn-action-wrapper">
+            <button class="main-btn" (click)="toggleNewAddress()">+ Thêm địa chỉ</button>
+        </div>
+        <ng-container *ngIf="isShowNewAddress">
+            <div class="new-address">
+                <form (ngSubmit)="onSubmit()" [formGroup]="addressForm">
+
+                    <mat-form-field class="field-full-width" appearance="fill">
+                        <mat-label>Tên</mat-label>
+                        <input type="text" matInput formControlName="name" placeholder="Vd: Trần Quang Tuyền">
+                        <mat-error *ngIf="addressFormControl['name'].invalid && (addressFormControl['name'].dirty || addressFormControl['name'].touched)" class="alert alert-danger">
+                            Vui lòng nhập tên hợp lệ
+                        </mat-error>
+                    </mat-form-field>
+
+                    <mat-form-field class="field-full-width" appearance="fill">
+                        <mat-label>Địa chỉ</mat-label>
+                        <input type="text" matInput formControlName="address" placeholder="Vd: KP3, Phường Linh Trung">
+                        <mat-error *ngIf="addressFormControl['address'].invalid && (addressFormControl['address'].dirty || addressFormControl['address'].touched)" class="alert alert-danger">
+                            Vui lòng nhập địa chỉ hợp lệ
+                        </mat-error>
+                    </mat-form-field>
+
+                    <mat-form-field class="field-full-width" appearance="fill">
+                        <mat-label>Thành phố</mat-label>
+                        <input type="text" matInput formControlName="city" placeholder="Vd: Hà Nội">
+                        <mat-error *ngIf="addressFormControl['city'].invalid && (addressFormControl['city'].dirty || addressFormControl['city'].touched)" class="alert alert-danger">
+                            Vui lòng nhập thành phố hợp lệ
+                        </mat-error>
+                    </mat-form-field>
+
+
+                    <mat-form-field class="field-full-width" appearance="fill">
+                        <mat-label>Số điện thoại</mat-label>
+                        <input type="tel" matInput formControlName="phone" placeholder="Vd: 0356965894">
+                        <mat-error *ngIf="addressFormControl['phone'].invalid && (addressFormControl['phone'].dirty || addressFormControl['phone'].touched)" class="alert alert-danger">
+                            Vui lòng nhập số điện thoại hợp lệ
+                        </mat-error>
+                    </mat-form-field>
+
+                    <div class="btn-action">
+                        <button class="main-btn" [disabled]="!addressForm.valid">Thêm địa chỉ</button>
+                        <button type="submit" mat-flat-button class="dark-btn">Hủy</button>
+                    </div>
+                </form>
+            </div>
+        </ng-container>
+        <div class="address-list">
+
+            <div class="address-item" *ngFor="let address of addressList">
+                <p class=""><strong>Tên tài khoản:</strong> {{address.fullname}}</p>
+                <p class=""><strong>Địa chỉ:</strong> {{address.street}}, phường {{address.ward}},quận {{address.district}},thành phố {{address.city}}.</p>
+                <p class=""><strong>Số điện thoại:</strong> 0356955894</p>
+                <div class="btn-wrapper" fxLayoutAlign="start center">
+                    <button class="main-btn">Chỉnh sửa địa chỉ</button>
+                    <button mat-flat-button class="dark-btn">Xóa</button>
+                </div>
+            </div>
+
+
+        </div>
+    </div>
+</div>

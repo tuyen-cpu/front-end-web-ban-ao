@@ -1,0 +1,23 @@
+a{
+    text-decoration: none;
+}
+.bread-crumb {
+    border-bottom: 1px solid #ebebeb;
+    margin-bottom: 20px;
+
+    span {
+        height: 24px;
+        color: #008744;
+        margin: 5px 10px 5px 0;
+        display: inline-block;
+        text-transform: capitalize;
+        a {
+            color: #333;
+        }
+
+        .material-icons {
+            font-size: 16px;
+            vertical-align: middle;
+        }
+    }
+}

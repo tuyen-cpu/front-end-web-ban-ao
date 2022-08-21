@@ -1,0 +1,212 @@
+@import "~swiper/css";
+@import "~swiper/css/free-mode";
+@import "~swiper/css/navigation";
+@import "~swiper/css/thumbs";
+.quick-view {
+    padding: 6px;
+   
+    .img-wrapper {
+        .swiper {
+            width: 100%;
+            height: 100%;
+            .swiper-button-next {
+                right: 0;
+            }
+            .swiper-button-prev {
+                left: 0;
+            }
+            .swiper-button-next,
+            .swiper-button-prev {
+                --swiper-navigation-size: 32px;
+                color: #000;
+            }
+        }
+        .swiper-slide {
+            text-align: center;
+            font-size: 18px;
+            background: #fff;
+            display: flex;
+            align-items: center;
+        }
+        .swiper-slide img {
+            display: block;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .swiper {
+            width: 100%;
+            height: 300px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .swiper-slide {
+            background-size: cover;
+            background-position: center;
+        }
+        .mySwiper2 {
+            height: 80%;
+            width: 100%;
+        }
+        .mySwiper {
+            height: 20%;
+            box-sizing: border-box;
+            padding: 10px 0;
+        }
+        .mySwiper {
+            .swiper-slide {
+                width: 25%;
+                height: 100%;
+                opacity: 0.4;
+                cursor: pointer;
+            }
+        }
+        .mySwiper {
+            .swiper-slide-thumb-active {
+                opacity: 1;
+            }
+        }
+        .swiper-slide img {
+            display: block;
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+    }
+    .content {
+        .name {
+            margin-bottom: 8px;
+            .link {
+                color: #444;
+                font-size: 24px;
+                line-height: 30px;
+                margin: 0;
+                margin-bottom: 8px;
+                font-weight: 400;
+                text-decoration: none;
+                &:hover {
+                    color: var(--main-color);
+                }
+            }
+        }
+        .brand-status {
+            line-height: 24px;
+            font-size: 14px;
+            margin-bottom: 10px;
+            .title {
+                color: #333;
+            }
+            .value {
+                color: var(--main-color);
+            }
+            .line {
+                margin: 0 5px;
+            }
+        }
+        .price-box {
+            font-family: arial, sans-serif;
+            margin-bottom: 14px;
+            .price {
+                font-size: 30px;
+                line-height: 30px;
+                display: inline-block;
+                color: #008744;
+                font-weight: 700;
+            }
+            .old-price {
+                font-size: 16px;
+                color: #888;
+                margin-left: 10px;
+                display: inline-block;
+            }
+        }
+        .description {
+            font-size: 14px;
+            line-height: 22px;
+            color: #888;
+            font-family: roboto, helveticaneue, helvetica neue, sans-serif;
+            margin-bottom: 20px;
+            .text {
+                overflow: hidden;
+                display: -webkit-box;
+                -webkit-line-clamp: 3 !important;
+                -webkit-box-orient: vertical;
+            }
+        }
+        .quantity-box {
+            margin-top: 10px;
+            margin-bottom: 20px;
+            .title {
+                margin-bottom: 10px;
+                display: block;
+            }
+            .action-box {
+                display: flex;
+                .btn-quantity {
+                    cursor: pointer;
+                    font-size: 27px;
+                    border: solid 1px #e5e5e5;
+                    display: inline-block;
+                    width: 40px;
+                    height: 40px;
+                    line-height: 40px;
+                    background: #fff;
+                    float: left;
+                    color: #333;
+                    text-align: center;
+                    padding: 0;
+                    font-weight: 300;
+                    font-family: sans-serif;
+                }
+                .btn-incr {
+                    border-top-right-radius: 3px;
+                    border-bottom-right-radius: 3px;
+                    font-size: 22px;
+                }
+                .quantity-value {
+                    margin: 0;
+                    padding: 0;
+                    display: block;
+                    float: left;
+                    height: 40px;
+                    width: 70px;
+                    text-align: center;
+                    box-shadow: none;
+                    border-radius: 0;
+                    font-size: 15px;
+                    border: 1px solid #e1e1e1;
+                }
+            }
+        }
+        .btn-action {
+            .txt1 {
+                font-size: 16px;
+                font-weight: 700;
+                line-height: 1.1;
+                display: block;
+            }
+            .txt2 {
+                font-size: 12px;
+                font-family: roboto, helveticaneue, helvetica neue, sans-serif;
+                display: block;
+            }
+            .btn-buy {
+                font-size: 14px;
+                outline: none;
+                box-shadow: none;
+                padding: 6px 0 4px 0;
+                color: #fff;
+                height: auto;
+                line-height: inherit;
+                width: calc(50% - 7px);
+                border-radius: 3px;
+                font-family: open sans, helveticaneue, helvetica neue, sans-serif;
+                margin-right: 5px;
+                background: var(--main-color);
+            }
+        }
+    }
+    .close-popup {
+        cursor: pointer;
+    }
+}

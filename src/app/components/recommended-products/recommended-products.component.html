@@ -1,0 +1,31 @@
+<div class="wrap-recommended">
+    <div class="title">
+        <h2>
+            <a href="/list/best-sale">CÓ THỂ BẠN THÍCH</a>
+        </h2>
+    </div>
+    
+    <div class="sale-off">
+        <div class="list-product">
+            <div class="item" *ngFor="let product of listProduct">
+                <a href="">
+                    <img src="{{product.urlImg}}" alt="">
+                </a>
+                <div class="info">
+                    <h3>
+                        <a href="">{{product.name}}</a>
+                    </h3>
+                    <div class="box-price">
+                        <span class="special-price">
+                            {{product.price - product.price*product.discount/100 }}<sup>đ</sup>
+
+                        </span>
+                        <span class="old-price">
+                            {{product.price}}<sup>đ</sup>
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

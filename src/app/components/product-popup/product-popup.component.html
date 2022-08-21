@@ -1,0 +1,53 @@
+<div class="quick-view" fxLayoutGap="30px">
+    <div class="img-wrapper" fxFlex="40">
+        <swiper style="--swiper-navigation-color: #fff;--swiper-pagination-color: #fff" [spaceBetween]="10" [navigation]="true" [thumbs]="{ swiper: thumbsSwiper }" class="mySwiper2">
+            <ng-template swiperSlide *ngFor="let img of images"><img [src]="'http://localhost:3000/FileUpload/files/'+img.link" />
+            </ng-template>
+        </swiper>
+        <swiper (swiper)="thumbsSwiper = $event" [spaceBetween]="10" [slidesPerView]="4" [freeMode]="true" [watchSlidesProgress]="true" class="mySwiper">
+            <ng-template swiperSlide *ngFor="let img of images"><img [src]="'http://localhost:3000/FileUpload/files/'+img.link" />
+            </ng-template>
+        </swiper>
+
+    </div>
+    <div class="content" fxFlex="60">
+        <h3 class="name">
+            <a href="" class="link">{{data.name}}</a>
+        </h3>
+        <div class="brand-status">
+            <span class="brand title">Thương hiệu: <span class="brand-value value">
+        {{data.quantity}}
+      </span> </span>
+            <span class="line">|</span>
+            <span class="status title">Tình trạng: <span class="status-value value">Còn hàng</span> </span>
+        </div>
+        <div class="price-box">
+            <span class="price">
+        {{data.price | currency: "VND"}}
+        </span>
+            <del class="old-price">4.390.000₫</del>
+        </div>
+        <div class="description">
+            <div class="text">
+                {{data.desc}}
+            </div>
+            <div class="quantity-box">
+                <span class="title">Số lượng:</span>
+                <div class="action-box">
+                    <button class="btn-quantity btn-decr" (click)="decreaseQuantity(inputElementQuantity)">-</button>
+                    <input [(ngModel)]="quantity" #inputElementQuantity type="text" class="quantity-value" value="1" onkeypress='return event.charCode >= 48 && event.charCode <= 57' maxlength="2" step="1" max="99" min="1">
+                    <span class="btn-quantity btn-incr" (click)="increaseQuantity(inputElementQuantity)">+</span>
+                </div>
+            </div>
+            <div class="btn-action">
+                <button mat-flat-button class="btn-buy" fxLayoutAlign="center">
+          <span class="txt1" (click)="addToCart()">Mua ngay</span>
+          <span class="txt2">Giao hàng miễn phí tận nơi</span>
+        </button>
+            </div>
+        </div>
+    </div>
+    <a class="close-popup" (click)="onNoClick()">
+        <mat-icon>close</mat-icon>
+    </a>
+</div>

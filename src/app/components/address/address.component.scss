@@ -1,0 +1,92 @@
+.field-full-width {
+    width: 100%;
+    margin-bottom: 16px;
+}
+
+.mat-form-field.mat-focused {
+    .mat-form-field-ripple {
+        background: var(--main-color);
+    }
+    .mat-form-field-label {
+        color: var(--main-color);
+    }
+}
+
+.address-wrapper {
+    .field {
+        .title {
+            display: block;
+            font-weight: 400;
+            font-size: 14px;
+            text-transform: unset;
+        }
+        .input-address {
+            display: block;
+            width: 100%;
+            min-height: 40px;
+            padding: 10px 15px;
+            font-size: 14px;
+            font-family: roboto, helveticaneue, helvetica neue, sans-serif;
+            line-height: 1.5;
+            color: #55595c;
+            background-color: #fff;
+            background-image: none;
+            margin-bottom: 15px;
+            border: 1px solid #ebebeb;
+            box-shadow: none;
+            border-radius: 3px;
+            height: 40px;
+            &:focus {
+                outline: none;
+            }
+        }
+    }
+    .dark-btn {
+        background: #2a2a2a;
+        border-radius: 3px!important;
+        border: 1px solid transparent!important;
+        color: #fff;
+        line-height: 38px;
+    }
+    .title {
+        font-size: 18px;
+        text-transform: uppercase;
+        margin-top: 9px;
+        color: #444;
+        .back {
+            margin: 15px 0;
+            font-size: 14px;
+            text-transform: initial;
+            text-decoration: none;
+            color: #444;
+            mat-icon {
+                font-size: 18px;
+                height: 16px;
+                width: 16px;
+                color: var(--main-color)
+            }
+        }
+    }
+    .new-address {
+        margin-top: 30px;
+        button+button {
+            margin-left: 4px;
+        }
+    }
+    .address-list {
+        .address-item {
+            border-top: 1px #ebebeb solid;
+            padding-top: 30px;
+            margin-top: 20px;
+            p {
+                color: #595959;
+                font-size: 14px;
+            }
+            .btn-wrapper {
+                button+button {
+                    margin-left: 4px;
+                }
+            }
+        }
+    }
+}

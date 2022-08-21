@@ -1,0 +1,76 @@
+<div class="" fxLayoutAlign="center">
+    <div class="account-wrapper" fxFlex="85" fxFlex.xs="98" fxLayout="row" fxLayout.xs="column" fxLayout.sm="column">
+        <div class="order-list" fxFlex="70" fxFlex.sm="50" fxFlex.xs="50">
+            <h2 class="title">Trang khách hàng</h2>
+            <div class="welcome-account">
+                <p><strong>Xin chào, <span *ngIf="user; else defaultName">{{user.username}}</span>
+                        <ng-template #defaultName><span> Trần Quang Tuyền</span></ng-template>
+                    </strong>!</p>
+            </div>
+
+            <div class="container-table">
+                <table mat-table [dataSource]="billList" class="mat-elevation-z8 demo-table">
+
+                    <!-- Name Column -->
+                    <ng-container matColumnDef="order-id">
+                        <th mat-header-cell *matHeaderCellDef> Đơn hàng </th>
+                        <td mat-cell *matCellDef="let element">Số <a routerLink="/bill/{{element.id}}" title="Xem chi tiết"><span style="text-decoration: underline;">{{element.id}}</span></a>  </td>
+                    </ng-container>
+
+                    <!-- Weight Column -->
+                    <ng-container matColumnDef="date">
+                        <th mat-header-cell *matHeaderCellDef> Ngày </th>
+                        <td mat-cell *matCellDef="let element"> <span class="">{{element.updatedDate| date: 'dd/MM/yyyy'}}</span> </td>
+                    </ng-container>
+
+                    <!-- Symbol Column -->
+                    <ng-container matColumnDef="address">
+                        <th mat-header-cell *matHeaderCellDef> Địa chỉ </th>
+                        <td mat-cell *matCellDef="let element">
+                            {{element.stringAddress}}
+                        </td>
+                    </ng-container>
+                    <ng-container matColumnDef="total">
+                        <th mat-header-cell *matHeaderCellDef>Giá trị đơn hàng </th>
+                        <td mat-cell *matCellDef="let element"><span class="">{{element.total |number}}đ</span> </td>
+                    </ng-container>
+                    <!-- <ng-container matColumnDef="status-checkout">
+                        <th mat-header-cell *matHeaderCellDef> Tình trạng thanh toán </th>
+                        <td mat-cell *matCellDef="let element">
+                            {{element.statusCheckout}}
+                        </td>
+                    </ng-container> -->
+                    <ng-container matColumnDef="status">
+                        <th mat-header-cell *matHeaderCellDef>Trạng thái </th>
+                        <td mat-cell *matCellDef="let element">
+                            {{element.status==0?'Đang Giao':'Đã giao'||'Hủy'}}
+                        </td>
+                    </ng-container>
+                    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                    <tr mat-row>
+                        <td>Tổng tiền:</td>
+                        <td>56000</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+        <div class="account-info" fxFlex="30" fxFlex.sm="50" fxFlex.xs="50">
+            <h5 class="title">Tài khoản của tôi</h5>
+            <div class="content">
+                <p class="item">
+                    <mat-icon class="icon">smartphone</mat-icon>
+                    <span *ngIf="lastBill; else defaultPhone">Điện thoại: {{lastBill.currentPhone}}</span>
+                    <ng-template #defaultPhone><span>Điện thoại: 0356965894</span></ng-template>
+                </p>
+                <p class="item">
+                    <mat-icon class="icon">location_pin</mat-icon>
+                    <span *ngIf="lastBill; else defaultAddress">Địa chỉ: {{lastBill.stringAddress}}</span>
+                    <ng-template #defaultAddress><span>Địa chỉ: 15 đường 160, KP3, Phường Tăng Nhơn Phú A, Thủ Đức, Vietnam</span></ng-template>
+                </p>
+                <button class="main-btn" (click)="navigateToAddress()">Sổ địa chỉ</button>
+            </div>
+        </div>
+    </div>
+
+</div>

@@ -1,0 +1,36 @@
+<div class="home-section">
+    <div class="top-section">
+        <h3><a href="" class="title">LAPTOP</a></h3>
+    </div>
+    <div class="wrapper" fxLayout="row" fxLayoutAlign="stretch stretch" fxFlexFill>
+
+        <div fxLayout="row" fxFlexFill fxFlex="75" fxFlex.sm="100" fxFlex.xs="100">
+            <swiper [slidesPerView]="1" [spaceBetween]="10" [navigation]="true" [breakpoints]="{
+            '375': {
+              slidesPerView: 2,
+              spaceBetween: 20
+            },
+            '768': {
+              slidesPerView: 3,
+              spaceBetween: 40
+            },
+            '1024': {
+              slidesPerView: 4,
+              spaceBetween: 50
+            }
+          }" class="mySwiper">
+
+                <ng-template swiperSlide *ngFor="let product of products">
+                    <div class="">
+                        <app-item-product [productItem]="product"></app-item-product>
+                        <app-item-product [productItem]="product"></app-item-product>
+                    </div>
+                </ng-template>
+            </swiper>
+        </div>
+        <div class="banner-side" fxFlex="25" fxShow fxHide.xs fxHide.sm>
+            <a href="" class=""><img class="img img-top" src="https://bizweb.sapocdn.net/100/329/122/themes/835213/assets/banner_1_fashion.png?1649137508733" alt=""></a>
+            <a href="" class=""><img class="img" src="https://bizweb.sapocdn.net/100/329/122/themes/835213/assets/banner_2_fashion.png?1649137508733" alt=""></a>
+        </div>
+    </div>
+</div>

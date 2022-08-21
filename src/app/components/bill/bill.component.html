@@ -1,0 +1,168 @@
+<div fxLayout="row" fxLayoutAlign="center center">
+    <div fxFlex="87" fxFlex.sm="98" fxFlex.xs="97">
+        <div class="title-cart">
+            <h2 class="content">Chi tiết đơn hàng</h2>
+        </div>
+        <div fxLayout="row wrap ">
+            <div fxFlex="60" fxFlex.sm="100" fxFlex.xs="100">
+                <div class="float">
+                    <p class="left">Đơn hàng số:</p>
+                    <p class="right">{{detailBill.id}}</p>
+                </div>
+                <div class="float">
+                    <p class="left">Tên người đặt:</p>
+                    <p class="right">{{detailBill.fullname}}</p>
+                </div>
+                <div class="float">
+                    <p class="left">Số điện thoại:</p>
+                    <p class="right"> {{detailBill.phone}}</p>
+                </div>
+                <div class="float">
+                    <p class="left">Địa chỉ:</p>
+                    <p class="right"> {{detailBill.address}}</p>
+                </div>
+                <div class="float">
+                    <p class="left">Ngày đặt:</p>
+                    <p class="right">Ngày {{detailBill.createdDate| date: 'dd/MM/yyyy'}} {{detailBill.createdDate |
+                        date: 'h:mm a'}}</p>
+                </div>
+                <div class="float">
+                    <p class="left">Ghi chú:</p>
+                    <p class="right"> {{detailBill.note}}</p>
+                </div>
+            </div>
+            <div fxFlex="40" fxFlex.sm="100" fxFlex.xs="100">
+                <div class="float">
+                    <p class="left">Trạng thái:</p>
+                    <p class="right"> {{status}} - Cập nhật lúc: {{detailBill.updatedDate| date: 'dd/MM/yyyy'}}
+                        {{detailBill.updatedDate | date: 'h:mm a'}}</p>
+                </div>
+                <div class="float">
+                    <p class="left">Thời gian giao:</p>
+                    <p class="right"> {{detailBill.shippingTime}}</p>
+                </div>
+                <div class="float">
+                    <p class="left">Giảm giá:</p>
+                    <p class="right"> -{{detailBill.voucherCost|number}} đ</p>
+                </div>
+                <div class="float">
+                    <p class="left">Phí vận chuyển:</p>
+                    <p class="right">{{detailBill.shippingCost|number}} đ</p>
+                </div>
+                <div class="float">
+                    <p class="left">Tổng chi phí:</p>
+                    <p class="right">{{detailBill.total|number}} đ</p>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+<div class="cart-wrapper" fxLayoutAlign="center">
+    <ng-container *ngIf="products.length != 0">
+        <div class="site" fxLayout="column" fxFlex="87" fxHide.xs>
+            <div class="title-cart">
+                <h2 class="content">Danh sách sản phẩm</h2>
+            </div>
+            <div class="cart-list" fxLayout="column" fxLayoutAlign="center">
+                <table mat-table [dataSource]="products" class="mat-elevation-z8 demo-table">
+                    <!-- Position Column -->
+                    <ng-container matColumnDef="img-product">
+                        <th mat-header-cell *matHeaderCellDef>Ảnh sản phẩm</th>
+                        <td mat-cell *matCellDef="let element">
+                            <img src="{{ 'http://localhost:3000/FileUpload/files/'+element.img }}" alt=""
+                                style="width: 100px; height: 100px; object-fit: cover" />
+                        </td>
+                    </ng-container>
+
+                    <!-- Name Column -->
+                    <ng-container matColumnDef="name-product">
+                        <th mat-header-cell *matHeaderCellDef>Tên sản phẩm</th>
+                        <td mat-cell *matCellDef="let element">
+                            <h3 class="name-value">{{ element.name }}</h3>
+                        </td>
+                    </ng-container>
+
+                    <!-- Weight Column -->
+                    <ng-container matColumnDef="price-product">
+                        <th mat-header-cell *matHeaderCellDef>Đơn giá</th>
+                        <td mat-cell *matCellDef="let element">
+                            <span class="price-value">{{
+                                element.price | currency: "VND"
+                                }}</span>
+                        </td>
+                    </ng-container>
+
+                    <!-- Symbol Column -->
+                    <ng-container matColumnDef="quantity-product">
+                        <th mat-header-cell *matHeaderCellDef>Số lượng</th>
+                        <td mat-cell *matCellDef="let element">
+
+                            <input type="text" class="input-quantity" readonly value="{{ element.quantity }}" />
+
+                        </td>
+                    </ng-container>
+                    <ng-container matColumnDef="total-product">
+                        <th mat-header-cell *matHeaderCellDef>Thành tiền</th>
+                        <td mat-cell *matCellDef="let element">
+                            <span class="price-value" id="subTotal-old-{{ element.id }}">{{
+                                element.quantity * element.price | currency: "VND"
+                                }}</span>
+                        </td>
+                    </ng-container>
+
+                    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                    <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+                </table>
+                <div class="total-all" fxLayoutAlign="center">
+                    <div class="title-wrapper" fxFlex="80">
+                        <p class="title">Vận chuyển:</p>
+                    </div>
+                    <div class="value-wrapper" fxFlex="20">
+                        <span class="value">{{ detailBill.shippingCost | currency: "VND" }}</span>
+                    </div>
+                </div>
+                <div class="total-all" fxLayoutAlign="center">
+                    <div class="title-wrapper" fxFlex="80">
+                        <p class="title">Tổng tiền:</p>
+                    </div>
+                    <div class="value-wrapper" fxFlex="20">
+                        <span class="value">{{ detailBill.total | currency: "VND" }}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="site-mobile" fxLayout="column" fxLayoutAlign="center center" fxHide.md fxHide.sm fxHide.lg>
+            <div class="title-cart">
+                <h2 class="content">Danh sách sản phẩm</h2>
+            </div>
+            <div class="product-list" fxLayout="column" fxFlex="97">
+                <div class="product-item" fxLayoutAlign="center" *ngFor="let item of products">
+                    <a href="" class="link">
+                        <img src="{{'http://localhost:3000/FileUpload/files/'+ item.img }}" alt="" />
+                    </a>
+                    <div class="describe">
+                        <a href="" class="name">{{ item.name }}</a>
+                        <p class="price">
+                            Giá: <span>{{ item.price | currency: "VND" }}</span>
+                        </p>
+                    </div>
+                    <div class="action">
+                        <div class="quantity-box" fxLayoutAlign="center">
+
+                            <input type="text" value="{{ item.quantity }}" readonly />
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="total-cart">
+                <h3 class="title">Vận chuyển:</h3>
+                <span class="value">{{ detailBill.shippingCost | currency: "VND" }}</span>
+
+                <h3 class="title">Tổng tiền:</h3>
+                <span class="value">{{ detailBill.total | currency: "VND" }}</span>
+            </div>
+        </div>
+    </ng-container>
+</div>

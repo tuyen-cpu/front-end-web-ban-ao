@@ -1,0 +1,168 @@
+<div class="cart-wrapper" fxLayoutAlign="center">
+  <ng-container *ngIf="dataSource.length != 0">
+    <div class="site" fxLayout="column" fxFlex="87" fxHide.xs>
+      <div class="title-cart">
+        <h2 class="content">Giỏ hàng</h2>
+      </div>
+      <div class="cart-list" fxLayout="column" fxLayoutAlign="center">
+        <table mat-table [dataSource]="dataSourceTable" class="mat-elevation-z8 demo-table">
+          <!-- Position Column -->
+          <ng-container matColumnDef="img-product">
+            <th mat-header-cell *matHeaderCellDef>Ảnh sản phẩm</th>
+            <td mat-cell *matCellDef="let element">
+              <img src="{{'http://localhost:3000/FileUpload/files/'+ element.img }}" alt="" style="width: 100px; height: 100px; object-fit: cover" />
+            </td>
+          </ng-container>
+
+          <!-- Name Column -->
+          <ng-container matColumnDef="name-product">
+            <th mat-header-cell *matHeaderCellDef>Tên sản phẩm</th>
+            <td mat-cell *matCellDef="let element">
+              <h3 class="name-value">{{ element.name }}</h3>
+            </td>
+          </ng-container>
+
+          <!-- Weight Column -->
+          <ng-container matColumnDef="price-product">
+            <th mat-header-cell *matHeaderCellDef>Đơn giá</th>
+            <td mat-cell *matCellDef="let element">
+              <span class="price-value">{{
+                element.price | currency: "VND"
+                }}</span>
+            </td>
+          </ng-container>
+
+          <!-- Symbol Column -->
+          <ng-container matColumnDef="quantity-product">
+            <th mat-header-cell *matHeaderCellDef>Số lượng</th>
+            <td mat-cell *matCellDef="let element">
+              <button class="btn-quantity btn-increase" (click)="decreaseQuantity(inputElementQuantity, element.id)">
+                -
+              </button>
+              <input #inputElementQuantity type="text" class="input-quantity"
+                onkeypress="return event.charCode >= 48 && event.charCode <= 57" maxlength="2" step="1" max="99" min="1"
+                value="{{ element.quantity }}" (change)="updateQuantity(inputElementQuantity, element.id)" />
+              <button class="btn-quantity btn-decrease" (click)="increaseQuantity(inputElementQuantity, element.id)">
+                +
+              </button>
+              <div style="display: none" id="msg-quantity-{{ element.id }}">
+                Sản phẩm không đủ số lượng
+              </div>
+            </td>
+          </ng-container>
+          <ng-container matColumnDef="total-product">
+            <th mat-header-cell *matHeaderCellDef>Thành tiền</th>
+            <td mat-cell *matCellDef="let element">
+              <span class="price-value" id="subTotal-old-{{ element.id }}">{{
+                element.quantity * element.price | currency: "VND"
+                }}</span>
+            </td>
+          </ng-container>
+          <ng-container matColumnDef="action-product">
+            <th mat-header-cell *matHeaderCellDef>Xóa</th>
+            <td mat-cell *matCellDef="let element">
+              <button mat-icon-button (click)="deleteCartItem(element.id)">
+                <mat-icon class="btn-remove">close</mat-icon>
+              </button>
+            </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+          <tr mat-row>
+            <td>Tổng tiền:</td>
+            <td>56000</td>
+          </tr>
+        </table>
+        <div class="total-all" fxLayoutAlign="center">
+          <div class="title-wrapper" fxFlex="80">
+            <p class="title">Tổng tiền:</p>
+          </div>
+          <div class="value-wrapper" fxFlex="20">
+            <span class="value">{{ totalCart | currency: "VND" }}</span>
+          </div>
+        </div>
+        <div class="btn-action-wrapper" fxLayoutAlign="end">
+          <button mat-flat-button class="btn" [routerLink]="['/list']">Tiếp tục mua hàng</button>
+          <button mat-flat-button class="btn btn-checkout" [routerLink]="['/checkout']">
+            Thực hiện thanh toán
+          </button>
+        </div>
+      </div>
+    </div>
+    <div class="site-mobile" fxLayout="column" fxLayoutAlign="center center" fxHide.md fxHide.sm fxHide.lg>
+      <div class="title-cart">
+        <h2 class="content">Giỏ hàng của bạn</h2>
+      </div>
+      <div class="product-list" fxLayout="column" fxFlex="97">
+        <div class="product-item" fxLayoutAlign="center" *ngFor="let item of dataSource">
+          <a href="" class="link">
+            <img src="{{'http://localhost:3000/FileUpload/files/'+ item.img }}" alt="" />
+          </a>
+          <div class="describe">
+            <a href="" class="name">{{ item.name }}</a>
+            <p class="price">
+              Giá: <span>{{ item.price | currency: "VND" }}</span>
+            </p>
+          </div>
+          <div class="action">
+            <div class="quantity-box" fxLayoutAlign="center">
+              <button class="btn-quantity btn-increase" (click)="decreaseQuantity(inputElementQuantity, item.id)">
+                -
+              </button>
+              <input #inputElementQuantity type="text" class="input-quantity"
+                onkeypress="return event.charCode >= 48 && event.charCode <= 57" maxlength="2" step="1" max="99" min="1"
+                value="{{ item.quantity }}" (change)="updateQuantity(inputElementQuantity, item.id)" />
+              <button class="btn-quantity btn-decrease" (click)="increaseQuantity(inputElementQuantity, item.id)">
+                +
+              </button>
+              <div style="display: none" id="msg-quantity-{{ item.id }}">
+                Sản phẩm không đủ số lượng
+              </div>
+            </div>
+            <a (click)="deleteCartItem(item.id)" class="btn-delete">Xóa</a>
+          </div>
+        </div>
+      </div>
+      <div class="total-cart">
+        <h3 class="title">Tổng tiền:</h3>
+        <span class="value">{{ totalCart | currency: "VND" }}</span>
+      </div>
+      <div class="checkout">
+        <button [routerLink]="['checkout']" class="btn">Tiến hành thanh toán</button>
+        <button [routerLink]="['list']" class="btn btn-continue">Tiếp tục mua hàng</button>
+      </div>
+    </div>
+  </ng-container>
+
+  <ng-container *ngIf="dataSource.length == 0">
+    <div class="site" fxLayout="column" fxFlex="87" fxHide.xs>
+      <div class="title-cart">
+        <h2 class="content">Giỏ hàng</h2>
+      </div>
+      <div class="cart-list" fxLayout="column" fxLayoutAlign="center"
+        style="text-align: center; border: 1px solid #d4d4d4">
+        <div>
+          <img src="./../../../assets/img/Shopping_cart_icon.svg.png" alt="continue-shopping" style="
+              text-align: center;
+              width: 200px;
+              height: 150px;
+              object-fit: cover;
+              margin-top: 20px;
+            " />
+        </div>
+        <h3>Giỏ hàng của bạn còn trống!</h3>
+        <div>
+          <button routerLink="/list" mat-raised-button style="
+              width: 300px;
+              color: white;
+              background: #008744;
+              margin-bottom: 20px;
+            ">
+            Tiếp tục mua sắm
+          </button>
+        </div>
+      </div>
+    </div>
+  </ng-container>
+</div>

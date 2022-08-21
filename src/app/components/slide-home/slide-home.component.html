@@ -1,0 +1,17 @@
+<div class="slide-wrapper">
+    <swiper style="--swiper-navigation-color: #fff;--swiper-pagination-color: #fff" [spaceBetween]="10" [thumbs]="{ swiper: thumbsSwiper }" class="swiper-img">
+        <ng-template swiperSlide><img src="../../../assets/img/slider1_1.webp" /></ng-template>
+        <ng-template swiperSlide><img src="../../../assets/img/slider1_2.webp" /></ng-template>
+        <ng-template swiperSlide><img src="../../../assets/img/slider1_3.webp" /></ng-template>
+        <ng-template swiperSlide><img src="../../../assets/img/slider1_4.webp" /></ng-template>
+        <ng-template swiperSlide><img src="../../../assets/img/slider1_5.webp" /></ng-template>
+
+    </swiper>
+    <swiper (swiper)="thumbsSwiper = $event" [spaceBetween]="10" [slidesPerView]="5" [freeMode]="true" [watchSlidesProgress]="true" class="swiper-descr">
+        <ng-template swiperSlide><span class="title">HP Victus 16</span></ng-template>
+        <ng-template swiperSlide><span class="title">LAPTOP <br> INTEL NUC M15</span> </ng-template>
+        <ng-template swiperSlide><span class="title"> MSI <br> MEGA SALE</span> </ng-template>
+        <ng-template swiperSlide><span class="title">SAMSUNG <br>SALE</span> </ng-template>
+        <ng-template swiperSlide><span class="title">ASUS <br>ROG</span> </ng-template>
+    </swiper>
+</div>

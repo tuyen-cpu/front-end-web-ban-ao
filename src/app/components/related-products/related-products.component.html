@@ -1,0 +1,23 @@
+<div class="wrap-relative">
+  <div class="border">
+    <h3><a href="/list/{{category}}" class="title">SẢN PHẨM CÙNG LOẠI</a></h3>
+  </div>
+    <swiper [slidesPerView]="1" [spaceBetween]="10" [navigation]="true" [breakpoints]="{
+        '375': {
+          slidesPerView: 2,
+          spaceBetween: 20
+        },
+        '768': {
+          slidesPerView: 3,
+          spaceBetween: 40
+        },
+        '1024': {
+          slidesPerView: 5,
+          spaceBetween: 50
+        }
+      }" class="swiper-relative">
+        <ng-template swiperSlide *ngFor="let item of listProduct ; ">
+            <app-item-product></app-item-product>
+        </ng-template>
+    </swiper>
+</div>
