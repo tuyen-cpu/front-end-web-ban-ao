@@ -93,7 +93,7 @@
                       </td> -->
                         <td>
                             <div class="flex">
-                                <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-success mr-2" (click)="editProduct(product)"></button>
+                                <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-success mr-2" (click)="openEditProduct(product)"></button>
                                 <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-warning" (click)="deleteProduct(product)"></button>
                             </div>
                         </td>
@@ -113,13 +113,19 @@
                 </div> -->
                 <div class="field">
                     <label for="name">Name</label>
-                    <p-dropdown [options]="groupProducts" [(ngModel)]="groupProductSelected" placeholder="Select name" optionLabel="name" [showClear]="true"></p-dropdown>
+                    <p-dropdown [options]="groupProducts" [(ngModel)]="groupProductSelected" [required]="true" placeholder="Select name" optionLabel="name" [ngClass]="{'ng-invalid ng-dirty' : submitted && !groupProductSelected}" [showClear]="true"></p-dropdown>
+                    <small class="p-error block" *ngIf="submitted &&!groupProductSelected">Name is required.</small>
                 </div>
                 <div class="field">
-                    <label for="category">Category</label>
-                    <p-dropdown [options]="categories" [(ngModel)]="categorySelected" placeholder="Select category" optionLabel="name" [showClear]="true"></p-dropdown>
+                    <label for="">Category</label>
+                    <p-dropdown [options]="categories" [(ngModel)]="categorySelected" [required]="true" placeholder="Select category" optionLabel="name" [ngClass]="{'ng-invalid ng-dirty' : submitted && !categorySelected}" [showClear]="true"></p-dropdown>
+                    <small class="p-error block" *ngIf="submitted &&!categorySelected">Category is required.</small>
                 </div>
-
+                <div class="field">
+                    <label for="">Size</label>
+                    <p-dropdown [options]="sizes" [(ngModel)]="sizeSelected" [required]="true" placeholder="Select size" optionLabel="name" [ngClass]="{'ng-invalid ng-dirty' : submitted && !sizeSelected}" [showClear]="true"></p-dropdown>
+                    <small class="p-error block" *ngIf="submitted &&!sizeSelected">size is required.</small>
+                </div>
                 <div class="formgrid grid">
                     <div class="field col">
                         <label for="price">Price</label>
@@ -161,12 +167,39 @@
         <p-dialog [(visible)]="productDialogEdit" [style]="{width: '100wh',height:'100vh'}" header="Product Details" [modal]="true" class="p-fluid">
             <ng-template pTemplate="content">
 
-                <div class="field">
+                <!-- <div class="field">
                     <label for="name">Name</label>
                     <input type="text" pInputText id="name" [(ngModel)]="productEdit.name" required [ngClass]="{'ng-invalid ng-dirty' : editSubmitted && !productEdit.name}" />
                     <small class="p-error block" *ngIf="editSubmitted &&!productEdit.name">Name is required.</small>
+                </div> -->
+                <div class="field">
+                    <label for="name">Name</label>
+                    <p-dropdown [(ngModel)]="productEdit.groupProductId" inputId="name" [options]="groupProductsDropdown" placeholder="Select name" [ngClass]="{'ng-invalid ng-dirty' : submitted && !productEdit.groupProductId}">
+                        <ng-template let-option pTemplate="item">
+                            <span>{{option.label}}</span>
+                        </ng-template>
+                    </p-dropdown>
+                    <small class="p-error block" *ngIf="submitted &&!productEdit.groupProductId">Name is required.</small>
                 </div>
+                <div class="field">
+                    <label for="category">Category</label>
+                    <p-dropdown [(ngModel)]="productEdit.categoryId" inputId="category" [options]="categoriesDropdown" placeholder="Select category" [ngClass]="{'ng-invalid ng-dirty' : submitted && !productEdit.categoryId}">
+                        <ng-template let-option pTemplate="item">
+                            <span>{{option.label}}</span>
+                        </ng-template>
+                    </p-dropdown>
+                    <small class="p-error block" *ngIf="submitted &&!productEdit.categoryId">Category is required.</small>
+                </div>
+                <div class="field">
+                    <label for="size">Size</label>
+                    <p-dropdown [(ngModel)]="productEdit.sizeId" inputId="size" [options]="sizesDropdown" placeholder="Select size" [ngClass]="{'ng-invalid ng-dirty' : submitted && !productEdit.sizeId}">
+                        <ng-template let-option pTemplate="item">
+                            <span>{{option.label}}</span>
+                        </ng-template>
+                    </p-dropdown>
 
+                    <small class="p-error block" *ngIf="submitted &&!productEdit.sizeId">size is required.</small>
+                </div>
 
                 <div class="formgrid grid">
                     <div class="field col">
@@ -186,7 +219,7 @@
                 </div>
                 <div class="field">
                     <label for="inventoryStatus">Inventory Status</label>
-                    <p-dropdown [(ngModel)]="productEdit.status" inputId="inventoryStatus" [options]="statuses" placeholder="Select">
+                    <p-dropdown [(ngModel)]="productEdit.status" inputId="inventoryStatus" [options]="statuses" placeholder="Select status">
                         <ng-template let-option pTemplate="item">
                             <span [class]="'product-badge status-' + option.value">{{option.label}}</span>
                         </ng-template>

@@ -6,6 +6,8 @@ import { DetailProduct } from '../model/detail-product.model';
 import { Pagination } from '../model/pagination.model';
 import { Product, ProductAdd } from '../model/product.model';
 import { GroupProduct } from '../model/group-product.model';
+import { Size } from '../model/size.model';
+import { ResponseObject } from '../model/response-object.model';
 
 @Injectable({
   providedIn: 'root',
@@ -88,8 +90,11 @@ export class ProductService {
     );
   }
 
-  public uploadFileImage(file: any): Observable<String[]> {
-    return this.http.post<String[]>(`${this.apiServerUrl}/FileUpload`, file);
+  public uploadFileImage(file: any): Observable<ResponseObject> {
+    return this.http.post<ResponseObject>(
+      `${this.apiServerUrl}/FileUpload`,
+      file
+    );
   }
   public getQuantityProductById(productId: number): Observable<number> {
     return this.http.get<number>(
@@ -103,13 +108,16 @@ export class ProductService {
     );
   }
 
-  public addProduct(product: ProductAdd): Observable<Product> {
-    return this.http.post<Product>(`${this.apiServerUrl}/product/add`, product);
+  public addProduct(product: ProductAdd): Observable<ResponseObject> {
+    return this.http.post<ResponseObject>(
+      `${this.apiServerUrl}/product/add`,
+      product
+    );
   }
 
-  public updateProduct(product: ProductAdd): Observable<Product> {
+  public updateProduct(product: ProductAdd): Observable<ResponseObject> {
     {
-      return this.http.put<Product>(
+      return this.http.put<ResponseObject>(
         `${this.apiServerUrl}/product/update`,
         product
       );
@@ -153,6 +161,12 @@ export class ProductService {
     return this.http.post<GroupProduct>(
       `${this.apiServerUrl}/group-product/add`,
       groupProduct
+    );
+  }
+
+  getAllSize(page: number, size: number): Observable<Size[]> {
+    return this.http.get<Size[]>(
+      this.apiServerUrl + '/size/all?page=' + page + '&size=' + size
     );
   }
 }

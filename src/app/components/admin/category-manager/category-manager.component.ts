@@ -84,7 +84,7 @@ export class CategoryManagerComponent implements OnInit {
   }
 
   public loadCategories(currentPage: number, size: number) {
-    this.categoryService.getCategoriesInAdmin(currentPage, size).subscribe({
+    this.categoryService.getCategoriesInAdmin(currentPage, size, '').subscribe({
       next: (response: any) => {
         console.log(response);
         this.categories = response?.content;

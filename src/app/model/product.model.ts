@@ -5,8 +5,11 @@ export interface Product {
   quantity: string;
   price: number;
   discount: number;
+  sizeName?: string;
   urlImg: string;
+  sizeId?: number;
   status?: number;
+  categoryId?: number;
   groupProductId?: number;
 }
 export interface ProductAdd {
@@ -16,6 +19,7 @@ export interface ProductAdd {
   price?: number;
   quantity?: number;
   discount?: number;
+  sizeId?: number;
   status?: number;
   categoryId?: number;
   groupProductId?: number;
