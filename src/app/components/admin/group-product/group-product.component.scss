@@ -10,6 +10,60 @@
     color: red;
 }
 
+.product-badge {
+    border-radius: 2px;
+    padding: 0.25em 0.5rem;
+    text-transform: uppercase;
+    font-weight: 700;
+    font-size: 12px;
+    letter-spacing: .3px;
+    &.status-1 {
+        background: #C8E6C9;
+        color: #256029;
+    }
+    &.status-0 {
+        background: #FFCDD2;
+        color: #c63737;
+    }
+}
+
 .page {
     background: initial;
+}
+
+.p-element {
+    .p-dialog-mask {
+        .p-element.ng-trigger.ng-trigger-animation.ng-tns-c150-2.p-dialog.p-component.p-dialog-draggable.p-dialog-resizable.ng-star-inserted {
+            width: 100vw;
+        }
+    }
+}
+
+p-dialog {
+    .p-dialog-mask.p-component-overlay {
+        z-index: 44!important;
+    }
+}
+
+.field {
+    .image-edit {
+        .tag-img {
+            display: flex;
+            align-items: center;
+            img {
+                width: 100%;
+                height: 50px;
+            }
+            .p-image-preview {
+                height: 50%;
+            }
+            i {
+                cursor: pointer;
+                font-size: 1.3rem;
+                &:hover {
+                    color: red;
+                }
+            }
+        }
+    }
 }

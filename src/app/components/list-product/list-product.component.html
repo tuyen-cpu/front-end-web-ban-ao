@@ -106,13 +106,13 @@
                                                     </h3>
                                                     <div class="price-box">
                                                         <div class="special-price">
-                                                            {{formatPrice(product.price - product.price*product.discount/100) }}
+                                                            {{formatPrice(product.price - product.price) }}
                                                         </div>
                                                         <div class="old-price">
                                                             {{formatPrice(product.price)}}
                                                         </div>
                                                     </div>
-                                                    <div class="product-summary">{{product.desc}}</div>
+                                                    <!-- <div class="product-summary">{{product.desc}}</div> -->
                                                     <div class="product-action">
                                                         <button class="btn-cart">
                                                             <i class="material-icons">shopping_cart_checkout</i>
