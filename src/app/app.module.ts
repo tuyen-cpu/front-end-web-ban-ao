@@ -36,6 +36,7 @@ import { ImageModule } from 'primeng/image';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { DropdownModule } from 'primeng/dropdown';
 import { TreeSelectModule } from 'primeng/treeselect';
+import { ChartModule } from 'primeng/chart';
 //Material
 import { MatGridListModule } from '@angular/material/grid-list';
 import { MatCardModule } from '@angular/material/card';
@@ -104,6 +105,7 @@ import { ForgotPasswordComponent } from './components/forgot-password/forgot-pas
 
 import { CKEditorModule } from '@ckeditor/ckeditor5-angular';
 import { GroupProductComponent } from './components/admin/group-product/group-product.component';
+import { HomeManagerComponent } from './components/admin/home-manager/home-manager.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -148,6 +150,7 @@ import { GroupProductComponent } from './components/admin/group-product/group-pr
     CommentManagerComponent,
     CategoryManagerComponent,
     GroupProductComponent,
+    HomeManagerComponent,
   ],
   imports: [
     BrowserModule,
@@ -201,6 +204,7 @@ import { GroupProductComponent } from './components/admin/group-product/group-pr
     ConfirmDialogModule,
     DropdownModule,
     TreeSelectModule,
+    ChartModule,
   ],
   providers: [],
   bootstrap: [AppComponent],
