@@ -67,7 +67,18 @@ export class ProductService {
       { responseType: 'text' }
     );
   }
-
+  updateStatusGroupProductById(
+    id: number,
+    status: number
+  ): Observable<boolean> {
+    return this.http.get<boolean>(
+      this.apiServerUrl +
+        '/group-product/update-status?id=' +
+        id +
+        '&status=' +
+        status
+    );
+  }
   public addImage(
     image: any[],
     groupProductId: number
@@ -158,9 +169,16 @@ export class ProductService {
     );
   }
 
-  getAllSize(page: number, size: number): Observable<Size[]> {
-    return this.http.get<Size[]>(
+  getAllSize(page: number, size: number): Observable<ResponseObject> {
+    return this.http.get<ResponseObject>(
       this.apiServerUrl + '/size/all?page=' + page + '&size=' + size
+    );
+  }
+  public getProductByGroupProductId(
+    groupProductId: number
+  ): Observable<ResponseObject> {
+    return this.http.get<ResponseObject>(
+      `${this.apiServerUrl}/product/group-product/` + groupProductId
     );
   }
 }

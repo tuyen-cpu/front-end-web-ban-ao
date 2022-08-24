@@ -7,7 +7,6 @@ export interface Product {
   urlImg: string;
   sizeId?: number;
   status?: number;
-  categoryId?: number;
   groupProductId?: number;
 }
 export interface ProductAdd {
@@ -17,6 +16,5 @@ export interface ProductAdd {
   quantity?: number;
   sizeId?: number;
   status?: number;
-  categoryId?: number;
   groupProductId?: number;
 }

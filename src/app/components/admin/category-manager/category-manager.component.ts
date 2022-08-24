@@ -26,8 +26,6 @@ export class CategoryManagerComponent implements OnInit {
 
   //pagination
   public totalRecords: number = 0;
-  public currentPage: number = 0;
-  public size: number = 5;
 
   public cols: any[] = [];
   public listStatuses: SelectItem[] = [];
@@ -84,13 +82,13 @@ export class CategoryManagerComponent implements OnInit {
   }
 
   public loadCategories(currentPage: number, size: number) {
+    console.log('current:' + currentPage);
     this.categoryService.getCategoriesInAdmin(currentPage, size, '').subscribe({
       next: (response: any) => {
         console.log(response);
+        console.log('current:' + response.number);
         this.categories = response?.content;
-        this.currentPage = response?.number;
         this.totalRecords = response?.totalElements;
-        this.size = response?.size;
       },
       error: (error: HttpErrorResponse) => {
         console.log('List category : ' + error.message);

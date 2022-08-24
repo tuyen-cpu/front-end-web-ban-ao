@@ -9,6 +9,11 @@ import { Image } from 'src/app/model/image.model';
 import { mergeMap, forkJoin } from 'rxjs';
 import { CategoryService } from 'src/app/service/category.service';
 import { Category } from 'src/app/model/category.model';
+import { Product, ProductAdd } from 'src/app/model/product.model';
+import { Size } from 'src/app/model/size.model';
+interface expandedRows {
+  [key: string]: boolean;
+}
 @Component({
   selector: 'app-group-product',
   templateUrl: './group-product.component.html',
@@ -18,27 +23,35 @@ import { Category } from 'src/app/model/category.model';
 })
 export class GroupProductComponent implements OnInit {
   @ViewChild('dt') dt!: Table;
+
+  isLoading: boolean = false;
+
+  product: ProductAdd;
   selectedUsers: GroupProduct[] = [];
   groupProducts: GroupProduct[] = [];
   groupProduct!: GroupProduct;
-  isLoading: boolean = false;
-  public deleteUserDialog: boolean = false;
-  public deleteUsersDialog: boolean = false;
+  categories: Category[] = [];
+  categoriesDropdown: any[];
+  sizes: Size[] = [];
+  sizesDropdown: any[];
+  sizeSelected: Size;
+  images: Image[] = [];
+
+  isEditGroupProduct: boolean = false;
 
   //pagination
   public totalRecords: number = 0;
-  public currentPage: number = 0;
   public size: number = 5;
 
-  isEditGroupProduct: boolean = false;
-  images: Image[] = [];
+  //expand
+  isExpanded: boolean = false;
+  expandedRows: expandedRows = {};
+
   cols: any[] = [];
+
+  productDialog = false;
   submitted: boolean = false;
   groupProductDialog: boolean = false;
-  listStatuses: SelectItem[] = [];
-
-  categories: Category[] = [];
-  categoriesDropdown: any[];
 
   uploadedFiles: any[] = [];
   public Editor = customBuild;
@@ -104,6 +117,8 @@ export class GroupProductComponent implements OnInit {
       ],
     },
   };
+
+  statusesProduct: any = [];
   constructor(
     private productService: ProductService,
     private confirmationService: ConfirmationService,
@@ -115,9 +130,9 @@ export class GroupProductComponent implements OnInit {
     //this.users.push(this.user0); this.users.push(this.user1);
     this.loadGroupProduct(0, this.size);
 
-    this.listStatuses = [
-      { label: 'Hoạt động', value: '1' },
-      { label: 'Đã dừng', value: '0' },
+    this.statusesProduct = [
+      { label: 'ACTIVE', value: 1 },
+      { label: 'INACTIVE', value: 0 },
     ];
     this.cols = [
       { field: 'id', header: 'id' },
@@ -130,6 +145,15 @@ export class GroupProductComponent implements OnInit {
       next: (res: any) => {
         this.categories = res.content;
         this.categoriesDropdown = this.convertToLabelAndValue(this.categories);
+      },
+    });
+    this.productService.getAllSize(0, 50).subscribe({
+      next: (res: any) => {
+        this.sizes = res.data.content;
+        this.sizesDropdown = this.convertToLabelAndValue(this.sizes);
+      },
+      error: (error) => {
+        alert(error.message);
       },
     });
   }
@@ -164,17 +188,84 @@ export class GroupProductComponent implements OnInit {
         },
       });
   }
-  openNew() {
+  openGroupProductDialog() {
     this.groupProduct = {};
     this.groupProduct.status = 1;
     this.submitted = false;
     this.groupProductDialog = true;
   }
-
-  deleteSelectedUsers() {
-    this.deleteUsersDialog = true;
+  openProductDialog(groupProduct: GroupProduct) {
+    this.product = {};
+    this.product.status = 1;
+    this.product.groupProductId = groupProduct.id;
+    this.submitted = false;
+    this.productDialog = true;
   }
+  expandAll() {
+    if (!this.isExpanded) {
+      this.groupProducts.forEach((groupProduct) =>
+        groupProduct && groupProduct.id
+          ? (this.expandedRows[groupProduct.id] = true)
+          : 0
+      );
+    } else {
+      this.expandedRows = {};
+    }
+    this.isExpanded = !this.isExpanded;
+  }
+  saveProduct() {
+    this.isLoading = true;
+    this.submitted = true;
+    if (
+      !this.sizeSelected.id ||
+      !this.product.price ||
+      !this.product.quantity
+    ) {
+      this.isLoading = false;
+      return;
+    }
+    if (this.product.price > 10000000) {
+      this.isLoading = false;
+      this.messageService.add({
+        severity: 'error',
+        summary: 'Wanning',
+        detail: 'Please enter valid price!',
+      });
+      this.isLoading = false;
+      return;
+    }
+    if (this.product.quantity > 1000) {
+      this.isLoading = false;
+      this.messageService.add({
+        severity: 'error',
+        summary: 'Wanning',
+        detail: 'Please enter valid quantity!',
+      });
+      this.isLoading = false;
+      return;
+    }
+    this.product.sizeId = this.sizeSelected.id;
+    console.log(this.product);
+    this.productService.addProduct(this.product).subscribe({
+      next: (res) => {
+        let indexGroupProduct = this.groupProducts.findIndex(
+          (element) => element.id == this.product.groupProductId
+        );
 
+        this.groupProducts[indexGroupProduct].products.push({
+          ...res.data,
+        });
+        this.product = {};
+        this.productDialog = false;
+        this.isLoading = false;
+      },
+      error: (e) => {
+        this.isLoading = false;
+
+        alert(e.error.message);
+      },
+    });
+  }
   openEditGroupProduct(groupProduct: GroupProduct) {
     this.isEditGroupProduct = true;
     this.groupProduct = {};
@@ -189,11 +280,6 @@ export class GroupProductComponent implements OnInit {
       },
     });
     this.groupProductDialog = true;
-  }
-
-  deleteUser(user: any) {
-    this.deleteUserDialog = true;
-    this.groupProduct = user;
   }
 
   applyFilterGlobal($event: any, stringVal: any) {
@@ -251,7 +337,6 @@ export class GroupProductComponent implements OnInit {
     this.isLoading = true;
     this.productService.addGroupProduct(this.groupProduct).subscribe({
       next: (response) => {
-        console.log(this.isEditGroupProduct);
         if (this.isEditGroupProduct) {
           this.groupProducts = this.groupProducts.map((product) =>
             product.id === response.data.id
@@ -279,9 +364,9 @@ export class GroupProductComponent implements OnInit {
   loadGroupProduct(currentPage: number, size: number) {
     this.productService.getGroupProduct(currentPage, size).subscribe({
       next: (response) => {
-        this.currentPage = response.data.number;
+        console.log(response.data);
         this.totalRecords = response.data.totalElements;
-        this.size = response.data.size;
+
         this.groupProducts = response.data.content;
       },
       error: (error: HttpErrorResponse) => {
@@ -314,12 +399,43 @@ export class GroupProductComponent implements OnInit {
       },
     });
   }
+  onUpdateStatusGroupProduct(groupProduct, status) {
+    let groupProductId = this.groupProducts.findIndex(
+      (obj) => obj.id == groupProduct.id
+    );
+    if (this.groupProducts[groupProductId].status !== status) {
+      this.productService
+        .updateStatusGroupProductById(groupProduct.id, status)
+        .subscribe({
+          next: (response: any) => {
+            this.groupProducts[groupProductId].status = status;
+            this.messageService.add({
+              severity: 'success',
+              summary: 'Successful',
+              detail: 'Group product was inactive',
+              life: 2000,
+            });
+          },
+          error: (error: HttpErrorResponse) => {
+            this.messageService.add({
+              severity: 'error',
+              summary: 'Error',
+              detail: error.message,
+              life: 2000,
+            });
+            console.log('Inactive group product : ' + error.message);
+          },
+        });
+    }
+  }
+
   convertToLabelAndValue(sourceList: any[]): any[] {
     return sourceList.map((item) => ({
       label: item.name,
       value: item.id,
     }));
   }
+
   onPageChange(event: any) {
     this.loadGroupProduct(event.page, event.rows);
   }

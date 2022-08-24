@@ -271,7 +271,7 @@ export class ProductManagerComponent implements OnInit, OnDestroy {
       ...this.product,
       sizeId: this.sizeSelected.id,
       name: this.groupProductSelected.name,
-      categoryId: this.categorySelected.id,
+      // categoryId: this.categorySelected.id,
       groupProductId: this.groupProductSelected.id,
     };
     console.log(this.product);
@@ -321,7 +321,6 @@ export class ProductManagerComponent implements OnInit, OnDestroy {
     this.editSubmitted = true;
     if (
       !this.productEdit.name ||
-      !this.productEdit.categoryId ||
       !this.productEdit.sizeId ||
       !this.productEdit.groupProductId ||
       this.productEdit.price == 0 ||

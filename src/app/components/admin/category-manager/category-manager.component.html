@@ -7,7 +7,7 @@
         <p-table #dt [globalFilterFields]="['name','status','id']" [value]="categories" dataKey="id" [expandedRowKeys]="expandedRows" responsiveLayout="scroll">
             <ng-template pTemplate="summary">
                 <div class="page">
-                    <p-paginator [rows]="size" [rowsPerPageOptions]="[5,10,15,30]" [totalRecords]="totalRecords" [first]="currentPage" (onPageChange)="onPageChange($event)"></p-paginator>
+                    <p-paginator [rowsPerPageOptions]="[5,10,15,30]" [totalRecords]="totalRecords" [first]="0" (onPageChange)="onPageChange($event)"></p-paginator>
                 </div>
 
             </ng-template>
@@ -50,6 +50,7 @@
                             <button title="Edit category" pButton pRipple icon="pi pi-pencil" class="p-button-raised p-button-outlined p-button-rounded p-button-infor mr-2" (click)="editCategory(category)"></button>
                             <button pButton pRipple icon="pi pi-bookmark" class="p-button-raised p-button-rounded p-button-outlined p-button-danger mr-2" title="Inactive category" (click)="deleteCategory(category)"></button>
                             <button pButton pRipple icon="pi pi-bookmark-fill" class="p-button-raised p-button-rounded p-button-outlined p-button-success" title="Active category" (click)="activeCategory(category)"></button>
+
                         </div>
                     </td>
                 </tr>

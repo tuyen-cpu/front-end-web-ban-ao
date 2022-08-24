@@ -70,10 +70,7 @@ const routes: Routes = [
     component: MainAdminComponent,
     children: [
       { path: '', redirectTo: 'product', pathMatch: 'full' },
-      {
-        path: 'product',
-        component: ProductManagerComponent,
-      },
+
       {
         path: 'user',
         component: UserManagerComponent,

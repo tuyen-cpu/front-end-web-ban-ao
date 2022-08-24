@@ -1,3 +1,4 @@
+import { ProductAdd } from './product.model';
 export interface GroupProduct {
   id?: number;
   name?: string;
@@ -6,4 +7,5 @@ export interface GroupProduct {
   status?: number;
   urlImage?: string;
   categoryId?: number;
+  products?: ProductAdd[];
 }
