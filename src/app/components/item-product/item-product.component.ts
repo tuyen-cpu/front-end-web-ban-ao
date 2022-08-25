@@ -1,3 +1,4 @@
+import { GroupProduct } from './../../model/group-product.model';
 import { Component, Input, OnInit } from '@angular/core';
 import {
   MatDialog,
@@ -15,7 +16,7 @@ import { ProductPopupComponent } from '../product-popup/product-popup.component'
   styleUrls: ['./item-product.component.scss'],
 })
 export class ItemProductComponent implements OnInit {
-  @Input() productItem!: Product;
+  @Input() productItem!: GroupProduct;
   name!: string;
 
   @Input() textHere: string = '';
@@ -31,18 +32,16 @@ export class ItemProductComponent implements OnInit {
     //this.productItem = new Product(1,' Laptop Gaming Gigabyte AORUS 17 XE5-73VN534GH (i7-12700H, RTX 3070 Ti 8GB, Ram 16GB DDR5, SSD 1TB, 17.3 Inch IPS 360Hz FHD) ','','Intel',60660990,10,'https://bizweb.sapocdn.net/thumb/medium/100/329/122/products/laptop-gaming-gigabyte-aorus-17-xe5-73vn534gh.png?v=1648702456000')
   }
 
-
-  public addToCart(Id: any){
-    let item: CartItem = {
-      id: Id,
-      name: this.productItem.name,
-      img: this.productItem.urlImg,
-      price:
-        this.productItem.price -
-        (this.productItem.price * this.productItem.discount) / 100,
-      quantity: 1,
-    };
-
-    this.cartService.addToCart(item);
+  public addToCart(Id: any) {
+    // let item: CartItem = {
+    //   id: Id,
+    //   name: this.productItem.name,
+    //   img: this.productItem.urlImage,
+    //   price: 0,
+    //   this.productItem.price -
+    //   (this.productItem.price * this.productItem.discount) / 100,
+    //   quantity: 1,
+    // };
+    // this.cartService.addToCart(item);
   }
 }

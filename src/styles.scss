@@ -8,12 +8,12 @@ s *::after {
 }
 
 body::-webkit-scrollbar-track {
-    background-color: #F5F5F5;
+    background-color: #F5F5F5 !important;
 }
 
 body::-webkit-scrollbar {
     width: 2px;
-    background-color: #F5F5F5;
+    background-color: #F5F5F5 !important;
 }
 
 body::-webkit-scrollbar-thumb {
@@ -34,8 +34,12 @@ body {
     overflow-x: hidden;
 }
 
+ul {
+    padding-left: 0;
+}
+
 :root {
-    --main-color: #008744;
+    --main-color: #f1f1f1;
 }
 
 a {

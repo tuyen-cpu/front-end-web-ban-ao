@@ -27,7 +27,7 @@ export class ProductPopupComponent implements OnInit {
     public dialogRef: MatDialogRef<ProductPopupComponent>,
     @Inject(MAT_DIALOG_DATA) public data: Product,
     private productService: ProductService,
-    private cartService: CartService,
+    private cartService: CartService
   ) {}
 
   onNoClick(): void {
@@ -46,20 +46,21 @@ export class ProductPopupComponent implements OnInit {
     console.log(element.value);
   }
   ngOnInit(): void {
-    this.productService
-      .getImagesProduct(this.data.id||1)
-      .subscribe((resp: Image[]) => {
-        this.images = resp;
-      });
+    // this.productService
+    //   .getImagesProduct(this.data.id || 1)
+    //   .subscribe((resp: Image[]) => {
+    //     this.images = resp;
+    //   });
   }
 
   public addToCart() {
     let item: CartItem = {
       id: this.data.id,
       name: this.data.name,
-      price: this.data.price - this.data.price * this.data.discount / 100,
+      // price: this.data.price - this.data.price * this.data.discount / 100,
+      price: 0,
       quantity: this.quantity,
-      img: this.data.urlImg
+      img: this.data.urlImg,
     };
 
     this.cartService.addToCart(item);

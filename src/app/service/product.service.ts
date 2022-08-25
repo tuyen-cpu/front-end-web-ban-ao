@@ -1,25 +1,22 @@
 import { Image } from './../model/image.model';
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, BehaviorSubject, tap } from 'rxjs';
 import { DetailProduct } from '../model/detail-product.model';
 import { Pagination } from '../model/pagination.model';
 import { Product, ProductAdd } from '../model/product.model';
 import { GroupProduct } from '../model/group-product.model';
+import { Size } from '../model/size.model';
+import { ResponseObject } from '../model/response-object.model';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ProductService {
   private apiServerUrl = 'http://localhost:3000';
-  imageChanged: BehaviorSubject<Image[]> = new BehaviorSubject([]);
-  images: Image[] = [];
 
   constructor(private http: HttpClient) {}
-  public resetImages() {
-    this.images = [];
-    this.imageChanged.next(this.images);
-  }
+
   public getProducts(
     q: string,
     page: number,
@@ -27,6 +24,21 @@ export class ProductService {
   ): Observable<Pagination> {
     return this.http.get<Pagination>(
       `${this.apiServerUrl}/product/all?q=${q}&page=${page}&size=${size}`
+    );
+  }
+  searchGroupProduct(
+    q: string,
+    page: number,
+    size: number
+  ): Observable<ResponseObject> {
+    return this.http.get<ResponseObject>(
+      this.apiServerUrl +
+        '/group-product/search?q=' +
+        q +
+        '&page=' +
+        page +
+        '&size=' +
+        size
     );
   }
   public getProductsManager(
@@ -38,6 +50,11 @@ export class ProductService {
       `${this.apiServerUrl}/product/all?q=${q}&page=${page}&size=${size}`
     );
   }
+  public getGroupProductById(id: number): Observable<ResponseObject> {
+    return this.http.get<ResponseObject>(
+      `${this.apiServerUrl}/group-product/${id}`
+    );
+  }
   public getProductsByCategoryId(
     id: number | null,
     page: number = 0,
@@ -47,26 +64,17 @@ export class ProductService {
       `${this.apiServerUrl}/product/all/${id}?page=${page}&size=${size}`
     );
   }
-  public getImagesProduct(productId: number): Observable<Image[]> {
-    return this.http
-      .get<Image[]>(`${this.apiServerUrl}/image/${productId}`)
-      .pipe(
-        tap((resp) => {
-          this.images = this.images.concat(resp);
-          console.log();
-          this.imageChanged.next(this.images);
-        })
-      );
+  public getImagesByGroupProductId(
+    productId: number
+  ): Observable<ResponseObject> {
+    return this.http.get<ResponseObject>(
+      `${this.apiServerUrl}/image/${productId}`
+    );
   }
-  public deleteImage(productId: number): Observable<number> {
-    return this.http
-      .delete<number>(`${this.apiServerUrl}/image/delete/${productId}`)
-      .pipe(
-        tap((resp) => {
-          this.images = this.images.filter((img) => img.id !== resp);
-          this.imageChanged.next(this.images);
-        })
-      );
+  public deleteImage(productId: number): Observable<ResponseObject> {
+    return this.http.delete<ResponseObject>(
+      `${this.apiServerUrl}/image/delete/${productId}`
+    );
   }
   public getLongDescriptionById(productId: number) {
     return this.http.get(
@@ -74,22 +82,34 @@ export class ProductService {
       { responseType: 'text' }
     );
   }
-
-  public addImage(image: any[], productId: number): Observable<Image[]> {
-    var f = [];
-    image.forEach((img) => {
-      f.push({ link: img, productId: productId });
-    });
-    return this.http.post<Image[]>(`${this.apiServerUrl}/image/add`, f).pipe(
-      tap((resp) => {
-        this.images = this.images.concat(resp);
-        this.imageChanged.next(this.images);
-      })
+  updateStatusGroupProductById(
+    id: number,
+    status: number
+  ): Observable<boolean> {
+    return this.http.get<boolean>(
+      this.apiServerUrl +
+        '/group-product/update-status?id=' +
+        id +
+        '&status=' +
+        status
     );
   }
+  public addImage(
+    image: any[],
+    groupProductId: number
+  ): Observable<ResponseObject> {
+    const f = [];
+    image.forEach((img) => {
+      f.push({ link: img, groupProductId: groupProductId });
+    });
+    return this.http.post<ResponseObject>(`${this.apiServerUrl}/image/add`, f);
+  }
 
-  public uploadFileImage(file: any): Observable<String[]> {
-    return this.http.post<String[]>(`${this.apiServerUrl}/FileUpload`, file);
+  public uploadFileImage(file: any): Observable<ResponseObject> {
+    return this.http.post<ResponseObject>(
+      `${this.apiServerUrl}/FileUpload`,
+      file
+    );
   }
   public getQuantityProductById(productId: number): Observable<number> {
     return this.http.get<number>(
@@ -103,13 +123,16 @@ export class ProductService {
     );
   }
 
-  public addProduct(product: ProductAdd): Observable<Product> {
-    return this.http.post<Product>(`${this.apiServerUrl}/product/add`, product);
+  public addProduct(product: ProductAdd): Observable<ResponseObject> {
+    return this.http.post<ResponseObject>(
+      `${this.apiServerUrl}/product/add`,
+      product
+    );
   }
 
-  public updateProduct(product: ProductAdd): Observable<Product> {
+  public updateProduct(product: ProductAdd): Observable<ResponseObject> {
     {
-      return this.http.put<Product>(
+      return this.http.put<ResponseObject>(
         `${this.apiServerUrl}/product/update`,
         product
       );
@@ -144,15 +167,43 @@ export class ProductService {
       params: params,
     });
   }
-  public getGroupProduct(): Observable<GroupProduct[]> {
-    return this.http.get<GroupProduct[]>(
-      `${this.apiServerUrl}/group-product/all`
+  public getGroupProduct(
+    page: number,
+    size: number
+  ): Observable<ResponseObject> {
+    return this.http.get<ResponseObject>(
+      `${this.apiServerUrl}/group-product/all?page=${page}&size=${size}`
     );
   }
-  public addGroupProduct(groupProduct: GroupProduct): Observable<GroupProduct> {
-    return this.http.post<GroupProduct>(
+  public getGroupProductByCategoryId(
+    id: number,
+    page: number,
+    size: number
+  ): Observable<ResponseObject> {
+    return this.http.get<ResponseObject>(
+      `${this.apiServerUrl}/group-product/all/category/${id}?page=${page}&size=${size}`
+    );
+  }
+  public addGroupProduct(
+    groupProduct: GroupProduct
+  ): Observable<ResponseObject> {
+    return this.http.post<ResponseObject>(
       `${this.apiServerUrl}/group-product/add`,
-      groupProduct
+      groupProduct,
+      { headers: new HttpHeaders({ 'Content-Type': 'application/json' }) }
+    );
+  }
+
+  getAllSize(page: number, size: number): Observable<ResponseObject> {
+    return this.http.get<ResponseObject>(
+      this.apiServerUrl + '/size/all?page=' + page + '&size=' + size
+    );
+  }
+  public getProductByGroupProductId(
+    groupProductId: number
+  ): Observable<ResponseObject> {
+    return this.http.get<ResponseObject>(
+      `${this.apiServerUrl}/product/group-product/` + groupProductId
     );
   }
 }

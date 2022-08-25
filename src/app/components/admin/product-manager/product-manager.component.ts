@@ -1,9 +1,9 @@
+import { Size } from './../../../model/size.model';
 import { GroupProduct } from './../../../model/group-product.model';
 import { Category } from 'src/app/model/category.model';
 import { Image } from './../../../model/image.model';
 import {
   Component,
-  ElementRef,
   OnDestroy,
   OnInit,
   ViewChild,
@@ -31,22 +31,22 @@ export class ProductManagerComponent implements OnInit, OnDestroy {
   categorySelected: Category;
   groupProductSelected: GroupProduct;
   categories: Category[] = [];
+  categoriesDropdown: any[];
+
   groupProducts: GroupProduct[];
-  productEdit: ProductAdd = {
-    name: '',
-    longDescription: 'Enter here!',
-    price: 0,
-    quantity: 0,
-    discount: 0,
-    status: 1,
-    groupProductId: 1,
-  };
+  groupProductsDropdown: any[];
+
+  sizes: Size[] = [];
+  sizesDropdown: any[];
+
+  sizeSelected: Size;
+  productEdit: ProductAdd;
   isLoading: boolean = false;
   statuses!: any[];
   images: Image[] = [];
   cols!: any[];
   @ViewChild('dt') dt!: Table;
-  private imageSub: Subscription = new Subscription();
+
   productDialog!: boolean;
   productDialogEdit!: boolean;
   uploadedFiles: any[] = [];
@@ -128,21 +128,26 @@ export class ProductManagerComponent implements OnInit, OnDestroy {
     for (let file of event.files) {
       fd.append('file', file);
     }
+
     this.productService
       .uploadFileImage(fd)
       .pipe(
         mergeMap((res) =>
-          this.productService.addImage(res, this.productEdit.id)
+          this.productService.addImage(res.data, this.productEdit.id)
         )
       )
-      .subscribe((resp) => {
-        console.log('Add image success!');
+      .subscribe({
+        next: (res) => {
+          this.messageService.add({
+            severity: 'info',
+            summary: 'File Uploaded',
+            detail: 'Uploaded file success!',
+          });
+        },
+        error: (error) => {
+          console.log(error);
+        },
       });
-    this.messageService.add({
-      severity: 'info',
-      summary: 'File Uploaded',
-      detail: 'Uploaded file success!',
-    });
   }
   constructor(
     private productService: ProductService,
@@ -153,16 +158,22 @@ export class ProductManagerComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.productService
-      .getProductsManager('', 0, 30)
+      .getProductsManager('', 0, 50)
       .subscribe((res: Pagination) => {
         this.products = res.products;
         console.log(this.products);
       });
-
+    this.productService.getAllSize(0, 50).subscribe({
+      next: (res: any) => {
+        this.sizes = res.content;
+        this.sizesDropdown = this.convertToLabelAndValue(this.sizes);
+      },
+    });
     this.statuses = [
       { label: 'INSTOCK', value: 1 },
       { label: 'OUTOFSTOCK', value: 0 },
     ];
+
     this.cols = [
       { field: 'id', header: 'ID' },
       { field: 'name', header: 'NAME' },
@@ -171,17 +182,26 @@ export class ProductManagerComponent implements OnInit, OnDestroy {
       { field: 'discount', header: 'DISCOUNT' },
       { field: 'status', header: 'STATUS' },
     ];
-    this.categoryService.getCategoriesInAdmin(0, 5).subscribe({
+    this.categoryService.getCategoriesInAdmin(0, 50, 'Active').subscribe({
       next: (res: any) => {
         this.categories = res.content;
-        console.log(res.content);
+        this.categoriesDropdown = this.convertToLabelAndValue(this.categories);
       },
     });
-    this.productService.getGroupProduct().subscribe({
+    this.productService.getGroupProduct(0, 5).subscribe({
       next: (res: any) => {
         this.groupProducts = res;
+        this.groupProductsDropdown = this.convertToLabelAndValue(
+          this.groupProducts
+        );
       },
     });
+  }
+  convertToLabelAndValue(sourceList: any[]): any[] {
+    return sourceList.map((item) => ({
+      label: item.name,
+      value: item.id,
+    }));
   }
   blur() {
     console.log('blur');
@@ -203,21 +223,16 @@ export class ProductManagerComponent implements OnInit, OnDestroy {
   }
   hideDialogEdit() {
     this.productDialogEdit = false;
-    this.imageSub.unsubscribe();
     this.uploadedFiles = [];
   }
   saveProduct() {
-    this.product = {
-      ...this.product,
-      name: this.groupProductSelected.name,
-      categoryId: this.categorySelected.id,
-      groupProductId: this.groupProductSelected.id,
-    };
-
+    console.log('save');
     this.isLoading = true;
     this.submitted = true;
     if (
-      !this.product.name ||
+      !this.categorySelected ||
+      !this.sizeSelected ||
+      !this.groupProductSelected ||
       this.product.price == 0 ||
       !this.product.quantity
     ) {
@@ -242,32 +257,46 @@ export class ProductManagerComponent implements OnInit, OnDestroy {
       });
       return;
     }
-    if (this.product.discount > 1000) {
-      this.isLoading = false;
-      this.messageService.add({
-        severity: 'error',
-        summary: 'Wanning',
-        detail: 'Please enter valid discount!',
-      });
-      return;
-    }
-
+    // if (this.product.discount > 1000) {
+    //   this.isLoading = false;
+    //   this.messageService.add({
+    //     severity: 'error',
+    //     summary: 'Wanning',
+    //     detail: 'Please enter valid discount!',
+    //   });
+    //   console.log('what');
+    //   return;
+    // }
+    this.product = {
+      ...this.product,
+      sizeId: this.sizeSelected.id,
+      name: this.groupProductSelected.name,
+      // categoryId: this.categorySelected.id,
+      groupProductId: this.groupProductSelected.id,
+    };
     console.log(this.product);
     this.productService.addProduct(this.product).subscribe({
       next: (res) => {
         console.log(res);
-        this.products.push({ ...res, name: this.product.name });
+        this.products.push({
+          ...res.data,
+          name: this.product.name,
+          sizeName: this.sizeSelected.name,
+        });
+        this.sizeSelected = {};
+        this.categorySelected = {};
+        this.groupProductSelected = {};
         this.productDialog = false;
         this.isLoading = false;
       },
       error: (e) => {
         this.isLoading = false;
+        console.log(e);
         alert(e.error.message);
       },
     });
 
     this.data = '<p>Enter description here!</p>';
-    this.imageSub.unsubscribe();
   }
   removeImage(img: Image) {
     this.confirmationService.confirm({
@@ -292,6 +321,8 @@ export class ProductManagerComponent implements OnInit, OnDestroy {
     this.editSubmitted = true;
     if (
       !this.productEdit.name ||
+      !this.productEdit.sizeId ||
+      !this.productEdit.groupProductId ||
       this.productEdit.price == 0 ||
       !this.productEdit.quantity
     ) {
@@ -316,20 +347,20 @@ export class ProductManagerComponent implements OnInit, OnDestroy {
       });
       return;
     }
-    if (this.productEdit.discount > 1000) {
-      this.isLoading = false;
-      this.messageService.add({
-        severity: 'error',
-        summary: 'Wanning',
-        detail: 'Please enter valid discount!',
-      });
-      return;
-    }
+    // if (this.productEdit.discount > 1000) {
+    //   this.isLoading = false;
+    //   this.messageService.add({
+    //     severity: 'error',
+    //     summary: 'Wanning',
+    //     detail: 'Please enter valid discount!',
+    //   });
+    //   return;
+    // }
 
     this.productService.updateProduct(this.productEdit).subscribe({
       next: (res) => {
         this.products = this.products.map((product) =>
-          product.id === res.id ? { ...product, ...res } : product
+          product.id === res.data.id ? { ...product, ...res.data } : product
         );
         this.isLoading = false;
         this.productDialogEdit = false;
@@ -342,21 +373,21 @@ export class ProductManagerComponent implements OnInit, OnDestroy {
     });
     this.uploadedFiles = [];
   }
-  editProduct(product: ProductAdd) {
+  openEditProduct(product: ProductAdd) {
+    console.log(product);
     this.editSubmitted = false;
-    this.productService.resetImages();
+    // this.productService.resetImages();
 
     this.productService.getLongDescriptionById(product.id).subscribe((res) => {
       this.productEdit = {
         ...product,
-        longDescription: res,
+        // longDescription: res,
       };
     });
 
-    this.productService.getImagesProduct(product.id).subscribe((res) => {});
-    this.imageSub = this.productService.imageChanged.subscribe((res) => {
-      this.images = res;
-    });
+    // this.imageSub = this.productService.imageChanged.subscribe((res) => {
+    //   this.images = res;
+    // });
     this.productDialogEdit = true;
   }
 

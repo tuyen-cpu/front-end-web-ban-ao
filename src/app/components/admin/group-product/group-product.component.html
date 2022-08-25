@@ -1,24 +1,22 @@
 <div class="grid" style="min-height: 700px;">
     <div class="col-12">
         <div class="card">
-            <p-toolbar styleClass="mb-4">
-                <ng-template pTemplate="left">
-                    <button pButton pRipple label="New" icon="pi pi-plus" class="p-button-success mr-2" (click)="openNew()"></button>
-                    <button pButton pRipple label="Delete" icon="pi pi-trash" class="p-button-danger" title="Update status" (click)="deleteSelectedUsers()" [disabled]="!selectedUsers || !selectedUsers.length"></button>
+
+            <p-table #dt [value]="groupProducts" [columns]="cols" responsiveLayout="scroll" [rows]="10" [expandedRowKeys]="expandedRows" [globalFilterFields]="['name','status']" [rows]="10" [showCurrentPageReport]="true" selectionMode="multiple" [rowHover]="true"
+                dataKey="id">
+                <ng-template pTemplate="summary">
+                    <div class="page">
+                        <p-paginator [rows]="1" [rowsPerPageOptions]="[size,10,15,30]" [totalRecords]="totalRecords" [first]="0" (onPageChange)="onPageChange($event)"></p-paginator>
+                    </div>
+
                 </ng-template>
-
-                <ng-template pTemplate="right">
-                    <p-fileUpload mode="basic" accept="image/*" [maxFileSize]="1000000" label="Import" chooseLabel="Import" class="mr-2 inline-block"></p-fileUpload>
-                    <button pButton pRipple label="Export" icon="pi pi-upload" class="p-button-help" (click)="dt.exportCSV()"></button>
-                </ng-template>
-            </p-toolbar>
-
-            <p-table #dt [value]="groupProducts" [columns]="cols" responsiveLayout="scroll" [rows]="10" [globalFilterFields]="['name']" [rows]="10" [paginator]="true" [rowsPerPageOptions]="[10,20,30]" [showCurrentPageReport]="true" currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
-                [(selection)]="selectedUsers" selectionMode="multiple" [rowHover]="true" dataKey="id">
-
                 <ng-template pTemplate="caption">
                     <div class="flex flex-column md:flex-row md:justify-content-between md:align-items-center">
-                        <h3 class="m-0">Manage group product</h3>
+                        <button pButton pRipple label="New group product" icon="pi pi-plus" class="p-button-success mr-2" (click)="openGroupProductDialog()"></button>
+
+                        <p-toast></p-toast>
+
+
                         <span style="display: flex;">
                           <span style="width: 250px;display: inline-block; margin-right: 15px;">
                           </span>
@@ -27,53 +25,181 @@
                               <input pInputText type="text" (input)="applyFilterGlobal($event, 'contains')"
                                   placeholder="Search..." />
                           </span>
+                        <button pButton class="ml-2" icon="pi pi-fw {{isExpanded ? 'pi-minus' : 'pi-plus'}}" label="{{isExpanded ? 'Collapse All' : 'Expand All'}}" (click)="expandAll()"></button>
                         </span>
 
                     </div>
                 </ng-template>
                 <ng-template pTemplate="header" let-columns>
                     <tr>
-                        <th style="width: 3rem">
+                        <!-- <th style="width: 3rem">
                             <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
-                        </th>
+                        </th> -->
+                        <th style="width: 3rem"></th>
                         <th pSortableColumn="id">ID
                             <p-sortIcon field="id"></p-sortIcon>
+                        </th>
+                        <th pSortableColumn="image">Image
+                            <p-sortIcon field="image"></p-sortIcon>
                         </th>
                         <th pSortableColumn="name">Name
                             <p-sortIcon field="name"></p-sortIcon>
                         </th>
-
+                        <th pSortableColumn="discount">Discount
+                            <p-sortIcon field="discount"></p-sortIcon>
+                        </th>
+                        <th pSortableColumn="price">Price
+                            <p-sortIcon field="price"></p-sortIcon>
+                        </th>
+                        <th pSortableColumn="status">Status
+                            <p-sortIcon field="status"></p-sortIcon>
+                        </th>
                         <th>Action</th>
                     </tr>
                 </ng-template>
-                <ng-template pTemplate="body" let-groupProduct let-columns="columns">
+                <ng-template pTemplate="body" let-groupProduct let-columns="columns" let-expanded="expanded">
                     <tr>
                         <td>
+                            <button type="button" pButton pRipple [pRowToggler]="groupProduct" class="p-button-text p-button-rounded p-button-plain" [icon]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'"></button>
+                        </td>
+                        <!-- <td>
                             <p-tableCheckbox [value]="groupProduct"></p-tableCheckbox>
                             <input type="hidden" value="{{groupProduct.id}}">
+                        </td> -->
 
-                        </td>
                         <td style="width:10%; "><span class="p-column-title">ID</span> {{groupProduct.id}}
+                        </td>
+                        <td style="width:14%; min-width:10rem;"><span class="p-column-title">Image</span>
+                            <p-skeleton class="img" *ngIf="!groupProduct.urlImage" width="100%" height="120px"></p-skeleton>
+                            <img *ngIf="groupProduct.urlImage" [src]="'http://localhost:3000/FileUpload/files/'+groupProduct.urlImage" [alt]="groupProduct.urlImage" width="100" class="shadow-4" />
                         </td>
                         <td style="width:15%;">
                             <span class="p-column-title">Name</span> {{groupProduct.name}}
                         </td>
-
+                        <td style="width:15%;">
+                            <span class="p-column-title">Discount</span> {{groupProduct.discount}}
+                        </td>
+                        <td style="width:15%;">
+                            <span class="p-column-title">Price</span> {{groupProduct.price|currency:'VND'}}
+                        </td>
+                        <td style="width:14%; min-width:10rem;">
+                            <span class="p-column-title">Status</span>
+                            <span [class]="'product-badge status-' + groupProduct.status">{{groupProduct.status===0?"INACTIVE":"ACTIVE"}}</span>
+                        </td>
                         <td>
                             <div class="flex">
-                                <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-success mr-2" (click)="editUser(groupProduct)"></button>
-                                <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-warning" title="Update status" (click)="deleteUser(groupProduct)"></button>
+                                <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-success mr-2" (click)="openEditGroupProduct(groupProduct)"></button>
+                                <button pButton pRipple icon="pi pi-bookmark" class="p-button-raised p-button-rounded p-button-outlined p-button-danger mr-2" title="Inactive" (click)="onUpdateStatusGroupProduct(groupProduct,0)"></button>
+                                <button pButton pRipple icon="pi pi-bookmark-fill" class="p-button-raised p-button-rounded p-button-outlined p-button-success" title="Active" (click)="onUpdateStatusGroupProduct(groupProduct,1)"></button>
+
                             </div>
                         </td>
                     </tr>
                 </ng-template>
+                <ng-template pTemplate="rowexpansion" let-groupProduct>
+                    <tr>
+                        <td colspan="7">
+                            <div class=" ml-5 p-1 box">
+                                <p-table #dt2 [globalFilterFields]="['price','status','id']" [value]="groupProduct.products" dataKey="id" responsiveLayout="scroll">
+                                    <ng-template pTemplate="header" let-columns>
+                                        <tr class="p-1">
+                                            <th colspan="5">
+                                                <span>
+                                                <span class="mr-2 ml-2" style="line-height: 40px;">Manage product</span>
+                                                <button pButton pRipple label="New product" icon="pi pi-plus" class="p-button-success mr-2 ml-2" (click)="openProductDialog(groupProduct)"></button>
+                                                </span>
+                                            </th>
+                                        </tr>
+                                        <tr>
+                                            <th class="border-tb" pSortableColumn="id">Id
+                                                <p-sortIcon field="id"></p-sortIcon>
+                                            </th>
+                                            <th class="border-tb" pSortableColumn="quantity">Quantity
+                                                <p-sortIcon field="quantity"></p-sortIcon>
+                                            </th>
+
+                                            <th class="border-tb" pSortableColumn="size">Size
+                                                <p-sortIcon field="size"></p-sortIcon>
+                                            </th>
+                                            <th class="border-tb" pSortableColumn="status">Status
+                                                <p-sortIcon field="status"></p-sortIcon>
+                                            </th>
+                                            <th class="border-tb">Action</th>
+                                        </tr>
+                                    </ng-template>
+                                    <ng-template pTemplate="body" let-product>
+                                        <tr>
+                                            <td>{{product.id}}</td>
+                                            <td>{{product.quantity}}</td>
+                                            <td>{{convertSizeIdToName(product.sizeId)}}</td>
+                                            <td> <span [class]="'product-badge status-' + product.status">{{product.status===0?"INACTIVE":"ACTIVE"}}</span></td>
+                                            <td>
+                                                <!-- <div class="flex">
+                                                    <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-infor mr-2" (click)="editAttribute(attribute)"></button>
+                                                    <button pButton pRipple icon="pi pi-times" class="p-button-rounded p-button-danger mr-2" title="Update status" (click)="deleteAttribute(attribute,category.id)"></button>
+                                                    <button pButton pRipple icon="pi pi-check" class="p-button-rounded p-button-success" title="Update status" (click)="activeAttribute(attribute,category.id)"></button>
+                                                </div> -->
+                                            </td>
+                                        </tr>
+                                    </ng-template>
+                                    <ng-template pTemplate="emptymessage">
+                                        <tr>
+                                            <td colspan="6">There are no product for this group product.</td>
+                                        </tr>
+                                    </ng-template>
+                                </p-table>
+                            </div>
+                        </td>
+                    </tr>
+
+                </ng-template>
+
             </p-table>
         </div>
+        <p-dialog [(visible)]="productDialog" [style]="{width: '100wh',height:'100vh'}" header="New product" [modal]="true" class="p-fluid">
+            <ng-template pTemplate="content">
 
-        <p-dialog [(visible)]="deleteUserDialog" header="Confirm" [modal]="true" [style]="{width:'450px'}">
+
+
+                <div class="field">
+                    <label for="">Size</label>
+                    <p-dropdown [options]="sizes" [(ngModel)]="sizeSelected" [required]="true" placeholder="Select size" optionLabel="name" [ngClass]="{'ng-invalid ng-dirty' : submitted && !sizeSelected}" [showClear]="true"></p-dropdown>
+                    <small class="p-error block" *ngIf="submitted &&!sizeSelected">Size is required.</small>
+                </div>
+                <div class="formgrid grid">
+                    <div class="field col">
+                        <label for="quantity">Quantity</label>
+                        <p-inputNumber id="quantity" [(ngModel)]="product.quantity" [required]="true" [ngClass]="{'ng-invalid ng-dirty' : submitted && !product.quantity}"></p-inputNumber>
+                        <small class="p-error block" *ngIf="submitted &&!product.quantity">Quantity is required.</small>
+                    </div>
+                    <div class="field">
+                        <label for="inventoryStatus"> Status</label>
+                        <p-dropdown [(ngModel)]="product.status" inputId="inventoryStatus" [options]="statusesProduct" placeholder="Select">
+                            <ng-template let-option pTemplate="item">
+                                <span [class]="'product-badge status-' + option.value">{{option.label}}</span>
+                            </ng-template>
+                        </p-dropdown>
+                    </div>
+                    <!-- <div class="field col">
+                        <label for="price">Price</label>
+                        <p-inputNumber id="price" [(ngModel)]="product.price" [required]="true" [ngClass]="{'ng-invalid ng-dirty' : submitted && !product.price}"></p-inputNumber>
+                        <small class="p-error block" *ngIf="submitted &&!product.price">Price is required.</small>
+                    </div> -->
+                </div>
+
+
+
+            </ng-template>
+
+            <ng-template pTemplate="footer">
+                <button pButton pRipple label="Cancel" icon="pi pi-times" class="p-button-text" (click)="hideDialog()"></button>
+                <button pButton pRipple label="Save" icon="pi pi-check" class="p-button-text" [loading]="isLoading" (click)="saveProduct()"></button>
+            </ng-template>
+        </p-dialog>
+        <!-- <p-dialog [(visible)]="deleteUserDialog" header="Confirm" [modal]="true" [style]="{width:'450px'}">
             <div class="flex align-items-center justify-content-center">
                 <i class="pi pi-exclamation-triangle mr-3" style="font-size: 2rem"></i>
-                <!-- <span *ngIf="user">Are you sure you want to delete <b>{{user.username}}</b>?</span> -->
+                <span *ngIf="user">Are you sure you want to delete <b>{{user.username}}</b>?</span>
             </div>
             <ng-template pTemplate="footer">
                 <button pButton pRipple icon="pi pi-times" class="p-button-text" label="No" (click)="deleteUserDialog = false"></button>
@@ -90,14 +216,61 @@
                 <button pButton pRipple icon="pi pi-times" class="p-button-text" label="No" (click)="deleteUsersDialog = false"></button>
                 <button pButton pRipple icon="pi pi-check" class="p-button-text" label="Yes" (click)="confirmDeleteSelected()"></button>
             </ng-template>
-        </p-dialog>
+        </p-dialog> -->
 
-        <p-dialog [(visible)]="groupProductDialog" [style]="{width: '500px'}" header="Detail group product" [modal]="true" class="p-fluid">
+        <p-dialog [(visible)]="groupProductDialog" header="New group product" [modal]="true" class="p-fluid">
             <ng-template pTemplate="content">
                 <div class="field">
                     <label for="name">Name<span class="red">*</span></label>
                     <input type="text" pInputText id="name" [(ngModel)]="groupProduct.name" required autofocus [ngClass]="{'ng-invalid ng-dirty' : submitted && !groupProduct.name}" />
                     <small class="ng-dirty ng-invalid red" *ngIf="submitted && !groupProduct.name">Group produt is required.</small>
+                </div>
+                <div class="field">
+                    <label for="category">Category</label>
+                    <p-dropdown [(ngModel)]="groupProduct.categoryId" inputId="category" [options]="categoriesDropdown" placeholder="Select category" [ngClass]="{'ng-invalid ng-dirty' : submitted && !groupProduct.categoryId}">
+                        <ng-template let-option pTemplate="item">
+                            <span>{{option.label}}</span>
+                        </ng-template>
+                    </p-dropdown>
+                    <small class="p-error block" *ngIf="submitted &&!groupProduct.categoryId">Category is required.</small>
+                </div>
+                <div class="formgrid grid">
+                    <div class="field col">
+                        <label for="quantity">Discount</label>
+                        <p-inputNumber id="quantity" [(ngModel)]="groupProduct.discount"></p-inputNumber>
+                    </div>
+                    <div class="field col">
+                        <label for="price">Price</label>
+                        <p-inputNumber id="price" [(ngModel)]="groupProduct.price"></p-inputNumber>
+                    </div>
+                </div>
+
+                <div class="formgrid grid inline-flex" *ngIf="groupProduct.id">
+                    <div class="field col" *ngFor="let img of images">
+                        <div class="image-edit">
+                            <div class="tag-img">
+                                <p-image src="http://localhost:3000/FileUpload/files/{{img.link}}" alt="Image" width="250" [preview]="true"></p-image>
+                                <i class="pi pi-times-circle" (click)="removeImage(img)"></i>
+                            </div>
+
+
+
+                            <!-- <img src="http://localhost:3000/FileUpload/files/{{img.link}}" alt=""> -->
+                        </div>
+                    </div>
+                </div>
+                <div class="field" *ngIf="groupProduct.id">
+                    <p-fileUpload name="file" url="" [customUpload]="true" (uploadHandler)="onUpload($event)" [multiple]="true" accept="image/*" [maxFileSize]=1000000>
+                        <ng-template pTemplate="content">
+                            <ul *ngIf="uploadedFiles.length">
+                                <li *ngFor="let file of uploadedFiles">{{file.name}} - {{file.size}} bytes</li>
+                            </ul>
+                        </ng-template>
+                    </p-fileUpload>
+                </div>
+                <div class="field">
+                    <label for="description">Description</label>
+                    <ckeditor [editor]="Editor" [config]="config" [(ngModel)]="groupProduct.description" (ready)="onReady($event)"></ckeditor>
 
                 </div>
 
@@ -106,14 +279,17 @@
             <ng-template pTemplate="footer">
                 <button pButton pRipple label="Cancel" icon="pi pi-times" class="p-button-rounded p-button-secondary" (click)="hideDialog()"></button>
 
-                <button *ngIf="!groupProduct.id;else btnSave" pButton pRipple label="Save" [loading]="isLoading" icon="pi pi-check" class="p-button-rounded" [disabled]="!groupProduct.name" (click)="saveUser()"></button>
+                <button *ngIf="!groupProduct.id;else btnSave" pButton pRipple label="Save" [loading]="isLoading" icon="pi pi-check" class="p-button-rounded" [disabled]="!groupProduct.name" (click)="saveGroupProduct()"></button>
 
                 <ng-template #btnSave>
-                    <button pButton pRipple label="Save" icon="pi pi-check" class="p-button-rounded" [loading]="isLoading" [disabled]="!groupProduct.name" (click)="saveUser()"></button>
+                    <button pButton pRipple label="Save" icon="pi pi-check" class="p-button-rounded" [loading]="isLoading" [disabled]="!groupProduct.name" (click)="saveGroupProduct()"></button>
                 </ng-template>
 
             </ng-template>
+            <p-confirmDialog></p-confirmDialog>
+
         </p-dialog>
+
 
     </div>
 </div>

@@ -5,7 +5,7 @@ import { Table } from 'primeng/table';
 import { Category } from 'src/app/model/category.model';
 import { Menu } from 'src/app/model/menu.model';
 import { CategoryService } from 'src/app/service/category.service';
-import { MenuService } from 'src/app/service/menu.service';
+// import { MenuService } from 'src/app/service/menu.service';
 
 interface expandedRows {
   [key: string]: boolean;
@@ -26,8 +26,6 @@ export class CategoryManagerComponent implements OnInit {
 
   //pagination
   public totalRecords: number = 0;
-  public currentPage: number = 0;
-  public size: number = 5;
 
   public cols: any[] = [];
   public listStatuses: SelectItem[] = [];
@@ -84,13 +82,13 @@ export class CategoryManagerComponent implements OnInit {
   }
 
   public loadCategories(currentPage: number, size: number) {
-    this.categoryService.getCategoriesInAdmin(currentPage, size).subscribe({
+    console.log('current:' + currentPage);
+    this.categoryService.getCategoriesInAdmin(currentPage, size, '').subscribe({
       next: (response: any) => {
         console.log(response);
+        console.log('current:' + response.number);
         this.categories = response?.content;
-        this.currentPage = response?.number;
         this.totalRecords = response?.totalElements;
-        this.size = response?.size;
       },
       error: (error: HttpErrorResponse) => {
         console.log('List category : ' + error.message);
