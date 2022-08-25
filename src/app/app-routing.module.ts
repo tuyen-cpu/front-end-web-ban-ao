@@ -24,6 +24,7 @@ import { CommentManagerComponent } from './components/admin/comment-manager/comm
 import { ForgotPasswordComponent } from './components/forgot-password/forgot-password.component';
 import { RoleGuardService } from './service/role-guard.service';
 import { GroupProductComponent } from './components/admin/group-product/group-product.component';
+import { HomeManagerComponent } from './components/admin/home-manager/home-manager.component';
 
 const routes: Routes = [
   {
@@ -69,8 +70,15 @@ const routes: Routes = [
     path: 'admin',
     component: MainAdminComponent,
     children: [
-      { path: '', redirectTo: 'group-product', pathMatch: 'full' },
-
+      { path: '', redirectTo: 'product', pathMatch: 'full' },
+      {
+        path: 'home',
+        component: HomeManagerComponent,
+      },
+      {
+        path: 'product',
+        component: ProductManagerComponent,
+      },
       {
         path: 'user',
         component: UserManagerComponent,
