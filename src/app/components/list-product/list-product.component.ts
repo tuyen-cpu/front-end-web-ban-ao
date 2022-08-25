@@ -1,4 +1,3 @@
-import { AttributeService } from './../../service/attribute.service';
 import { ActivatedRoute, ParamMap, Router } from '@angular/router';
 import {
   ChangeContext,
@@ -28,14 +27,11 @@ export class ListProductComponent implements OnInit {
   totalPages!: number;
   params: any = {};
   private sort = 'default';
-  brand = 'THƯƠNG HIỆU';
+
   public products: Product[] = [];
-  private f: Object[] = [];
   public view_list = false;
   isLoading: boolean = false;
-  //list attribute
-  // public attributes: AttributeProduct[] = [];
-  // brands: string[] = [];
+
   //slider
   minValue: number = 0;
   maxValue: number = 110000000;
@@ -60,16 +56,10 @@ export class ListProductComponent implements OnInit {
     public dialog: MatDialog,
     private activatedRoute: ActivatedRoute,
     private router: Router,
-    private productService: ProductService,
-    private attributeService: AttributeService
+    private productService: ProductService
   ) {}
 
   ngOnInit(): void {
-    // this.productService
-    //   .filterProduct({ category_id: ['1', '2'] })
-    //   .subscribe((data) => {
-    //     console.log(data);
-    //   });
     this.getParamsUrl();
   }
   trackById(index: number, item: any) {
@@ -96,34 +86,6 @@ export class ListProductComponent implements OnInit {
     this.changeUrl();
   }
 
-  // attributesChange(event: any) {
-  //   const value = event.target.value;
-  //   if (event.currentTarget.checked) {
-  //     this.params[this.brand]
-  //       ? (this.params[this.brand] = [...this.params[this.brand], value])
-  //       : (this.params[this.brand] = [...[], value]);
-  //   } else {
-  //     //uncheck
-
-  //     if (this.params[this.brand].length === 1) {
-  //       this.params = {};
-  //     } else {
-  //       this.params[this.brand] = this.params[this.brand].filter(
-  //         (e: any) => e !== value
-  //       );
-  //     }
-  //   }
-  //   this.page = 0;
-  //   this.params['page'] = 1;
-  //   this.changeUrl();
-  // }
-  isChecked(branch: string): boolean {
-    if (!this.params[this.brand]) {
-      return false;
-    }
-    return this.params[this.brand]?.includes(branch) || false;
-  }
-
   changeUrl() {
     this.router.navigate([], {
       relativeTo: this.activatedRoute,
@@ -134,22 +96,19 @@ export class ListProductComponent implements OnInit {
   getParamsUrl() {
     this.activatedRoute.paramMap.subscribe((paramMap: ParamMap) => {
       this.categoryId = paramMap.get('cateId')!;
-      // this.getAttributesByCategoryId();
-      this.getProducts({
-        size: this.size,
-        page: 0,
-        category_id: this.categoryId,
-      });
+      if (!this.categoryId) {
+        this.getProducts({
+          size: this.size,
+          page: 0,
+        });
+      } else {
+        this.getProductByCategoryId(+this.categoryId, {
+          size: this.size,
+          page: 0,
+        });
+      }
     });
     this.activatedRoute.queryParams.subscribe((res) => {
-      if (Object.entries(this.params).length === 0) {
-        if (typeof res[this.brand] === 'string') {
-          this.params[this.brand] = [...[], res[this.brand]];
-        }
-        if (typeof res[this.brand] === 'object') {
-          this.params[this.brand] = [...[], ...res[this.brand]];
-        }
-      }
       //default
       if (res['page'] === undefined) {
         this.page = 0;
@@ -163,44 +122,48 @@ export class ListProductComponent implements OnInit {
         this.size = res['size'];
       }
 
-      if (res['size'] === undefined) {
-        this.getProducts({
-          ...res,
-          category_id: this.categoryId,
-          size: this.size,
-          page: this.page,
-        });
-      } else {
-        this.getProducts({
-          ...res,
-          page: this.page,
-          category_id: this.categoryId,
-        });
-      }
-    });
-  }
-  // getAttributesByCategoryId() {
-  //   this.brands = [];
-  //   this.attributeService
-  //     .getAttributesByCategoryId(+this.categoryId)
-  //     .subscribe((data) => {
-  //       this.attributes = data;
-  //       this.attributes.forEach((e) => {
-  //         if (e.name === this.brand) {
-  //           this.brands = this.brands.concat(e.values);
-  //         }
-  //       });
-  //     });
-  // }
-  getProducts(para: any) {
-    this.isLoading = true;
-    this.productService.filterProduct(para).subscribe((resp: Pagination) => {
-      this.products = resp.products;
-      this.totalPages = resp.totalPages;
-      this.isLoading = false;
+      // if (res['size'] === undefined) {
+      //   if(!this.categoryId){
+      //     this.getProducts({
+      //       size: this.size,
+      //       page: this.page,
+      //     });
+      //   }else{
+      //   this.getProductByCategoryId(+this.categoryId,{size:this.size,page:this.page})
+      //   }
+
+      // } else {
+      //   this.getProducts({
+      //     ...res,
+      //     page: this.page,
+      //     category_id: this.categoryId,
+      //   });
+      // }
     });
   }
 
+  getProducts(para: any) {
+    this.isLoading = true;
+    this.productService
+      .getGroupProduct(para.page, para.size)
+      .subscribe((resp) => {
+        console.log(resp.data);
+        this.products = resp.data.content;
+        this.totalPages = resp.data.totalPages;
+        this.isLoading = false;
+      });
+  }
+  getProductByCategoryId(id: number, para: any) {
+    this.isLoading = true;
+    this.productService
+      .getGroupProductByCategoryId(id, para.page, para.size)
+      .subscribe((resp) => {
+        console.log(resp.data);
+        this.products = resp.data.content;
+        this.totalPages = resp.data.totalPages;
+        this.isLoading = false;
+      });
+  }
   openDialogProduct(product: Product): void {
     const dialogRef = this.dialog.open(ProductPopupComponent, {
       width: '970px',

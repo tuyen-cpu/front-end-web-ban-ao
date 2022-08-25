@@ -1,14 +1,14 @@
 <app-breadcrumb [name]="'Kết quả tìm kiếm cho từ khóa '+'&#8220;'+keySearch+'&#8221;'"></app-breadcrumb>
 <section class="products-view products-view-grid" fxLayoutAlign="center center">
     <div fxLayout="row wrap" fxFlex="87" fxFlex.sm="98" fxFlex.xs="97">
-        <div class="item-list" fxFlex="20" fxFlex.sm="33" fxFlex.xs="50" *ngFor="let product of products">
+        <div class="item-list" fxFlex="20" fxFlex.sm="33" fxFlex.xs="50" *ngFor="let product of groupProducts">
 
             <app-item-product [productItem]="product" [textHere]="'ha'"></app-item-product>
 
         </div>
     </div>
 </section>
-<div *ngIf="products.length==0" class="text-center">Không có sản phẩm nào</div>
-<div *ngIf="products.length!=0" class="pagination">
+<div *ngIf="groupProducts.length==0" class="text-center">Không có sản phẩm nào</div>
+<div *ngIf="groupProducts.length!=0" class="pagination">
     <p-paginator [rows]="1" [totalRecords]="totalPages" [first]="currentPage" (onPageChange)="onPageChange($event)"></p-paginator>
 </div>

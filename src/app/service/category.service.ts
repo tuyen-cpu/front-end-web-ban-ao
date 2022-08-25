@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { AppSettings } from '../shared/app-settings';
 import { Category } from '../model/category.model';
+import { ResponseObject } from '../model/response-object.model';
 
 @Injectable({
   providedIn: 'root',
@@ -27,7 +28,9 @@ export class CategoryService {
       { headers: new HttpHeaders({ 'Content-Type': 'application/json' }) }
     );
   }
-
+  getAll(): Observable<ResponseObject> {
+    return this.http.get<ResponseObject>(this.REST_API + '/all');
+  }
   updateCancelledStatus(id: number[]): Observable<boolean> {
     return this.http.get<boolean>(this.REST_API + '/editStatus?id=' + id, {
       headers: new HttpHeaders({ 'Content-Type': 'application/json' }),

@@ -46,7 +46,7 @@ export class ProductManagerComponent implements OnInit, OnDestroy {
   images: Image[] = [];
   cols!: any[];
   @ViewChild('dt') dt!: Table;
-  private imageSub: Subscription = new Subscription();
+
   productDialog!: boolean;
   productDialogEdit!: boolean;
   uploadedFiles: any[] = [];
@@ -128,6 +128,7 @@ export class ProductManagerComponent implements OnInit, OnDestroy {
     for (let file of event.files) {
       fd.append('file', file);
     }
+
     this.productService
       .uploadFileImage(fd)
       .pipe(
@@ -187,7 +188,7 @@ export class ProductManagerComponent implements OnInit, OnDestroy {
         this.categoriesDropdown = this.convertToLabelAndValue(this.categories);
       },
     });
-    this.productService.getGroupProduct().subscribe({
+    this.productService.getGroupProduct(0, 5).subscribe({
       next: (res: any) => {
         this.groupProducts = res;
         this.groupProductsDropdown = this.convertToLabelAndValue(
@@ -222,7 +223,6 @@ export class ProductManagerComponent implements OnInit, OnDestroy {
   }
   hideDialogEdit() {
     this.productDialogEdit = false;
-    this.imageSub.unsubscribe();
     this.uploadedFiles = [];
   }
   saveProduct() {
@@ -237,8 +237,6 @@ export class ProductManagerComponent implements OnInit, OnDestroy {
       !this.product.quantity
     ) {
       this.isLoading = false;
-      console.log();
-      console.log('what');
       return;
     }
     if (this.product.price > 500000000) {
@@ -248,7 +246,6 @@ export class ProductManagerComponent implements OnInit, OnDestroy {
         summary: 'Wanning',
         detail: 'Please enter valid price!',
       });
-      console.log('what');
       return;
     }
     if (this.product.quantity > 10000) {
@@ -258,24 +255,23 @@ export class ProductManagerComponent implements OnInit, OnDestroy {
         summary: 'Wanning',
         detail: 'Please enter valid quantity!',
       });
-      console.log('what');
       return;
     }
-    if (this.product.discount > 1000) {
-      this.isLoading = false;
-      this.messageService.add({
-        severity: 'error',
-        summary: 'Wanning',
-        detail: 'Please enter valid discount!',
-      });
-      console.log('what');
-      return;
-    }
+    // if (this.product.discount > 1000) {
+    //   this.isLoading = false;
+    //   this.messageService.add({
+    //     severity: 'error',
+    //     summary: 'Wanning',
+    //     detail: 'Please enter valid discount!',
+    //   });
+    //   console.log('what');
+    //   return;
+    // }
     this.product = {
       ...this.product,
       sizeId: this.sizeSelected.id,
       name: this.groupProductSelected.name,
-      categoryId: this.categorySelected.id,
+      // categoryId: this.categorySelected.id,
       groupProductId: this.groupProductSelected.id,
     };
     console.log(this.product);
@@ -301,7 +297,6 @@ export class ProductManagerComponent implements OnInit, OnDestroy {
     });
 
     this.data = '<p>Enter description here!</p>';
-    this.imageSub.unsubscribe();
   }
   removeImage(img: Image) {
     this.confirmationService.confirm({
@@ -326,7 +321,6 @@ export class ProductManagerComponent implements OnInit, OnDestroy {
     this.editSubmitted = true;
     if (
       !this.productEdit.name ||
-      !this.productEdit.categoryId ||
       !this.productEdit.sizeId ||
       !this.productEdit.groupProductId ||
       this.productEdit.price == 0 ||
@@ -353,15 +347,15 @@ export class ProductManagerComponent implements OnInit, OnDestroy {
       });
       return;
     }
-    if (this.productEdit.discount > 1000) {
-      this.isLoading = false;
-      this.messageService.add({
-        severity: 'error',
-        summary: 'Wanning',
-        detail: 'Please enter valid discount!',
-      });
-      return;
-    }
+    // if (this.productEdit.discount > 1000) {
+    //   this.isLoading = false;
+    //   this.messageService.add({
+    //     severity: 'error',
+    //     summary: 'Wanning',
+    //     detail: 'Please enter valid discount!',
+    //   });
+    //   return;
+    // }
 
     this.productService.updateProduct(this.productEdit).subscribe({
       next: (res) => {
@@ -382,19 +376,18 @@ export class ProductManagerComponent implements OnInit, OnDestroy {
   openEditProduct(product: ProductAdd) {
     console.log(product);
     this.editSubmitted = false;
-    this.productService.resetImages();
+    // this.productService.resetImages();
 
     this.productService.getLongDescriptionById(product.id).subscribe((res) => {
       this.productEdit = {
         ...product,
-        longDescription: res,
+        // longDescription: res,
       };
     });
 
-    this.productService.getImagesProduct(product.id).subscribe((res) => {});
-    this.imageSub = this.productService.imageChanged.subscribe((res) => {
-      this.images = res;
-    });
+    // this.imageSub = this.productService.imageChanged.subscribe((res) => {
+    //   this.images = res;
+    // });
     this.productDialogEdit = true;
   }
 

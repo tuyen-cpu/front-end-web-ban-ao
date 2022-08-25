@@ -1,7 +1,7 @@
 <div class="product-item">
     <a routerLink="/product/{{productItem.id}}" class="wrapper-img">
-        <p-skeleton class="img" *ngIf="!productItem.urlImg" width="100%" height="190px"></p-skeleton>
-        <img *ngIf="productItem.urlImg" class="img" [src]="'http://localhost:3000/FileUpload/files/'+productItem.urlImg" alt="Photo of a Shiba Inu">
+        <p-skeleton class="img" *ngIf="!productItem.urlImage" width="100%" height="190px"></p-skeleton>
+        <img *ngIf="productItem.urlImage" class="img" [src]="'http://localhost:3000/FileUpload/files/'+productItem.urlImage" alt="Photo of a Shiba Inu">
     </a>
     <div class="action">
         <button mat-flat-button color="primary" class="btn add-cart" (click)="addToCart(productItem.id)">
@@ -16,7 +16,9 @@
         <a class="name" href="">
           {{productItem.name}} </a>
     </mat-card-content>
-    <div class="discount-tag"><span class="value">{{productItem.discount}}%</span></div>
+    <div class="discount-tag">
+        <!-- <span class="value">{{productItem.discount}}%</span> -->
+    </div>
     <div class="price-box">
         <span class="new-price">{{productItem.price|currency:'VND'}}</span>
         <span class="old-price"> 61.990.000₫</span>

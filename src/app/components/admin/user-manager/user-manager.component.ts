@@ -8,7 +8,7 @@ import { UserService } from 'src/app/service/user.service';
 @Component({
   selector: 'app-user-manager',
   templateUrl: './user-manager.component.html',
-  styleUrls: ['./user-manager.component.scss']
+  styleUrls: ['./user-manager.component.scss'],
 })
 export class UserManagerComponent implements OnInit {
   @ViewChild('dt') dt!: Table;
@@ -37,21 +37,19 @@ export class UserManagerComponent implements OnInit {
   existEmail: boolean = false;
   invalidPwd: boolean = false;
 
-  constructor(
-    private userService: UserService,
-  ) { }
+  constructor(private userService: UserService) {}
 
   ngOnInit(): void {
     //this.users.push(this.user0); this.users.push(this.user1);
-    this.loadUsers(0, 5);
+    this.loadUsers(0, this.size);
     this.listRoles = [
       { label: 'Admin', value: 'admin' },
-      { label: 'Client', value: 'client' }
+      { label: 'Client', value: 'client' },
     ];
     this.listStatuses = [
       { label: 'Hoạt động', value: '1' },
-      { label: 'Đã dừng', value: '0' }
-    ]
+      { label: 'Đã dừng', value: '0' },
+    ];
     this.cols = [
       { field: 'id', header: 'Id' },
       { field: 'username', header: 'Username' },
@@ -60,13 +58,13 @@ export class UserManagerComponent implements OnInit {
       { field: 'role', header: 'role' },
       { field: 'numBills', header: 'numBills' },
       { field: 'numComments', header: 'numComments' },
-      { field: 'numAddresses', header: 'numAddresses' }
+      { field: 'numAddresses', header: 'numAddresses' },
     ];
 
     this.genders = [
       { label: 'Male', value: 1 },
       { label: 'Female', value: 0 },
-      { label: 'Other', value: 2 }
+      { label: 'Other', value: 2 },
     ];
   }
 
@@ -89,17 +87,19 @@ export class UserManagerComponent implements OnInit {
     this.user = {};
     this.user = user;
     //console.log(user);
-    if(this.user.birthday!=null){
+    if (this.user.birthday != null) {
       this.user.birthday = this.creatDate(this.user.birthday);
     }
-    Object.values(this.user.roles).forEach(item => {
+    Object.values(this.user.roles).forEach((item) => {
       if (item == 'client' && !this.selectedRoles.includes(this.listRoles[0])) {
         this.selectedRoles.push(this.listRoles[1]);
-      } else
-        if (item == 'admin' && !this.selectedRoles.includes(this.listRoles[1])) {
-          this.selectedRoles.push(this.listRoles[0]);
-        }
-    })
+      } else if (
+        item == 'admin' &&
+        !this.selectedRoles.includes(this.listRoles[1])
+      ) {
+        this.selectedRoles.push(this.listRoles[0]);
+      }
+    });
     this.user.status = this.user.status + '';
     this.userDialog = true;
   }
@@ -119,15 +119,20 @@ export class UserManagerComponent implements OnInit {
 
   confirmDelete() {
     this.deleteUserDialog = false;
-    const status = document.getElementById("status-user-" + this.user.id);
+    const status = document.getElementById('status-user-' + this.user.id);
     //this.users = this.users.filter(val => val.id !== this.user.id);
-    const foundIndex = this.users.findIndex(element => element.id == this.user.id);
+    const foundIndex = this.users.findIndex(
+      (element) => element.id == this.user.id
+    );
     this.users[foundIndex].status = 0;
-    this.userService.updateDeletedStatus(this.user.id).subscribe((response: boolean) => {
-      if (response) {
-        if (status) status.innerHTML = '<span style="color: orangered;">Đã dừng</span>';
-      }
-    })
+    this.userService
+      .updateDeletedStatus(this.user.id)
+      .subscribe((response: boolean) => {
+        if (response) {
+          if (status)
+            status.innerHTML = '<span style="color: orangered;">Đã dừng</span>';
+        }
+      });
     this.user = {};
   }
 
@@ -136,21 +141,24 @@ export class UserManagerComponent implements OnInit {
     //this.products = this.products.filter(val => !this.selectedProducts.includes(val));
     const ids: number[] = [];
 
-    Object.values(this.selectedUsers).forEach(val => {
+    Object.values(this.selectedUsers).forEach((val) => {
       if (val.status == 1) {
-        ids.push(val.id)
+        ids.push(val.id);
       }
     });
     this.userService.updateDeletedStatus(ids).subscribe((response: boolean) => {
       if (response) {
-        ids.forEach(val => {
-          const foundIndex = this.users.findIndex(element => element.id == val);
+        ids.forEach((val) => {
+          const foundIndex = this.users.findIndex(
+            (element) => element.id == val
+          );
           this.users[foundIndex].status = 0;
-          const status = document.getElementById("status-user-" + val);
-          if (status) status.innerHTML = '<span style="color: orangered;">Đã dừng</span>';
+          const status = document.getElementById('status-user-' + val);
+          if (status)
+            status.innerHTML = '<span style="color: orangered;">Đã dừng</span>';
         });
       }
-    })
+    });
     this.selectedUsers = [];
   }
 
@@ -166,23 +174,23 @@ export class UserManagerComponent implements OnInit {
       this.user.status = 1;
     }
 
-    Object.values(this.selectedRoles).forEach(item => {
+    Object.values(this.selectedRoles).forEach((item) => {
       this.user.roles.push(item.value);
-    })
+    });
 
     if (this.user.roles.length == 0) {
-      this.user.roles.push("client");
+      this.user.roles.push('client');
     }
     if (this.user.id) {
-      this.users = this.users.filter(val => val.id !== this.user.id);
+      this.users = this.users.filter((val) => val.id !== this.user.id);
     }
     this.userService.newUser(this.user).subscribe((response: User) => {
       //console.log(response.birthday + "....")
       response.numAddresses = 0;
       response.numBills = 0;
       response.numComments = 0;
-      this.users.unshift(response)
-    })
+      this.users.unshift(response);
+    });
     this.userDialog = false;
     this.user = {};
   }
@@ -200,7 +208,8 @@ export class UserManagerComponent implements OnInit {
       },
       (error: HttpErrorResponse) => {
         console.log(error.message);
-      });
+      }
+    );
   }
 
   public checkEmail(email: string) {
@@ -216,7 +225,8 @@ export class UserManagerComponent implements OnInit {
       },
       (error: HttpErrorResponse) => {
         console.log(error.message);
-      });
+      }
+    );
   }
 
   public checkPwd(pwd: string) {
@@ -236,13 +246,12 @@ export class UserManagerComponent implements OnInit {
         this.size = response?.size;
       },
       error: (error: HttpErrorResponse) => {
-        console.log("List user : " + error.message);
-      }
+        console.log('List user : ' + error.message);
+      },
     });
   }
 
   public onPageChange(event: any) {
-    this.loadUsers(event.page, event.rows)
+    this.loadUsers(event.page, event.rows);
   }
-
 }

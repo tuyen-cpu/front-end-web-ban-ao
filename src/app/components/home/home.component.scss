@@ -1,6 +1,6 @@
 .banner-slide {
-    margin-top: 20px;
-    margin-bottom: 60px;
+    margin-top: -1px;
+    margin-bottom: 40px;
     .main-banner,
     .sub-banner {
         padding: 0 5px;
@@ -24,14 +24,12 @@
     .banner-sub {
         &:hover {
             img {
-                opacity: .6;
-                -webkit-transform: scale3d(1.05, 1.05, 1);
-                transform: scale3d(1.05, 1.05, 1);
+                filter: brightness(90%);
             }
         }
     }
     img {
         width: 100%;
-        transition: opacity .35s, transform .35s;
+        transition: filter .5s, transform .35s;
     }
 }

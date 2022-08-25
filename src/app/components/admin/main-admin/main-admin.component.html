@@ -2,7 +2,7 @@
     <app-header-admin (newItemEvent)="showSidebar($event)"></app-header-admin>
     <div class="sidebar">
         <a [routerLink]="['group-product']" [routerLinkActiveOptions]="{ exact: true }" routerLinkActive="active" class="p-link sidebar-item"><i class="pi pi-calendar"></i><span>Group product</span></a>
-        <a [routerLink]="['product']" [routerLinkActiveOptions]="{ exact: true }" routerLinkActive="active" class="p-link sidebar-item"><i class="pi pi-calendar"></i><span>Product</span></a>
+
         <a [routerLink]="['user']" [routerLinkActiveOptions]="{ exact: true }" routerLinkActive="active" class="p-link sidebar-item"><i class="pi pi-users"></i><span>User</span></a>
         <a [routerLink]="['bill']" [routerLinkActiveOptions]="{ exact: true }" routerLinkActive="active" class="p-link sidebar-item"><i class="pi pi-money-bill"></i><span>Bill</span></a>
         <a [routerLink]="['voucher']" [routerLinkActiveOptions]="{ exact: true }" routerLinkActive="active" class="p-link sidebar-item"><i class="pi pi-ticket"></i><span>Voucher</span></a>

@@ -69,11 +69,8 @@ const routes: Routes = [
     path: 'admin',
     component: MainAdminComponent,
     children: [
-      { path: '', redirectTo: 'product', pathMatch: 'full' },
-      {
-        path: 'product',
-        component: ProductManagerComponent,
-      },
+      { path: '', redirectTo: 'group-product', pathMatch: 'full' },
+
       {
         path: 'user',
         component: UserManagerComponent,

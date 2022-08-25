@@ -139,7 +139,7 @@
                     </div>
                     <div class="field col">
                         <label for="quantity">Discount</label>
-                        <p-inputNumber id="quantity" [(ngModel)]="product.discount"></p-inputNumber>
+                        <!-- <p-inputNumber id="quantity" [(ngModel)]="product.discount"></p-inputNumber> -->
                     </div>
                 </div>
                 <div class="field">
@@ -152,8 +152,9 @@
                 </div>
                 <div class="field">
                     <label for="description">Description</label>
-                    <!-- <textarea id="description" pInputTextarea [(ngModel)]="product.desc" required rows="3" cols="20"></textarea> -->
-                    <ckeditor [editor]="Editor" [config]="config" [(ngModel)]="product.longDescription" (ready)="onReady($event)"></ckeditor>
+
+                    <!-- <ckeditor [editor]="Editor" [config]="config" [(ngModel)]="product.longDescription" (ready)="onReady($event)"></ckeditor> -->
+
                 </div>
 
             </ng-template>
@@ -181,7 +182,7 @@
                     </p-dropdown>
                     <small class="p-error block" *ngIf="submitted &&!productEdit.groupProductId">Name is required.</small>
                 </div>
-                <div class="field">
+                <!-- <div class="field">
                     <label for="category">Category</label>
                     <p-dropdown [(ngModel)]="productEdit.categoryId" inputId="category" [options]="categoriesDropdown" placeholder="Select category" [ngClass]="{'ng-invalid ng-dirty' : submitted && !productEdit.categoryId}">
                         <ng-template let-option pTemplate="item">
@@ -189,7 +190,7 @@
                         </ng-template>
                     </p-dropdown>
                     <small class="p-error block" *ngIf="submitted &&!productEdit.categoryId">Category is required.</small>
-                </div>
+                </div> -->
                 <div class="field">
                     <label for="size">Size</label>
                     <p-dropdown [(ngModel)]="productEdit.sizeId" inputId="size" [options]="sizesDropdown" placeholder="Select size" [ngClass]="{'ng-invalid ng-dirty' : submitted && !productEdit.sizeId}">
@@ -214,7 +215,7 @@
                     </div>
                     <div class="field col">
                         <label for="quantity">Discount</label>
-                        <p-inputNumber id="quantity" [(ngModel)]="productEdit.discount"></p-inputNumber>
+                        <!-- <p-inputNumber id="quantity" [(ngModel)]="productEdit.discount"></p-inputNumber> -->
                     </div>
                 </div>
                 <div class="field">
@@ -250,8 +251,7 @@
                 </div>
                 <div class="field">
                     <label for="description">Description</label>
-                    <!-- <textarea id="description" pInputTextarea [(ngModel)]="product.desc" required rows="3" cols="20"></textarea> -->
-                    <ckeditor [editor]="Editor" [config]="config" [(ngModel)]="productEdit.longDescription" (ready)="onReady($event)"></ckeditor>
+                    <!-- <ckeditor [editor]="Editor" [config]="config" [(ngModel)]="productEdit.longDescription" (ready)="onReady($event)"></ckeditor> -->
                 </div>
 
             </ng-template>
