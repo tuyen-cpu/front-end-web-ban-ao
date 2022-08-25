@@ -1,3 +1,4 @@
+import { GroupProduct } from './../../model/group-product.model';
 import { Component, Input, OnInit } from '@angular/core';
 import {
   MatDialog,
@@ -15,7 +16,7 @@ import { ProductPopupComponent } from '../product-popup/product-popup.component'
   styleUrls: ['./item-product.component.scss'],
 })
 export class ItemProductComponent implements OnInit {
-  @Input() productItem!: Product;
+  @Input() productItem!: GroupProduct;
   name!: string;
 
   @Input() textHere: string = '';
@@ -32,16 +33,15 @@ export class ItemProductComponent implements OnInit {
   }
 
   public addToCart(Id: any) {
-    let item: CartItem = {
-      id: Id,
-      name: this.productItem.name,
-      img: this.productItem.urlImg,
-      price: 0,
-      // this.productItem.price -
-      // (this.productItem.price * this.productItem.discount) / 100,
-      quantity: 1,
-    };
-
-    this.cartService.addToCart(item);
+    // let item: CartItem = {
+    //   id: Id,
+    //   name: this.productItem.name,
+    //   img: this.productItem.urlImage,
+    //   price: 0,
+    //   this.productItem.price -
+    //   (this.productItem.price * this.productItem.discount) / 100,
+    //   quantity: 1,
+    // };
+    // this.cartService.addToCart(item);
   }
 }

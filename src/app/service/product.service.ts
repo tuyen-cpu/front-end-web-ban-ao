@@ -1,5 +1,5 @@
 import { Image } from './../model/image.model';
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, BehaviorSubject, tap } from 'rxjs';
 import { DetailProduct } from '../model/detail-product.model';
@@ -24,6 +24,21 @@ export class ProductService {
   ): Observable<Pagination> {
     return this.http.get<Pagination>(
       `${this.apiServerUrl}/product/all?q=${q}&page=${page}&size=${size}`
+    );
+  }
+  searchGroupProduct(
+    q: string,
+    page: number,
+    size: number
+  ): Observable<ResponseObject> {
+    return this.http.get<ResponseObject>(
+      this.apiServerUrl +
+        '/group-product/search?q=' +
+        q +
+        '&page=' +
+        page +
+        '&size=' +
+        size
     );
   }
   public getProductsManager(
@@ -160,12 +175,22 @@ export class ProductService {
       `${this.apiServerUrl}/group-product/all?page=${page}&size=${size}`
     );
   }
+  public getGroupProductByCategoryId(
+    id: number,
+    page: number,
+    size: number
+  ): Observable<ResponseObject> {
+    return this.http.get<ResponseObject>(
+      `${this.apiServerUrl}/group-product/all/category/${id}?page=${page}&size=${size}`
+    );
+  }
   public addGroupProduct(
     groupProduct: GroupProduct
   ): Observable<ResponseObject> {
     return this.http.post<ResponseObject>(
       `${this.apiServerUrl}/group-product/add`,
-      groupProduct
+      groupProduct,
+      { headers: new HttpHeaders({ 'Content-Type': 'application/json' }) }
     );
   }
 

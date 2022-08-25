@@ -5,7 +5,7 @@ import { Table } from 'primeng/table';
 import { Category } from 'src/app/model/category.model';
 import { Menu } from 'src/app/model/menu.model';
 import { CategoryService } from 'src/app/service/category.service';
-import { MenuService } from 'src/app/service/menu.service';
+// import { MenuService } from 'src/app/service/menu.service';
 
 interface expandedRows {
   [key: string]: boolean;

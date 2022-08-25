@@ -48,6 +48,9 @@
                         <th pSortableColumn="discount">Discount
                             <p-sortIcon field="discount"></p-sortIcon>
                         </th>
+                        <th pSortableColumn="price">Price
+                            <p-sortIcon field="price"></p-sortIcon>
+                        </th>
                         <th pSortableColumn="status">Status
                             <p-sortIcon field="status"></p-sortIcon>
                         </th>
@@ -75,6 +78,9 @@
                         </td>
                         <td style="width:15%;">
                             <span class="p-column-title">Discount</span> {{groupProduct.discount}}
+                        </td>
+                        <td style="width:15%;">
+                            <span class="p-column-title">Price</span> {{groupProduct.price|currency:'VND'}}
                         </td>
                         <td style="width:14%; min-width:10rem;">
                             <span class="p-column-title">Status</span>
@@ -111,8 +117,9 @@
                                             <th class="border-tb" pSortableColumn="quantity">Quantity
                                                 <p-sortIcon field="quantity"></p-sortIcon>
                                             </th>
-                                            <th class="border-tb" pSortableColumn="price">Price
-                                                <p-sortIcon field="price"></p-sortIcon>
+
+                                            <th class="border-tb" pSortableColumn="size">Size
+                                                <p-sortIcon field="size"></p-sortIcon>
                                             </th>
                                             <th class="border-tb" pSortableColumn="status">Status
                                                 <p-sortIcon field="status"></p-sortIcon>
@@ -124,7 +131,7 @@
                                         <tr>
                                             <td>{{product.id}}</td>
                                             <td>{{product.quantity}}</td>
-                                            <td>{{product.price}}</td>
+                                            <td>{{convertSizeIdToName(product.sizeId)}}</td>
                                             <td> <span [class]="'product-badge status-' + product.status">{{product.status===0?"INACTIVE":"ACTIVE"}}</span></td>
                                             <td>
                                                 <!-- <div class="flex">
@@ -149,7 +156,7 @@
 
             </p-table>
         </div>
-        <p-dialog [(visible)]="productDialog" [style]="{width: '100wh',height:'100vh'}" header="Product Details" [modal]="true" class="p-fluid">
+        <p-dialog [(visible)]="productDialog" [style]="{width: '100wh',height:'100vh'}" header="New product" [modal]="true" class="p-fluid">
             <ng-template pTemplate="content">
 
 
@@ -161,25 +168,25 @@
                 </div>
                 <div class="formgrid grid">
                     <div class="field col">
-                        <label for="price">Price</label>
-                        <p-inputNumber id="price" [(ngModel)]="product.price" [required]="true" [ngClass]="{'ng-invalid ng-dirty' : submitted && !product.price}"></p-inputNumber>
-                        <small class="p-error block" *ngIf="submitted &&!product.price">Price is required.</small>
-                    </div>
-                    <div class="field col">
                         <label for="quantity">Quantity</label>
                         <p-inputNumber id="quantity" [(ngModel)]="product.quantity" [required]="true" [ngClass]="{'ng-invalid ng-dirty' : submitted && !product.quantity}"></p-inputNumber>
                         <small class="p-error block" *ngIf="submitted &&!product.quantity">Quantity is required.</small>
                     </div>
+                    <div class="field">
+                        <label for="inventoryStatus"> Status</label>
+                        <p-dropdown [(ngModel)]="product.status" inputId="inventoryStatus" [options]="statusesProduct" placeholder="Select">
+                            <ng-template let-option pTemplate="item">
+                                <span [class]="'product-badge status-' + option.value">{{option.label}}</span>
+                            </ng-template>
+                        </p-dropdown>
+                    </div>
+                    <!-- <div class="field col">
+                        <label for="price">Price</label>
+                        <p-inputNumber id="price" [(ngModel)]="product.price" [required]="true" [ngClass]="{'ng-invalid ng-dirty' : submitted && !product.price}"></p-inputNumber>
+                        <small class="p-error block" *ngIf="submitted &&!product.price">Price is required.</small>
+                    </div> -->
+                </div>
 
-                </div>
-                <div class="field">
-                    <label for="inventoryStatus"> Status</label>
-                    <p-dropdown [(ngModel)]="product.status" inputId="inventoryStatus" [options]="statusesProduct" placeholder="Select">
-                        <ng-template let-option pTemplate="item">
-                            <span [class]="'product-badge status-' + option.value">{{option.label}}</span>
-                        </ng-template>
-                    </p-dropdown>
-                </div>
 
 
             </ng-template>
@@ -211,7 +218,7 @@
             </ng-template>
         </p-dialog> -->
 
-        <p-dialog [(visible)]="groupProductDialog" header="Detail group product" [modal]="true" class="p-fluid">
+        <p-dialog [(visible)]="groupProductDialog" header="New group product" [modal]="true" class="p-fluid">
             <ng-template pTemplate="content">
                 <div class="field">
                     <label for="name">Name<span class="red">*</span></label>
@@ -227,10 +234,17 @@
                     </p-dropdown>
                     <small class="p-error block" *ngIf="submitted &&!groupProduct.categoryId">Category is required.</small>
                 </div>
-                <div class="field">
-                    <label for="quantity">Discount</label>
-                    <p-inputNumber id="quantity" [(ngModel)]="groupProduct.discount"></p-inputNumber>
+                <div class="formgrid grid">
+                    <div class="field col">
+                        <label for="quantity">Discount</label>
+                        <p-inputNumber id="quantity" [(ngModel)]="groupProduct.discount"></p-inputNumber>
+                    </div>
+                    <div class="field col">
+                        <label for="price">Price</label>
+                        <p-inputNumber id="price" [(ngModel)]="groupProduct.price"></p-inputNumber>
+                    </div>
                 </div>
+
                 <div class="formgrid grid inline-flex" *ngIf="groupProduct.id">
                     <div class="field col" *ngFor="let img of images">
                         <div class="image-edit">

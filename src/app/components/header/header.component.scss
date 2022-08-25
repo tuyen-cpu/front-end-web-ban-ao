@@ -1,5 +1,4 @@
-$green-bg: #008744;
-$white-font: white;
+$white-font: #000;
 $yellow-btn: #ffba00;
 .highlighted-text {
     background-color: yellow;
@@ -86,10 +85,9 @@ img {
 }
 
 .topbar {
-    border-bottom: 1px solid;
-    border-color: rgba(255, 255, 255, .2);
+    border-bottom: 1px solid #393a44;
     line-height: 36px;
-    background: $green-bg;
+    background: var(--main-color);
     font-size: 13px;
     color: $white-font;
     ul {
@@ -178,10 +176,51 @@ img {
     }
 }
 
+.menu-cate {
+    cursor: pointer;
+    &:hover {
+        .submenu-cate {
+            margin-top: 0;
+            pointer-events: all;
+            opacity: 1;
+        }
+    }
+    .submenu-cate {
+        list-style: none;
+        position: absolute;
+        min-width: 220px;
+        transition: all 0.2s ease-in-out;
+        z-index: 99;
+        margin-top: 10px;
+        pointer-events: none;
+        opacity: 0;
+        padding-top: 5px;
+        .itemsub {
+            &:hover {
+                a {
+                    background: #202020
+                }
+            }
+        }
+        a {
+            font-weight: bold;
+            background: rgba(32, 32, 32, 0.651);
+            display: block;
+            text-transform: uppercase;
+            color: #ffffff;
+            font-size: 13px;
+            padding: 10px 15px;
+            border-bottom: solid 1px rgba(255, 255, 255, 0.3);
+        }
+    }
+}
+
 .mid-header {
     padding: 6px 0;
-    background: $green-bg;
+    background: var(--main-color);
     color: $white-font;
+    box-shadow: 0 4px 8px 0 rgb(0, 0, 0, 20%), 0 6px 20px 0 rgb(0, 0, 0, 19%);
+    z-index: 999;
     .header-main {
         position: relative;
     }
@@ -300,7 +339,7 @@ img {
                 vertical-align: middle;
                 margin: 0;
                 button {
-                    background: $yellow-btn;
+                    background: #393a44;
                     color: #fff;
                     font-size: 14px;
                     height: 36px;
@@ -351,7 +390,7 @@ img {
             text-align: center;
             font-size: 16px;
             margin: 0 8px;
-            border: 2px solid #fff;
+            border: 2px solid $white-font;
             display: inline-block;
             .mat-icon {
                 vertical-align: middle;
@@ -815,14 +854,14 @@ img {
                     text-transform: uppercase;
                 }
                 &:first-child.active a {
-                    color: $green-bg;
+                    color: var(--main-color);
                     padding-left: 10px;
                 }
                 &.active a {
-                    color: $green-bg;
+                    color: var(--main-color);
                 }
                 &:hover a {
-                    color: $green-bg;
+                    color: var(--main-color);
                 }
             }
         }

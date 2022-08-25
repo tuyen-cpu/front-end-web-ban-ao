@@ -6,7 +6,7 @@
                 <ul class="ct-mobile" (click)="hiddenMenuNav ()">
                     <li class="level0 level-top parent level_ico" (click)="hiddenMenuNav ()">
                         <!-- <img src="./../../assets/img/logo.png" alt="logo"> -->
-                        <img src="https://i.ibb.co/XynK8Fr/logo.webp" alt="logo">
+                        <img src="../../../assets/img/logo.png" alt="logo">
                     </li>
                     <li class="level0 level-top parent level_ico">
                         <a routerLink="" routerLinkActive="active">TRANG CHỦ</a>
@@ -52,12 +52,7 @@
                 </div>
                 <div class="topbar-right" fxFlex="50%" fxFlex.xs="100%" fxFlex.sm="100%" fxLayoutAlign="end center">
                     <ul ngClass.xs="center">
-                        <li *ngIf="isAdmin">
-                            <a routerLink="/admin" title="Go to admin page">
-                                <mat-icon>person</mat-icon>
-                                Admin page
-                            </a>
-                        </li>
+
                         <li class="login-content" *ngIf="currentUser; else loggedOut">
                             <a routerLink="/account" class="click-account">
                                 <mat-icon>person</mat-icon>
@@ -80,16 +75,10 @@
                                 </ul>
                             </li>
                         </ng-template>
-                        <li fxShow fxHide.xs>
-                            <a href="/san-pham-noi-bat" title="Khuyến mãi hot">
-                                <mat-icon>star</mat-icon>
-                                Khuyến mãi hot
-                            </a>
-                        </li>
-                        <li fxShow fxHide.xs>
-                            <a href="/he-thong" title="Hệ thống cửa hàng">
-                                <mat-icon>location_on</mat-icon>
-                                Hệ thống cửa hàng
+                        <li *ngIf="isAdmin">
+                            <a routerLink="/admin" title="Go to admin page">
+                                <mat-icon>person</mat-icon>
+                                Admin page
                             </a>
                         </li>
                     </ul>
@@ -106,13 +95,31 @@
                     <div class="menu-bar" fxHide fxShow.sm fxShow.xs (click)="showMenuNav()">
                         <mat-icon>menu</mat-icon>
                     </div>
-                    <div class="logo" fxFlex="25%" fxFlex.sm="60%" fxFlex.xs="90%" fxLayoutAlign.sm="center center" ngClass.xs="center">
+                    <div class="logo" fxFlex="20%" fxFlex.sm="60%" fxFlex.xs="90%" fxLayoutAlign.sm="center center" ngClass.xs="center">
                         <a routerLink="/">
                             <!-- <img src="./../../assets/img/logo.png" alt="logo"> -->
-                            <img src="https://i.ibb.co/XynK8Fr/logo.webp" alt="logo">
+                            <img src="../../../assets/img/logo.png" alt="logo">
                         </a>
                     </div>
-                    <div class="header-left" fxFlex="40%" fxFlex.xs="100%" fxFlex.sm="100%" fxFlexOrder.sm="2">
+                    <div class="" fxFlex="15">
+                        <ul class="menu-cate flex list-none text-lg font-medium">
+                            <li class="relative">
+                                <a routerLink="/list" class="mx-2 py-3 cursor-pointer">SHOP</a>
+                                <ul class="submenu-cate">
+                                    <li class="itemsub" *ngFor="let cate of categories">
+                                        <a routerLink="/list/{{cate.id}}">{{cate.name}}</a>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li>
+                                <a class="mx-2 py-3 cursor-pointer">CONTACT</a>
+                                <ul class="hidden">
+                                    <li></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="header-left" fxFlex="40" fxFlex.xs="100%" fxFlex.sm="100%" fxFlexOrder.sm="2">
                         <div class="header-search">
                             <form class="search-bar" (ngSubmit)="onSubmit()" [formGroup]="searchForm">
                                 <input class="search-input" #searchInput formControlName="inputSearch" type="text" appDropdown (keyup)="onSearch($event)" name="search" placeholder="Sản phẩm bạn muốn tìm...">
@@ -123,34 +130,29 @@
                                 </span>
                                 <div class="result-search">
                                     <div class="result-title">Sản phẩm<span *ngIf="isLoading" class="loading"><i class="pi pi-spin pi-spinner" style="font-size: 1rem"></i></span></div>
-                                    <ul *ngIf="!isLoading && productList.length>0" class="search-list">
-                                        <li class="search-item" *ngFor="let product of productList">
-                                            <a class="link-item" href="">
-                                                <img src="../../../assets/img/banner_2.webp" alt="">
-                                                <div class="desc">
+                                    <ul *ngIf="!isLoading && groupProducts.length>0" class="search-list">
+                                        <li class="search-item" *ngFor="let product of groupProducts">
+                                            <a class="link-item px-6" href="">
+                                                <img [src]="'http://localhost:3000/FileUpload/files/'+product.urlImage||'../../../assets/img/banner_2.webp'">
+                                                <div class="desc ml-4">
                                                     <p class="name-item" [innerHtml]="product.name | highlighter:keySearch:'partial'"></p>
-                                                    <span>{{product.price}}</span>
+                                                    <div class="flex justify-content-between">
+                                                        <span>{{product.price|currency:'VND'}}</span>
+
+                                                    </div>
                                                 </div>
                                             </a>
                                         </li>
                                         <div class="more-item"><a (click)="goSearchProducts()" class="more-link">Xem thêm kết quả cho: {{keySearch}}</a></div>
                                     </ul>
-                                    <div *ngIf="!isLoading && productList.length===0" class="result-empty">Không tìm thấy sản phẩm nào phù hợp.</div>
+                                    <div *ngIf="!isLoading && groupProducts.length===0" class="result-empty">Không tìm thấy sản phẩm nào phù hợp.</div>
                                 </div>
                             </form>
                         </div>
                     </div>
-                    <div fxFlex="35%" fxFlex.xs="100%" fxFlex.sm="20%" fxFlexOrder.sm="1">
+                    <div fxFlex="10" fxFlex.xs="100%" fxFlex.sm="20%" fxFlexOrder.sm="1">
                         <div class="header-right" [ngStyle.xs]="{'float': 'none'}">
-                            <div class="hotline-dathang" ngClass.gt-sm="pl-30" fxHide.sm>
-                                <div class="icon">
-                                    <mat-icon>local_phone</mat-icon>
-                                </div>
-                                <div class="content-hotline">
-                                    <div class="hotline">(028) 0123 4567</div>
-                                    <div class="phone"> DĐ:<b> 0909 305 350</b></div>
-                                </div>
-                            </div>
+
                             <div class="mini-cart">
                                 <div class="heading-cart">
                                     <a [routerLink]="['/cart']" title="Giỏ hàng">
@@ -160,8 +162,8 @@
                                     </a>
                                     <div class="content-cart-header">
                                         <a [routerLink]="['/cart']" title="Giỏ hàng">
-                                            (<span class="count-item">{{cartItems.length}}</span>)&nbsp;Sản phẩm
-                                            <span class="txt-giohang">Giỏ hàng</span>
+                                            <span class="count-item">{{cartItems.length}}</span>
+
                                         </a>
                                     </div>
                                 </div>
@@ -232,7 +234,7 @@
             </div>
         </div>
     </div>
-
+    <!--
     <div class="wrap-main" fxLayout="row wrap" fxLayoutAlign="center center">
         <div class="container" fxFlex="87" fxFlex.sm="98" fxFlex.xs="97">
             <div fxLayout="row" fxLayoutAlign="center center">
@@ -316,6 +318,6 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div> -->
 
 </header>

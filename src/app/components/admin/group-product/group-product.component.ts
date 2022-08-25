@@ -181,6 +181,7 @@ export class GroupProductComponent implements OnInit {
             severity: 'info',
             summary: 'File Uploaded',
             detail: 'Uploaded file success!',
+            life: 1000,
           });
         },
         error: (error) => {
@@ -216,11 +217,7 @@ export class GroupProductComponent implements OnInit {
   saveProduct() {
     this.isLoading = true;
     this.submitted = true;
-    if (
-      !this.sizeSelected.id ||
-      !this.product.price ||
-      !this.product.quantity
-    ) {
+    if (!this.sizeSelected.id || !this.product.quantity) {
       this.isLoading = false;
       return;
     }
@@ -335,6 +332,7 @@ export class GroupProductComponent implements OnInit {
   saveGroupProduct() {
     this.submitted = true;
     this.isLoading = true;
+    // this.groupProduct.products = [];
     this.productService.addGroupProduct(this.groupProduct).subscribe({
       next: (response) => {
         if (this.isEditGroupProduct) {
@@ -353,6 +351,7 @@ export class GroupProductComponent implements OnInit {
         this.isEditGroupProduct = false;
       },
       error: (error: HttpErrorResponse) => {
+        this.isLoading = false;
         alert(error.message);
       },
     });
@@ -427,6 +426,9 @@ export class GroupProductComponent implements OnInit {
           },
         });
     }
+  }
+  convertSizeIdToName(sizeId: number) {
+    return this.sizes.filter((size) => size.id == sizeId)[0].name;
   }
 
   convertToLabelAndValue(sourceList: any[]): any[] {

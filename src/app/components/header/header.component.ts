@@ -1,5 +1,6 @@
+import { CategoryService } from 'src/app/service/category.service';
+import { GroupProduct } from './../../model/group-product.model';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { Product } from './../../model/product.model';
 import { ProductService } from './../../service/product.service';
 import { HttpErrorResponse } from '@angular/common/http';
 import {
@@ -13,14 +14,13 @@ import {
   ViewEncapsulation,
 } from '@angular/core';
 import { MediaChange, MediaObserver } from '@angular/flex-layout';
-import { debounceTime, map, of, Subject, Subscription, take } from 'rxjs';
-import { Menu } from 'src/app/model/menu.model';
-import { MenuService } from 'src/app/service/menu.service';
+import { debounceTime, Subject, Subscription } from 'rxjs';
 import { Router } from '@angular/router';
 import { StorageService } from 'src/app/service/storage.service';
 import { AuthService } from 'src/app/service/auth.service';
 import { CartItem } from 'src/app/model/cart-item.model';
 import { CartService } from 'src/app/service/cart.service';
+import { Category } from 'src/app/model/category.model';
 
 @Component({
   selector: 'app-header',
@@ -35,11 +35,12 @@ export class HeaderComponent implements OnInit, AfterViewInit, OnDestroy {
   private mqAlias = '';
   public showMenu = false;
   private mediaSub: Subscription = new Subscription();
-  public menus!: Menu[];
+
+  categories: Category[];
   //changed key search
   private subjectKeyup = new Subject<any>();
-  //list product when search
-  productList: Product[] = [];
+  //list group product when search
+  groupProducts: GroupProduct[] = [];
   //key input when search
   keySearch: string = '';
   //check is loading
@@ -56,7 +57,7 @@ export class HeaderComponent implements OnInit, AfterViewInit, OnDestroy {
   constructor(
     private cdRef: ChangeDetectorRef,
     private mediaObserver: MediaObserver,
-    private menuService: MenuService,
+    private categoryService: CategoryService,
     private productService: ProductService,
     private router: Router,
     private storageService: StorageService,
@@ -76,7 +77,7 @@ export class HeaderComponent implements OnInit, AfterViewInit, OnDestroy {
         this.mqAlias = change.mqAlias;
       }
     );
-    this.getMenus();
+    this.getCategory();
     this.initForm();
 
     //get user login
@@ -91,7 +92,7 @@ export class HeaderComponent implements OnInit, AfterViewInit, OnDestroy {
     this.loadIsAdmin();
   }
 
-  public loadIsAdmin(){
+  public loadIsAdmin() {
     this.isAdmin = this.storageService.isAdmin();
   }
 
@@ -108,10 +109,10 @@ export class HeaderComponent implements OnInit, AfterViewInit, OnDestroy {
 
   searchProducts(key: string) {
     this.productService
-      .getProducts(key, 0, this.limitedQuantity)
+      .searchGroupProduct(key, 0, this.limitedQuantity)
       // .pipe(map((x) => x.slice(0, this.limitedQuantity)))
       .subscribe((res) => {
-        this.productList = res.products;
+        this.groupProducts = res.data.content;
       });
   }
 
@@ -130,7 +131,7 @@ export class HeaderComponent implements OnInit, AfterViewInit, OnDestroy {
   onSearch(event: any) {
     const value = event.target.value;
     if (this.hasBlankSpaces(value)) {
-      this.productList = [];
+      this.groupProducts = [];
       this.isLoading = false;
       this.searchInput.nativeElement.classList.remove('open');
       return;
@@ -157,10 +158,10 @@ export class HeaderComponent implements OnInit, AfterViewInit, OnDestroy {
       inputSearch: new FormControl('', Validators.required),
     });
   }
-  public getMenus(): void {
-    this.menuService.getMenus().subscribe(
-      (response: Menu[]) => {
-        this.menus = response;
+  public getCategory(): void {
+    this.categoryService.getAll().subscribe(
+      (response) => {
+        this.categories = response.data;
       },
       (error: HttpErrorResponse) => {
         console.log(error.message);
@@ -204,14 +205,14 @@ export class HeaderComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   public logout(): void {
+    this.isAdmin = false;
     this.authService.logout().subscribe({
       next: (res) => {
-        console.log(res);
         this.storageService.clean();
         this.router.navigate(['/']);
       },
       error: (err) => {
-        console.log(err);
+        alert(err);
       },
     });
 

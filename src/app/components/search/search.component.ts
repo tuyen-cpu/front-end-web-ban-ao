@@ -1,3 +1,4 @@
+import { GroupProduct } from './../../model/group-product.model';
 import { ProductService } from './../../service/product.service';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -12,9 +13,9 @@ import { Product } from 'src/app/model/product.model';
 export class SearchComponent implements OnInit {
   keySearch!: string | null;
   currentPage: number = 1;
-  size: number = 1;
+  size: number = 5;
   totalPages!: number;
-  products: Product[] = [];
+  groupProducts: GroupProduct[] = [];
   constructor(
     private activatedRoute: ActivatedRoute,
     private router: Router,
@@ -43,12 +44,12 @@ export class SearchComponent implements OnInit {
   }
   getProducts(keySearch: string | null, currentPage: number, size: number) {
     this.productService
-      .getProducts(keySearch, currentPage, size)
-      .subscribe((res: Pagination) => {
-        this.products = res.products;
-        this.totalPages = res.totalPages;
+      .searchGroupProduct(keySearch, currentPage, size)
+      .subscribe((res) => {
+        this.groupProducts = res.data.content;
+        this.totalPages = res.data.totalPages;
         console.log(res);
-        console.log(this.products);
+        console.log(this.groupProducts);
       });
   }
   onPageChange(event: any) {
