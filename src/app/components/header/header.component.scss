@@ -58,7 +58,7 @@ img {
                 border-top: solid 1px #fff;
                 &:first-child {
                     padding: 10px;
-                    background: $yellow-btn;
+                    background: #d00;
                 }
                 a {
                     display: block;
@@ -112,7 +112,7 @@ img {
                 vertical-align: text-bottom;
             }
             &:hover {
-                color: $yellow-btn;
+                color: #d00;
             }
         }
         &.login-content {
@@ -122,8 +122,8 @@ img {
                 top: 37px;
                 right: -88px;
                 min-width: 240px;
-                border: 1px solid $white-font;
-                background: $white-font;
+                border: 1px solid #fff;
+                background: #fff;
                 margin: 0;
                 padding: 8px 10px;
                 border-radius: 0 0 3px 3px;
@@ -147,11 +147,11 @@ img {
                         margin: 0;
                     }
                     &:nth-child(1) {
-                        background-color: $yellow-btn;
+                        background-color: #393a44;
                         margin-bottom: 5px;
                     }
                     &:nth-child(1) a {
-                        color: $white-font;
+                        color: #fff;
                     }
                     &:nth-child(2) {
                         background: #e1e1e1;
@@ -285,7 +285,7 @@ img {
                         text-align: center;
                         .more-link {
                             display: block;
-                            color: var(--main-color);
+                            color: #000;
                             cursor: pointer;
                             font-weight: 600;
                         }
@@ -423,6 +423,7 @@ img {
                         }
                     }
                     .list-item-cart {
+                        list-style: none;
                         padding: 0;
                         max-height: 290px;
                         overflow: auto;
@@ -550,7 +551,7 @@ img {
                     font-size: 14px !important;
                     font-weight: 700;
                     font-family: arial, sans-serif;
-                    color: #008744;
+                    color: #d00;
                 }
                 .pd {
                     padding: 0 5px;
@@ -585,13 +586,13 @@ img {
                     }
                     .btn-primary {
                         margin-right: 10px !important;
-                        background: #008744;
+                        background: #000;
                         color: #fff;
                     }
                     .btn-white {
                         border: none;
-                        color: #fff;
-                        background: #3d4356;
+                        color: #000;
+                        background: fff;
                     }
                 }
             }
@@ -605,6 +606,7 @@ img {
                 .content-cart-header {
                     line-height: 18px;
                     display: inline-block;
+                    top: 5%;
                 }
                 a {
                     font-size: 14px;

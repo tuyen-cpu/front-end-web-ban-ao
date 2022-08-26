@@ -49,7 +49,7 @@
             <div fxFlex="75" fxFlex.sm="100" fxFlex.xs="100">
                 <section class="main-container collection">
                     <div class="category-products products">
-                        <div class="sortPagiBar" *ngIf="products.length!==0">
+                        <div class="sortPagiBar" *ngIf="groupProducts.length!==0">
                             <div fxLayout="row " fxLayoutAlign="start  center">
                                 <div fxFlex="50">
                                     <h1 class="title-head">Sản phẩm</h1>
@@ -90,12 +90,12 @@
                         <section class="products-view products-view-list" [hidden]="!view_list">
                             <div fxLayout="row" fxLayoutAlign="center center">
                                 <div fxFlex="97">
-                                    <div class="item-list" *ngFor="let product of products">
+                                    <div class="item-list" *ngFor="let product of groupProducts">
                                         <div fxLayout="row" fxLayoutAlign="center center">
                                             <div fxFlex="35" fxFlex.xs="97">
                                                 <div class="product-thumbnail">
                                                     <a href="" class="img-link">
-                                                        <img src="http://localhost:3000/FileUpload/files/{{product.urlImg}}" alt="">
+                                                        <img src="http://localhost:3000/FileUpload/files/{{product.urlImage}}" alt="">
                                                     </a>
                                                 </div>
                                             </div>
@@ -132,9 +132,9 @@
                         </section>
 
                         <section class="products-view products-view-grid" [hidden]="view_list">
-                            <div class="text-center" *ngIf="products.length===0">Không có sản phẩm nào phù hợp</div>
-                            <div *ngIf="!!products" fxLayout="row wrap" fxLayoutAlign="start center">
-                                <div class="item-list" fxFlex="24" fxFlex.sm="33" fxFlex.xs="49" *ngFor="let product of products;trackBy: trackById">
+                            <div class="text-center" *ngIf="groupProducts.length===0">Không có sản phẩm nào phù hợp</div>
+                            <div *ngIf="!!groupProducts" fxLayout="row wrap" fxLayoutAlign="start center">
+                                <div class="item-list" fxFlex="24" fxFlex.sm="33" fxFlex.xs="49" *ngFor="let product of groupProducts;trackBy: trackById">
                                     <ng-container>
                                         <app-item-product [productItem]="product" [textHere]="'ha'"></app-item-product>
                                     </ng-container>

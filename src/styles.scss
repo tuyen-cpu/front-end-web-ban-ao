@@ -55,7 +55,7 @@ button {
 }
 
 .main-btn {
-    background: var(--main-color);
+    background: #393a44;
     color: #fff;
     border-radius: 3px;
     font-size: 14px;
@@ -73,8 +73,8 @@ button {
     transition: background-color .1s ease-in;
     &:hover {
         background: #fff;
-        color: var(--main-color);
-        border: 1px solid var(--main-color);
+        color: #393a44;
+        border: 1px solid #393a44;
     }
 }
 

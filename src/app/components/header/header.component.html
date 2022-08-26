@@ -132,7 +132,7 @@
                                     <div class="result-title">Sản phẩm<span *ngIf="isLoading" class="loading"><i class="pi pi-spin pi-spinner" style="font-size: 1rem"></i></span></div>
                                     <ul *ngIf="!isLoading && groupProducts.length>0" class="search-list">
                                         <li class="search-item" *ngFor="let product of groupProducts">
-                                            <a class="link-item px-6" href="">
+                                            <a class="link-item px-6" routerLink="/{{product.id}}">
                                                 <img [src]="'http://localhost:3000/FileUpload/files/'+product.urlImage||'../../../assets/img/banner_2.webp'">
                                                 <div class="desc ml-4">
                                                     <p class="name-item" [innerHtml]="product.name | highlighter:keySearch:'partial'"></p>
@@ -150,19 +150,20 @@
                             </form>
                         </div>
                     </div>
-                    <div fxFlex="10" fxFlex.xs="100%" fxFlex.sm="20%" fxFlexOrder.sm="1">
+                    <div fxFlex="14" fxFlex.xs="100%" fxFlex.sm="20%" fxFlexOrder.sm="1">
                         <div class="header-right" [ngStyle.xs]="{'float': 'none'}">
 
                             <div class="mini-cart">
                                 <div class="heading-cart">
-                                    <a [routerLink]="['/cart']" title="Giỏ hàng">
+                                    <a class="flex align-items-center" [routerLink]="['/cart']" title="Giỏ hàng">
+                                      Giỏ hàng
                                         <div class="icon">
                                             <mat-icon>shopping_cart</mat-icon>
                                         </div>
                                     </a>
-                                    <div class="content-cart-header">
+                                    <div class="content-cart-header absolute right-0">
                                         <a [routerLink]="['/cart']" title="Giỏ hàng">
-                                            <span class="count-item">{{cartItems.length}}</span>
+                                            <span class="count-item">{{totalQuantity}}</span>
 
                                         </a>
                                     </div>
@@ -183,7 +184,8 @@
                                                         </div>
                                                         <div class="product-detail-bottom">
                                                             <span class="price">{{ item.price | currency: "VND" }}</span>
-                                                            <a (click)="deleteCartItem(item.id)" title="xóa">
+                                                            <span class="size">Size: {{ item.size.name }}</span>
+                                                            <a class="cursor-pointer" (click)="deleteCartItem(item.id)" title="xóa">
                                                                 <i class="material-icons">close</i>
                                                             </a>
                                                             <div class="quantity-select">

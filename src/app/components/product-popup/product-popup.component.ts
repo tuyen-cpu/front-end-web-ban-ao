@@ -1,3 +1,4 @@
+import { GroupProduct } from 'src/app/model/group-product.model';
 import { ProductService } from './../../service/product.service';
 import { Component, Inject, OnInit, ViewEncapsulation } from '@angular/core';
 import {
@@ -25,7 +26,7 @@ export class ProductPopupComponent implements OnInit {
   images: Image[] = [];
   constructor(
     public dialogRef: MatDialogRef<ProductPopupComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: Product,
+    @Inject(MAT_DIALOG_DATA) public data: GroupProduct,
     private productService: ProductService,
     private cartService: CartService
   ) {}
@@ -60,7 +61,7 @@ export class ProductPopupComponent implements OnInit {
       // price: this.data.price - this.data.price * this.data.discount / 100,
       price: 0,
       quantity: this.quantity,
-      img: this.data.urlImg,
+      img: this.data.urlImage,
     };
 
     this.cartService.addToCart(item);

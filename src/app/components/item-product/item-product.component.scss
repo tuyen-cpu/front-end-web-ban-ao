@@ -1,3 +1,13 @@
+@font-face {
+    font-family: 'PN';
+    src: url("../../../assets/PN-Regular2.ttf") format("truetype");
+}
+
+@font-face {
+    font-family: 'PN';
+    src: url("../../../assets/PN_SemiBold_gdi.ttf") format("truetype");
+}
+
 .product-item {
     position: relative;
     height: 100%;
@@ -14,14 +24,15 @@
         margin: 16px 0 10px 0;
         display: block;
         .name {
+            font-family: 'PN', sans-serif;
             text-decoration: none;
             color: #444;
-            font-size: 14px;
+            font-size: 17px;
             overflow: hidden;
             display: -webkit-box;
-            -webkit-line-clamp: 3!important;
+            -webkit-line-clamp: 2!important;
             -webkit-box-orient: vertical;
-            min-height: 60px;
+            // min-height: 60px;
         }
     }
     .discount-tag {
@@ -43,11 +54,12 @@
     }
     .price-box {
         .new-price {
-            color: var(--main-color);
+            color: #000;
             font-size: 16px;
             font-weight: 700;
-            font-family: arial, sans-serif;
+            font-family: 'PN', sans-serif;
             margin-right: 7px;
+            color: #d00;
         }
         .old-price {
             text-decoration: line-through;
@@ -115,15 +127,15 @@
             }
         }
     }
-    &:hover {
-        .action {
-            opacity: 1;
-            visibility: visible;
-            top: calc(100% - var(--height));
-        }
-        .price-box,
-        .start-review {
-            visibility: hidden;
-        }
-    }
+    // &:hover {
+    //     .action {
+    //         opacity: 1;
+    //         visibility: visible;
+    //         top: calc(100% - var(--height));
+    //     }
+    //     .price-box,
+    //     .start-review {
+    //         visibility: hidden;
+    //     }
+    // }
 }
