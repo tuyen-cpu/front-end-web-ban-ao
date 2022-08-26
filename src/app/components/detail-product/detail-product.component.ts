@@ -48,7 +48,7 @@ export class DetailProductComponent implements OnInit {
   sizes: Size[] = [];
   thumbsSwiper: any;
   private id!: number;
-  public groupProduct: GroupProduct = { name: 'má ' };
+  public groupProduct: GroupProduct = { name: ' ', products: [] };
   public quantity = 1;
   sizeSelected: number = 1;
 
@@ -106,10 +106,11 @@ export class DetailProductComponent implements OnInit {
       next: (response) => {
         this.groupProduct = response.data;
         console.log(this.groupProduct);
-        this.groupProduct.products.forEach((product: any) => {
-          console.log(product);
-          this.sizes.push({ id: product.sizeId, name: product.sizeName });
-        });
+        if (this.groupProduct.products) {
+          this.groupProduct.products.forEach((product: any) => {
+            this.sizes.push({ id: product.sizeId, name: product.sizeName });
+          });
+        }
       },
       error: (error: HttpErrorResponse) => {
         alert(error.message);
@@ -134,6 +135,9 @@ export class DetailProductComponent implements OnInit {
   }
 
   public addToCart() {
+    if (this.sizes.length === 0) {
+      return;
+    }
     let product = this.groupProduct.products.filter(
       (p) => p.sizeId === this.sizeSelected
     )[0];

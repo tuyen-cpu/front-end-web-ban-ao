@@ -5,12 +5,10 @@
                 <div class="title">Thông tin nhận hàng </div>
                 <div class="content">
                     <div style="text-align: right;" *ngIf="user==null">
-                        <button routerLink="/login" pButton type="button" label="Đăng nhập" icon="pi pi-user"
-                            iconPos="left" class="p-button-text p-button-text" style="color:#008744;"></button>
+                        <button routerLink="/login" pButton type="button" label="Đăng nhập" icon="pi pi-user" iconPos="left" class="p-button-text p-button-text" style="color:#008744;"></button>
                     </div>
                     <div class="field" *ngIf="addressList.length > 0">
-                        <select (change)="onChangeAddress($event)" id="customer-address"
-                            class="input-info label-info--select">
+                        <select (change)="onChangeAddress($event)" id="customer-address" class="input-info label-info--select">
                             <option value=""></option>
                             <ng-container *ngFor="let address of addressList">
                                 <option value="{{address.id}}">{{address.street}}, phường {{address.ward}},quận
@@ -23,12 +21,10 @@
                     <form [formGroup]="addressForm">
                         <input type="hidden" formControlName="id" value="" id="addressId">
                         <div class="field">
-                            <input type="text" class="input-info" id="customer-name" [(ngModel)]="username"
-                                formControlName="fullname">
+                            <input type="text" class="input-info" id="customer-name" [(ngModel)]="username" formControlName="fullname">
                             <label for="customer-name" class="label-info">Họ và tên *</label>
                             <div *ngIf="submittedAddress && fAddress['fullname'].errors?.['required']
-                            || fAddress['fullname'].errors?.['required'] && fAddress['fullname'].touched"
-                                style="color: rgb(208, 3, 3);">
+                            || fAddress['fullname'].errors?.['required'] && fAddress['fullname'].touched" style="color: rgb(208, 3, 3);">
                                 <small>*Họ và tên không được để trống</small>
                             </div>
                         </div>
@@ -39,13 +35,10 @@
                         </div>
 
                         <div class="field">
-                            <input type="tel" class="input-info" id="customer-phone" maxlength="25"
-                                formControlName="phone"
-                                onkeypress='return event.charCode >= 48 && event.charCode <= 57'>
+                            <input type="tel" class="input-info" id="customer-phone" maxlength="25" formControlName="phone" onkeypress='return event.charCode >= 48 && event.charCode <= 57'>
                             <label for="customer-phone" class="label-info">Số điện thoại *</label>
-                            <div *ngIf="submittedAddress && fAddress['phone'].errors?.['required'] 
-                            || fAddress['phone'].errors?.['required'] && fAddress['phone'].touched"
-                                style="color: rgb(208, 3, 3);">
+                            <div *ngIf="submittedAddress && fAddress['phone'].errors?.['required']
+                            || fAddress['phone'].errors?.['required'] && fAddress['phone'].touched" style="color: rgb(208, 3, 3);">
                                 <small>*Số điện thoại không được để trống</small>
                             </div>
                         </div>
@@ -100,9 +93,8 @@
                         <div class="field">
                             <input type="text" class="input-info" id="customer-street" formControlName="street">
                             <label for="customer-street" class="label-info">Đường *</label>
-                            <div *ngIf="submittedAddress && fAddress['street'].errors?.['required'] 
-                                || fAddress['street'].errors?.['required'] && fAddress['street'].touched"
-                                style="color: rgb(208, 3, 3);">
+                            <div *ngIf="submittedAddress && fAddress['street'].errors?.['required']
+                                || fAddress['street'].errors?.['required'] && fAddress['street'].touched" style="color: rgb(208, 3, 3);">
                                 <small>*Đường không được để trống</small>
                             </div>
                         </div>
@@ -127,7 +119,6 @@
                             <input type="radio" id="time-shipping" class="radio-input" checked>
                             <label for="time-shipping" class="radio-label">
                                 <span class="time">GIAO NHANH 2-4 NGÀY</span>
-                                <span class="fee">Miễn phí khi > 100 triệu đồng</span>
                             </label>
                         </div>
                     </div>
@@ -135,13 +126,13 @@
                 <div class="payment">
                     <div class="title">Thanh toán</div>
                     <div class="payment-list">
-
-                        <mat-radio-group aria-labelledby="example-radio-group-label" class="example-radio-group"
-                            [(ngModel)]="favoriteSeason">
-                            <mat-radio-button class="payment-item" *ngFor="let season of seasons" [value]="season">
-                                {{season}}
+                        <mat-radio-group aria-labelledby="example-radio-group-label" class="example-radio-group" [(ngModel)]="paymentSelected">
+                            <mat-radio-button class="payment-item" *ngFor="let method of methodPayment" [value]="method.code">
+                                {{method.name}}
                             </mat-radio-button>
                         </mat-radio-group>
+
+
 
                     </div>
                 </div>
@@ -156,13 +147,11 @@
                     <ng-container *ngFor="let item of cartItems">
                         <div class="product-item">
                             <div class="img-wrapper">
-                                <img src="{{ 'http://localhost:3000/FileUpload/files/'+item.img }}" alt="Image"
-                                    style="max-width: 70px; max-height: 60px; object-fit: cover;">
+                                <img src="{{ 'http://localhost:3000/FileUpload/files/'+item.img }}" alt="Image" style="max-width: 70px; max-height: 60px; object-fit: cover;">
                                 <span class="quantity">{{ item.quantity }}</span>
                             </div>
                             <div class="name">
-                                <p
-                                    style="overflow: hidden; text-overflow: ellipsis; max-width: 222px; max-height: 60px; margin: 0;">
+                                <p style="overflow: hidden; text-overflow: ellipsis; max-width: 222px; max-height: 60px; margin: 0;">
                                     {{ item.name }}
                                 </p>
                             </div>
@@ -175,21 +164,16 @@
 
                 <form [formGroup]="voucherForm" (ngSubmit)="onSubmit()" class="voucher-wrapper">
                     <div class="field">
-                        <input type="text" class="input-info" id="voucher-input" formControlName="voucherValue"
-                            (input)="changeVoucherCode()">
-                        <label for="voucher-input" class="label-info"
-                            [ngStyle]="{ 'top': (this.voucherForm.value.voucherValue!='' ? '-1px' : '0') }">Mã giảm
+                        <input type="text" class="input-info" id="voucher-input" formControlName="voucherValue" (input)="changeVoucherCode()">
+                        <label for="voucher-input" class="label-info" [ngStyle]="{ 'top': (this.voucherForm.value.voucherValue!='' ? '-1px' : '0') }">Mã giảm
                             giá</label>
                     </div>
-                    <button class="main-btn btn-apply" type="submit"
-                        [disabled]="!voucherForm.valid || vouchers.size > 1">Áp dụng</button>
+                    <button class="main-btn btn-apply" type="submit" [disabled]="!voucherForm.valid || vouchers.size > 1">Áp dụng</button>
                 </form>
-                <div *ngIf="this.voucherForm.value.voucherValue!='' && !validVoucherCode && submitVoucher"
-                    style="color: red;"><small>*Mã giảm giá này không hợp lệ</small> </div>
+                <div *ngIf="this.voucherForm.value.voucherValue!='' && !validVoucherCode && submitVoucher" style="color: red;"><small>*Mã giảm giá này không hợp lệ</small> </div>
                 <div style="margin: 10px;">
                     <ng-container *ngFor="let code of voucherCodes">
-                        <button pButton type="button" class="p-button-outlined" style="margin-bottom: 2px;"
-                            (click)="cancelVoucher(code)">
+                        <button pButton type="button" class="p-button-outlined" style="margin-bottom: 2px;" (click)="cancelVoucher(code)">
                             <mat-icon class="btn-remove">close</mat-icon>
                             <strong>Bỏ dùng mã {{code}} - {{getCostVoucher(code)|number}} ₫ </strong>
                         </button>
@@ -217,50 +201,44 @@
                     <a class="btn-back" fxLayoutAlign="space-between center" [routerLink]="'/cart'">
                         <mat-icon class="icon-left">arrow_left</mat-icon>Quay lại giỏ hàng
                     </a>
-                    <button class="main-btn btn-apply btn-checkout" (click)="checkout()">Đặt hàng</button>
+                    <button class="main-btn btn-apply btn-checkout" [disabled]="!this.paymentSelected" [hidden]="paymentSelected==='paypal'" (click)="checkout()">Đặt hàng</button>
+
+                </div>
+                <div class="mt-4" [hidden]="paymentSelected!=='paypal'">
+                    <div id="myPaypalButton"></div>
                 </div>
             </div>
         </aside>
     </div>
 </div>
-<p-dialog header="Thông báo" [(visible)]="displayModalSuccess" [modal]="true" [style]="{width: '500px'}"
-    [draggable]="false" [resizable]="false">
+<p-dialog header="Thông báo" [(visible)]="displayModalSuccess" [modal]="true" [style]="{width: '500px'}" [draggable]="false" [resizable]="false">
     <p class="m-0">Đặt hàng thành công</p>
     <ng-template pTemplate="footer">
-        <button pButton pRipple type="button" label="Xem hóa đơn" (click)="showOrder()" *ngIf="orderId > 0"
-            class="p-button-success"></button>
-        <button pButton pRipple type="button" label="Tiếp tục xem sản phẩm" (click)="continueShopping()"
-            class="p-button-info"></button>
+        <button pButton pRipple type="button" label="Xem hóa đơn" (click)="showOrder()" *ngIf="orderId > 0" class="p-button-success"></button>
+        <button pButton pRipple type="button" label="Tiếp tục xem sản phẩm" (click)="continueShopping()" class="p-button-info"></button>
     </ng-template>
 </p-dialog>
-<p-dialog header="Thông báo" [(visible)]="displayModalFail" [modal]="true" [style]="{width: '500px'}"
-    [draggable]="false" [resizable]="false">
+<p-dialog header="Thông báo" [(visible)]="displayModalFail" [modal]="true" [style]="{width: '500px'}" [draggable]="false" [resizable]="false">
     <p class="m-0">Đặt hàng không thành công</p>
     <p class="m-0">Đã xảy ra lỗi</p>
     <ng-template pTemplate="footer">
-        <button pButton pRipple type="button" label="Tiếp tục mua sắm" routerLink="/list"
-            class="p-button-success"></button>
-        <button pButton pRipple type="button" label="Đóng" (click)="displayModalFail=false"
-            class="p-button-info"></button>
+        <button pButton pRipple type="button" label="Tiếp tục mua sắm" routerLink="/list" class="p-button-success"></button>
+        <button pButton pRipple type="button" label="Đóng" (click)="displayModalFail=false" class="p-button-info"></button>
     </ng-template>
 </p-dialog>
-<p-dialog header="Thông báo" [(visible)]="displayModalInfo" [modal]="true" [style]="{width: '500px'}"
-    [draggable]="false" [resizable]="false">
+<p-dialog header="Thông báo" [(visible)]="displayModalInfo" [modal]="true" [style]="{width: '500px'}" [draggable]="false" [resizable]="false">
     <p class="m-0">Bạn chưa đăng nhập</p>
     <ng-template pTemplate="footer">
         <button pButton pRipple type="button" label="Đăng nhập" routerLink="/login" class="p-button-success"></button>
-        <button pButton pRipple type="button" label="Ok" (click)="displayModalInfo=false"
-            class="p-button-info"></button>
+        <button pButton pRipple type="button" label="Ok" (click)="displayModalInfo=false" class="p-button-info"></button>
     </ng-template>
 </p-dialog>
 
-<p-dialog header="Thông báo" [(visible)]="displayModalInfoAddress" [modal]="true" [style]="{width: '500px'}"
-    [draggable]="false" [resizable]="false">
+<p-dialog header="Thông báo" [(visible)]="displayModalInfoAddress" [modal]="true" [style]="{width: '500px'}" [draggable]="false" [resizable]="false">
     <p class="m-0">Thông tin nhận dạng không hợp lệ</p>
     <p class="m-0">Vui lòng kiểm tra lại</p>
     <ng-template pTemplate="footer">
-        <button pButton pRipple type="button" label="Ok" (click)="displayModalInfoAddress=false"
-            class="p-button-info"></button>
+        <button pButton pRipple type="button" label="Ok" (click)="displayModalInfoAddress=false" class="p-button-info"></button>
     </ng-template>
 </p-dialog>
 

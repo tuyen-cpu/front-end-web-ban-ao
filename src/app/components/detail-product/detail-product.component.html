@@ -76,12 +76,16 @@
                                 <label class="label-size" for="size{{size.id}}">{{size.name}}</label>
                             </div>
                             <div class="button-actions">
-                                <button class="mt-4" (click)="addToCart()">
+                                <button *ngIf="sizes.length!==0" class="mt-4" (click)="addToCart()">
                                     <span>Thêm vào giỏ</span>
-                                    <!-- <span>Giao hàng miễn phí tận nơi</span> -->
                                 </button>
+                                <button *ngIf="sizes.length===0" class="mt-4" [disabled]="true">
+                                  <span>Hết hàng</span>
+                              </button>
                             </div>
-
+                            <div class="">
+                                <img src="../../../assets/img/size-chart.webp" alt="">
+                            </div>
 
                         </div>
                     </div>

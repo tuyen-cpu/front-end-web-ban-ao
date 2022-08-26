@@ -116,10 +116,18 @@ img {
             }
         }
         &.login-content {
+            .point {
+                height: 5px;
+                width: 5px;
+                border-radius: 50%;
+                top: 32%;
+                left: 1px;
+                background-color: #000;
+            }
             position: relative;
             ul.ul-account {
                 position: absolute;
-                top: 37px;
+                top: 34px;
                 right: -88px;
                 min-width: 240px;
                 border: 1px solid #fff;
@@ -146,15 +154,13 @@ img {
                         color: #444;
                         margin: 0;
                     }
-                    &:nth-child(1) {
-                        background-color: #393a44;
-                        margin-bottom: 5px;
-                    }
-                    &:nth-child(1) a {
+                    .login-link {
+                        background-color: #000;
                         color: #fff;
                     }
-                    &:nth-child(2) {
-                        background: #e1e1e1;
+                    .logout-link {
+                        background: #fff;
+                        color: #000
                     }
                 }
                 &:before {
@@ -168,9 +174,19 @@ img {
                     position: absolute;
                     pointer-events: none;
                 }
+                a.bullet-link {
+                    color: #000;
+                    background-color: rgb(245, 245, 245);
+                    &:hover {
+                        background-color: rgb(219, 219, 219);
+                    }
+                }
             }
             &:hover ul.ul-account {
                 display: block;
+            }
+            ul.ul-account.bullet-dropdown {
+                min-width: 350px;
             }
         }
     }
@@ -567,7 +583,7 @@ img {
                         font-weight: 700;
                         line-height: 24px;
                         margin-top: 0 !important;
-                        color: #008744 !important;
+                        color: #d00 !important;
                         float: right;
                     }
                 }

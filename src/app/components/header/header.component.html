@@ -49,18 +49,30 @@
             <div fxLayout="row" fxLayoutAlign="space-between center">
                 <div class="topbar-left" fxFlex="70%" fxShow fxHide.sm fxHide.xs fxLayoutAlign="start center">
                     Mở cửa: 9h đến 20h, chủ nhật 10h đến 19h
+
                 </div>
                 <div class="topbar-right" fxFlex="50%" fxFlex.xs="100%" fxFlex.sm="100%" fxLayoutAlign="end center">
-                    <ul ngClass.xs="center">
+                    <ul ngClass.xs="center" class="flex">
+                        <li *ngIf="currentUser" class="relative flex align-items-center cursor-pointer login-content"><i class="pi pi-bell"></i>Thông báo
+                            <span *ngIf="bulletins.length!==0" class="point absolute"></span>
+                            <ul class="ul-account bullet-dropdown">
 
+                                <li *ngFor="let bullet of bulletins">
+                                    <a (click)="checkBullet(bullet)" class="bullet-link">{{bullet.name}}</a>
+                                </li>
+                                <li *ngIf="bulletins.length===0">
+                                    <a class="bullet-link">Không có thông báo</a>
+                                </li>
+                            </ul>
+                        </li>
                         <li class="login-content" *ngIf="currentUser; else loggedOut">
                             <a routerLink="/account" class="click-account">
                                 <mat-icon>person</mat-icon>
                                 Hi! {{ currentUser.username }}
                             </a>
                             <ul class="ul-account">
-                                <li><a routerLink="/account" routerLinkActive="active">{{ currentUser.username }}</a></li>
-                                <li><a (click)="logout()">Đăng xuất</a></li>
+                                <!-- <li><a class="login-link" routerLink="/account" routerLinkActive="active">{{ currentUser.username }}</a></li> -->
+                                <li><a class="logout-link" (click)="logout()">Đăng xuất</a></li>
                             </ul>
                         </li>
                         <ng-template #loggedOut>
@@ -70,8 +82,8 @@
                                     Tài khoản
                                 </a>
                                 <ul class="ul-account">
-                                    <li><a routerLink="/login" routerLinkActive="active">Đăng nhập</a></li>
-                                    <li><a routerLink="/register" routerLinkActive="active">Đăng ký</a></li>
+                                    <li><a class="login-link" routerLink="/login" routerLinkActive="active">Đăng nhập</a></li>
+                                    <li><a class="logout-link" routerLink="/register" routerLinkActive="active">Đăng ký</a></li>
                                 </ul>
                             </li>
                         </ng-template>

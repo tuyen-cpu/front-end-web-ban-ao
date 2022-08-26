@@ -58,7 +58,7 @@ const routes: Routes = [
   {
     path: 'checkout',
     component: CheckoutComponent,
-    canActivate: [CheckoutGuardService],
+    // canActivate: [CheckoutGuardService],
   },
   {
     path: 'bill/:id',
@@ -70,15 +70,15 @@ const routes: Routes = [
     path: 'admin',
     component: MainAdminComponent,
     children: [
-      { path: '', redirectTo: 'product', pathMatch: 'full' },
+      { path: '', redirectTo: 'home', pathMatch: 'full' },
       {
         path: 'home',
         component: HomeManagerComponent,
       },
-      {
-        path: 'product',
-        component: ProductManagerComponent,
-      },
+      // {
+      //   path: 'product',
+      //   component: ProductManagerComponent,
+      // },
       {
         path: 'user',
         component: UserManagerComponent,

@@ -1,8 +1,11 @@
+import { BulletService } from './../../service/bullet.service';
+import { CheckoutService } from 'src/app/service/checkout.service';
 import { CategoryService } from 'src/app/service/category.service';
 import { GroupProduct } from './../../model/group-product.model';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ProductService } from './../../service/product.service';
 import { HttpErrorResponse } from '@angular/common/http';
+
 import {
   AfterViewInit,
   ChangeDetectorRef,
@@ -48,7 +51,7 @@ export class HeaderComponent implements OnInit, AfterViewInit, OnDestroy {
   //quantity show when search
   limitedQuantity: number = 5;
   searchForm!: FormGroup;
-
+  bulletins: any[] = [];
   isAdmin = false;
 
   //cart
@@ -63,7 +66,9 @@ export class HeaderComponent implements OnInit, AfterViewInit, OnDestroy {
     private router: Router,
     private storageService: StorageService,
     private authService: AuthService,
-    private cartService: CartService
+    private cartService: CartService,
+    private checkoutService: CheckoutService,
+    private bulletService: BulletService
   ) {}
 
   ngOnInit() {
@@ -91,6 +96,14 @@ export class HeaderComponent implements OnInit, AfterViewInit, OnDestroy {
     this.loadListCartItem();
 
     this.loadIsAdmin();
+    this.bulletService.getByUserId(this.currentUser.id).subscribe({
+      next: (res) => {
+        this.bulletins = res.data;
+      },
+      error: (err) => {
+        alert(err.message);
+      },
+    });
   }
 
   public loadIsAdmin() {
@@ -283,5 +296,36 @@ export class HeaderComponent implements OnInit, AfterViewInit, OnDestroy {
         }
       },
     });
+  }
+  checkBullet(bullet: any) {
+    bullet.status = 1;
+    this.bulletService.update(bullet).subscribe({
+      next: (res) => {
+        this.bulletService.getByUserId(this.currentUser.id).subscribe({
+          next: (resp) => {
+            this.bulletins = resp.data;
+            console.log(this.bulletins);
+          },
+        });
+      },
+    });
+  }
+  pay() {
+    this.checkoutService
+      .payByPalpal({
+        price: 40,
+        currency: 'USD',
+        method: 'paypal',
+        intent: 'sale',
+        description: 'testing',
+      })
+      .subscribe({
+        next: (resp) => {
+          window.open(resp.data, '_blank');
+        },
+        error: (err) => {
+          alert(err.message);
+        },
+      });
   }
 }
