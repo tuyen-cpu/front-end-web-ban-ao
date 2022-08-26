@@ -248,6 +248,9 @@ export class GroupProductComponent implements OnInit {
         let indexGroupProduct = this.groupProducts.findIndex(
           (element) => element.id == this.product.groupProductId
         );
+        if (!this.groupProducts[indexGroupProduct].products) {
+          this.groupProducts[indexGroupProduct].products = [];
+        }
 
         this.groupProducts[indexGroupProduct].products.push({
           ...res.data,
@@ -258,8 +261,7 @@ export class GroupProductComponent implements OnInit {
       },
       error: (e) => {
         this.isLoading = false;
-
-        alert(e.error.message);
+        alert(e.message);
       },
     });
   }
@@ -335,7 +337,13 @@ export class GroupProductComponent implements OnInit {
     // this.groupProduct.products = [];
     this.productService.addGroupProduct(this.groupProduct).subscribe({
       next: (response) => {
+        console.log(this.groupProducts);
+        console.log(response.data);
         if (this.isEditGroupProduct) {
+          let img = this.groupProducts.filter(
+            (e) => e.id === response.data.id
+          )[0].urlImage;
+          response.data.urlImage = img;
           this.groupProducts = this.groupProducts.map((product) =>
             product.id === response.data.id
               ? { ...product, ...response.data }

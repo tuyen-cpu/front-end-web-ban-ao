@@ -1,12 +1,7 @@
 <div class="admin-wrapper" [class.isShowSidebar]="isShowSidebar">
-  <app-header-admin (newItemEvent)="showSidebar($event)"></app-header-admin>
-  <div class="sidebar">
-    <a
-      [routerLink]="['home']"
-      [routerLinkActiveOptions]="{ exact: true }"
-      routerLinkActive="active"
-      class="p-link sidebar-item"
-      ><i class="pi pi-home"></i><span>Home</span></a
+    <app-header-admin (newItemEvent)="showSidebar($event)"></app-header-admin>
+    <div class="sidebar">
+        <a [routerLink]="['home']" [routerLinkActiveOptions]="{ exact: true }" routerLinkActive="active" class="p-link sidebar-item"><i class="pi pi-home"></i><span>Home</span></a
     >
     <a
       [routerLink]="['group-product']"
@@ -15,13 +10,13 @@
       class="p-link sidebar-item"
       ><i class="pi pi-calendar"></i><span>Group product</span></a
     >
-    <a
+    <!-- <a
       [routerLink]="['product']"
       [routerLinkActiveOptions]="{ exact: true }"
       routerLinkActive="active"
       class="p-link sidebar-item"
       ><i class="pi pi-calendar"></i><span>Product</span></a
-    >
+    > -->
     <a
       [routerLink]="['user']"
       [routerLinkActiveOptions]="{ exact: true }"
@@ -50,14 +45,14 @@
       class="p-link sidebar-item"
       ><i class="pi pi-th-large"></i><span>Category</span></a
     >
-    <a
+    <!-- <a
       [routerLink]="['comment']"
       [routerLinkActiveOptions]="{ exact: true }"
       routerLinkActive="active"
       class="p-link sidebar-item"
       ><i class="pi pi-comments"></i><span>Comment</span></a
-    >
-    <a
+    > -->
+    <!-- <a
       [routerLink]="['x']"
       [routerLinkActiveOptions]="{ exact: true }"
       routerLinkActive="active"
@@ -66,7 +61,7 @@
     >
     <a class="p-link sidebar-item"
       ><i class="pi pi-user"></i><span>Profile</span></a
-    >
+    > -->
   </div>
   <div class="main-content">
     <router-outlet></router-outlet>

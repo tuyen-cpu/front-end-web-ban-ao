@@ -1,6 +1,13 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
-import { AbstractControl, FormBuilder, FormControl, FormGroup, NgForm, Validators } from '@angular/forms';
+import {
+  AbstractControl,
+  FormBuilder,
+  FormControl,
+  FormGroup,
+  NgForm,
+  Validators,
+} from '@angular/forms';
 import { Router } from '@angular/router';
 import { CartItem } from 'src/app/model/cart-item.model';
 import { Checkout } from 'src/app/model/checkout.model';
@@ -13,7 +20,7 @@ import { Order } from '../account-home/account/account.component';
 import { Address } from './../../model/address.model';
 import { AddressesService } from './../../shared/addresses.service';
 import { ProvincesApiService } from './../../shared/provinces-api.service';
-
+import { render } from 'creditcardpayments/creditCardPayments';
 @Component({
   selector: 'app-checkout',
   templateUrl: './checkout.component.html',
@@ -21,18 +28,15 @@ import { ProvincesApiService } from './../../shared/provinces-api.service';
   encapsulation: ViewEncapsulation.None,
 })
 export class CheckoutComponent implements OnInit {
-  favoriteSeason!: string;
+  paymentSelected!: string;
   voucherForm!: FormGroup;
   provinceList!: Province[];
   districtList!: District[];
   communesList!: Ward[];
   addressList: Address[] = [];
-  seasons: string[] = [
-    'Thanh toán khi giao hàng (COD)',
-    //'Chuyển khoản qua ngân hàng (Miễn phí thanh toán)',
-    // 'Chuyển khoản qua ngân hàng (VietQR) (Miễn phí thanh toán)',
-    // '	Trả góp 0% lãi suất qua thẻ Visa, Master, JCB (Đơn hàng từ 3.000.000đ)',
-    // 'Thanh toán online qua thẻ Visa, Master, JCB (Miễn phí thanh toán)',
+  methodPayment: any[] = [
+    { code: 'cash', name: 'Thanh toán khi giao hàng (COD)' },
+    { code: 'paypal', name: 'Paypal' },
   ];
   //cart
   public cartItems: CartItem[] = [];
@@ -41,7 +45,7 @@ export class CheckoutComponent implements OnInit {
   //checkout
   public user: User = this.storageService.getUser();
   public shippingCost: number = 25000;
-  public username: string = this.user != null ? this.user.username : "";
+  public username: string = this.user != null ? this.user.username : '';
   public orderId: number = -1;
   public note: string = '';
 
@@ -72,6 +76,7 @@ export class CheckoutComponent implements OnInit {
   public displayModalInfo: boolean = false;
   public displayModalInfoAddress: boolean = false;
   public displayModalLoading: boolean = false;
+  paymentDialog: boolean = false;
 
   constructor(
     private provincesApiService: ProvincesApiService,
@@ -80,8 +85,8 @@ export class CheckoutComponent implements OnInit {
     private storageService: StorageService,
     private checkoutService: CheckoutService,
     private formBuilder: FormBuilder,
-    private route: Router,
-  ) { }
+    private route: Router
+  ) {}
 
   ngOnInit(): void {
     this.initForm();
@@ -95,8 +100,16 @@ export class CheckoutComponent implements OnInit {
     this.loadListCartItem();
 
     //checkout
-    this.favoriteSeason = this.seasons[0];
-
+    this.paymentSelected = this.methodPayment[0].id;
+    render({
+      id: '#myPaypalButton',
+      currency: 'USD',
+      value:
+        '' + ~~((this.totalCart + this.shippingCost - this.discount) / 23.4),
+      onApprove: (details) => {
+        this.checkout();
+      },
+    });
   }
 
   private initForm() {
@@ -104,20 +117,17 @@ export class CheckoutComponent implements OnInit {
       voucherValue: new FormControl('', Validators.required),
     });
 
-    this.addressForm = this.formBuilder.group(
-      {
-        id: [''],
-        fullname: ['', [Validators.required]],
-        phone: ['', [Validators.required]],
-        country: ['Việt Nam'],
-        city: ['', [Validators.required]],
-        district: ['', [Validators.required]],
-        ward: ['', [Validators.required]],
-        street: ['', [Validators.required]],
-        company: [''],
-      },
-
-    );
+    this.addressForm = this.formBuilder.group({
+      id: [''],
+      fullname: ['', [Validators.required]],
+      phone: ['', [Validators.required]],
+      country: ['Việt Nam'],
+      city: ['', [Validators.required]],
+      district: ['', [Validators.required]],
+      ward: ['', [Validators.required]],
+      street: ['', [Validators.required]],
+      company: [''],
+    });
   }
 
   public get fAddress(): { [key: string]: AbstractControl } {
@@ -149,10 +159,14 @@ export class CheckoutComponent implements OnInit {
   }
 
   public loadListCartItem() {
-    this.cartService.getCart().subscribe(res => {
+    this.cartService.getCart().subscribe((res) => {
       this.cartItems = res;
       //load total price
-      this.totalCart = this.cartItems.reduce((previousValue, currentValue) => previousValue + (currentValue.quantity * currentValue.price), 0)
+      this.totalCart = this.cartItems.reduce(
+        (previousValue, currentValue) =>
+          previousValue + currentValue.quantity * currentValue.price,
+        0
+      );
       if (this.totalCart > 100000000) {
         this.shippingCost = 0;
       }
@@ -163,64 +177,70 @@ export class CheckoutComponent implements OnInit {
     this.addressesService
       .getAddressesById(event.target.value)
       .subscribe((data: Address) => {
-        this.addressForm = this.formBuilder.group(
-          {
-            id: [data.id],
-            fullname: [data.fullname, [Validators.required]],
-            phone: [data.phone, [Validators.required]],
-            country: ['Việt Nam'],
-            city: [data.city, [Validators.required]],
-            district: [data.district, [Validators.required]],
-            ward: [data.ward, [Validators.required]],
-            street: [data.street, [Validators.required]],
-            company: [data.company]
-          }
-        )
+        this.addressForm = this.formBuilder.group({
+          id: [data.id],
+          fullname: [data.fullname, [Validators.required]],
+          phone: [data.phone, [Validators.required]],
+          country: ['Việt Nam'],
+          city: [data.city, [Validators.required]],
+          district: [data.district, [Validators.required]],
+          ward: [data.ward, [Validators.required]],
+          street: [data.street, [Validators.required]],
+          company: [data.company],
+        });
         this.nameProvince = data.city;
         this.nameDistrict = data.district;
         this.nameCommune = data.ward;
       });
-    var select = document.getElementById("customer-province") as HTMLSelectElement;
+    var select = document.getElementById(
+      'customer-province'
+    ) as HTMLSelectElement;
     let province = select.selectedOptions[0].text;
     this.nameProvince = province;
   }
 
-  public nameProvince: string = "";
+  public nameProvince: string = '';
   onChangeProvince(event: any) {
     this.provincesApiService
       .getDistricts(event.target.value)
       .subscribe((data: Province) => {
         this.districtList = data.districts;
       });
-    var select = document.getElementById("customer-province") as HTMLSelectElement;
+    var select = document.getElementById(
+      'customer-province'
+    ) as HTMLSelectElement;
     let province = select.selectedOptions[0].text;
     this.nameProvince = province;
   }
 
-  public nameDistrict: string = "";
+  public nameDistrict: string = '';
   onChangeDistrict(event: any) {
     this.provincesApiService
       .getCommunes(event.target.value)
       .subscribe((data: District) => {
         this.communesList = data.wards;
       });
-    var select = document.getElementById("customer-district") as HTMLSelectElement;
+    var select = document.getElementById(
+      'customer-district'
+    ) as HTMLSelectElement;
     let district = select.selectedOptions[0].text;
     this.nameDistrict = district;
   }
 
-  public nameCommune: string = "";
+  public nameCommune: string = '';
   onChangeCommune(event: any) {
-    var select = document.getElementById("customer-ward") as HTMLSelectElement;
+    var select = document.getElementById('customer-ward') as HTMLSelectElement;
     let commune = select.selectedOptions[0].text;
     this.nameCommune = commune;
   }
 
   getAddresses() {
     if (this.user != null) {
-      this.addressesService.getAddressesByUserId(this.user.id).subscribe((data) => {
-        this.addressList = data;
-      });
+      this.addressesService
+        .getAddressesByUserId(this.user.id)
+        .subscribe((data) => {
+          this.addressList = data;
+        });
     }
   }
 
@@ -238,8 +258,9 @@ export class CheckoutComponent implements OnInit {
         }
       },
       (error: HttpErrorResponse) => {
-        console.log("Check voucher code: " + error.message);
-      });
+        console.log('Check voucher code: ' + error.message);
+      }
+    );
   }
 
   public useVoucher(code: string) {
@@ -257,8 +278,9 @@ export class CheckoutComponent implements OnInit {
         }
       },
       (error: HttpErrorResponse) => {
-        console.log("Use voucher code: " + error.message);
-      });
+        console.log('Use voucher code: ' + error.message);
+      }
+    );
   }
 
   getCostVoucher(code: string): number {
@@ -279,11 +301,10 @@ export class CheckoutComponent implements OnInit {
     setTimeout(() => {
       this.displayModalLoading = false;
       this.placeAnOrder();
-    }, 1000);
+    }, 10);
   }
   public placeAnOrder(): number {
-
-    let result: number = -1;//false
+    let result: number = -1; //false
 
     if (this.user == null) {
       this.displayModalInfo = true;
@@ -296,7 +317,7 @@ export class CheckoutComponent implements OnInit {
     }
 
     //check again voucher
-    this.voucherCodes.forEach(code => {
+    this.voucherCodes.forEach((code) => {
       this.checkVoucher(code);
       if (this.validVoucherCode == false) {
         this.cancelVoucher(code);
@@ -309,7 +330,10 @@ export class CheckoutComponent implements OnInit {
     let curCartItems: CartItem[] = this.cartItems;
     let curShipCost: number = this.shippingCost;
     let curVoucherCodes: string[] = this.voucherCodes;
-
+    let payMethod = 'Chưa thanh toán';
+    if (this.paymentSelected === 'paypal') {
+      payMethod = 'Đã thanh toán';
+    }
     let checkout: Checkout = {
       address: curAddress,
       voucherCodes: curVoucherCodes,
@@ -318,6 +342,7 @@ export class CheckoutComponent implements OnInit {
       userId: curUserId,
       total: curTotal,
       note: curNote,
+      payMethod: payMethod,
     };
     this.checkoutService.placeAnOrder(checkout).subscribe(
       (response: Number) => {
@@ -329,27 +354,28 @@ export class CheckoutComponent implements OnInit {
           this.displayModalSuccess = true;
           this.orderId = result;
 
-          //remove all cart 
+          //remove all cart
           this.cartService.removeAllCartItems();
           //remove all voucher
           this.voucherCodes = [];
           this.vouchers.clear();
-          //move to account or order 
+          //move to account or order
           // this.route.navigate(['/account');
           return result;
         }
       },
       (error: HttpErrorResponse) => {
-        console.log("Place an order: " + error.message);
+        console.log('Place an order: ' + error.message);
         this.displayModalFail = true;
         return result;
-      });
+      }
+    );
     return result;
   }
 
   showOrder() {
     //window.location.href = '/bill/' + this.orderId;
-    this.route.navigate(['/bill/'+this.orderId]);
+    this.route.navigate(['/bill/' + this.orderId]);
   }
 
   continueShopping() {

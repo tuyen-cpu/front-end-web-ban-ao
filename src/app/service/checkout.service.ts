@@ -3,14 +3,14 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Checkout } from '../model/checkout.model';
 import { AppSettings } from '../shared/app-settings';
-
+import { ResponseObject } from '../model/response-object.model';
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class CheckoutService {
   REST_API = AppSettings.REST_API;
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {}
 
   existsVoucher(code: string): Observable<Boolean> {
     return this.http.get<Boolean>(
@@ -32,5 +32,10 @@ export class CheckoutService {
     );
   }
 
-
+  payByPalpal(paymentObject: any): Observable<ResponseObject> {
+    return this.http.post<ResponseObject>(
+      this.REST_API + '/pay',
+      paymentObject
+    );
+  }
 }

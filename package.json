@@ -24,6 +24,7 @@
     "@angular/router": "^13.3.10",
     "@ckeditor/ckeditor5-angular": "^4.0.0",
     "chart.js": "^3.9.1",
+    "creditcardpayments": "^1.0.3",
     "detect-passive-events": "^2.0.3",
     "json-server": "^0.17.0",
     "ngx-quill": "^15.0.0",
