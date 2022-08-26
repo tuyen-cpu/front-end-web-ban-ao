@@ -25,6 +25,7 @@ import { CommentService } from 'src/app/service/comment.service';
 import { FileService } from 'src/app/service/file.service';
 import { Image } from 'src/app/model/image.model';
 import { Size } from 'src/app/model/size.model';
+import { ConfirmationService, MessageService } from 'primeng/api';
 
 // install Swiper modules
 SwiperCore.use([Zoom, FreeMode, Navigation, Thumbs]);
@@ -33,6 +34,7 @@ SwiperCore.use([Zoom, FreeMode, Navigation, Thumbs]);
   selector: 'app-detail-product',
   templateUrl: './detail-product.component.html',
   styleUrls: ['./detail-product.component.scss'],
+  providers: [MessageService, ConfirmationService],
   encapsulation: ViewEncapsulation.None,
 })
 export class DetailProductComponent implements OnInit {
@@ -78,7 +80,8 @@ export class DetailProductComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private productService: ProductService,
-    private cartService: CartService
+    private cartService: CartService,
+    private messageService: MessageService
   ) {}
 
   ngOnInit(): void {
@@ -98,8 +101,9 @@ export class DetailProductComponent implements OnInit {
   }
 
   public getDetailProduct(productId: number): void {
-    this.productService.getGroupProductById(productId).subscribe(
-      (response) => {
+    this.sizes = [];
+    this.productService.getGroupProductById(productId).subscribe({
+      next: (response) => {
         this.groupProduct = response.data;
         console.log(this.groupProduct);
         this.groupProduct.products.forEach((product: any) => {
@@ -107,10 +111,10 @@ export class DetailProductComponent implements OnInit {
           this.sizes.push({ id: product.sizeId, name: product.sizeName });
         });
       },
-      (error: HttpErrorResponse) => {
+      error: (error: HttpErrorResponse) => {
         alert(error.message);
-      }
-    );
+      },
+    });
   }
 
   // public showMore(): void {
@@ -130,18 +134,43 @@ export class DetailProductComponent implements OnInit {
   }
 
   public addToCart() {
-    console.log(this.sizeSelected);
+    let product = this.groupProduct.products.filter(
+      (p) => p.sizeId === this.sizeSelected
+    )[0];
+
     let item: CartItem = {
-      id: this.id,
+      id: product.id,
       name: this.groupProduct.name,
       img: this.groupProduct.urlImage,
       price:
         this.groupProduct.price -
         (this.groupProduct.price * this.groupProduct.discount) / 100,
-      size: this.sizeSelected,
+      size: {
+        id: this.sizeSelected,
+        name: this.sizes.filter((e) => e.id === this.sizeSelected)[0].name,
+      },
       quantity: this.quantity,
     };
 
     this.cartService.addToCart(item);
+    this.productService.getGroupProductById(this.id).subscribe({
+      next: (response) => {
+        this.sizes = [];
+        this.groupProduct.products = response.data.products;
+        this.groupProduct.products.forEach((product: any) => {
+          console.log(product);
+          this.sizes.push({ id: product.sizeId, name: product.sizeName });
+        });
+        this.messageService.add({
+          severity: 'success',
+          summary: 'Successful',
+          detail: 'Đã thêm vào giỏ',
+          life: 2000,
+        });
+      },
+      error: (error: HttpErrorResponse) => {
+        alert(error.message);
+      },
+    });
   }
 }

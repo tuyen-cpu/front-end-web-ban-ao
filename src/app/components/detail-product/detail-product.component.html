@@ -1,31 +1,31 @@
 <!-- <app-breadcrumb [name]="groupProduct.name">
 </app-breadcrumb> -->
 
-<div class="details-product-container" id="details-product-container" fxLayout="row" fxLayoutAlign="center center">
-    <div fxFlex="87" fxFlex.sm="98" fxFlex.xs="97">
-
+<div class="details-product-container mt-5" id="details-product-container" fxLayout="row" fxLayoutAlign="center center">
+    <div fxFlex="90" fxFlex.sm="98" fxFlex.xs="97">
+        <p-toast></p-toast>
         <div class="details-product" fxLayout="row wrap " fxLayoutAlign="space-around  start">
 
-            <div fxFlex="75" fxFlex.sm="100" fxFlex.xs="100">
+            <div fxFlex="100" fxFlex.sm="100" fxFlex.xs="100">
                 <div fxLayout="row wrap" fxLayoutAlign="space-around  start">
 
-                    <div class="product-images" fxFlex="40" fxFlex.sm="50" fxFlex.xs="100">
+                    <div class="product-images" fxFlex="70" fxFlex.sm="50" fxFlex.xs="100">
                         <swiper [spaceBetween]="10" [navigation]="true" [thumbs]="{ swiper: thumbsSwiper }" [zoom]="true" class="mySwiper2">
                             <ng-template swiperSlide *ngFor="let img of images| slice:0:8;">
                                 <img src="{{'http://localhost:3000/FileUpload/files/'+img.link}}" />
                             </ng-template>
 
                         </swiper>
-                        <swiper (swiper)="thumbsSwiper = $event" [spaceBetween]="10" [slidesPerView]="3" [freeMode]="true" [watchSlidesProgress]="true" class="mySwiper">
+                        <swiper (swiper)="thumbsSwiper = $event" [spaceBetween]="10" [slidesPerView]="4" [freeMode]="true" [watchSlidesProgress]="true" class="mySwiper">
                             <ng-template swiperSlide *ngFor="let img of images| slice:0:8;">
-                                <img src="{{'http://localhost:3000/FileUpload/files/'+img.link}}" />
+                                <img class="cursor-pointer" src="{{'http://localhost:3000/FileUpload/files/'+img.link}}" />
                             </ng-template>
 
                         </swiper>
                     </div>
 
-                    <div class="info-product" fxFlex="60" fxFlex.sm="50" fxFlex.xs="100">
-                        <h1 class="title-product">
+                    <div class="info-product" fxFlex="30" fxFlex.sm="50" fxFlex.xs="100">
+                        <h1 class="title-product mt-4">
                             {{groupProduct.name}}
                         </h1>
                         <!-- <div class="review-result">
@@ -70,20 +70,15 @@
                                     </li>
                                 </ul>
                             </div> -->
-                            <div class="quantity">
-                                <p class="label">Size</p>
 
-                                <p id="alert-quantity">Sản phẩm không đủ số lượng</p>
-                            </div>
-                            <div *ngFor="let size of sizes" class="">
-                                <label for="size{{size.id}}">{{size.name}}</label>
-                                <input type="radio" id="size{{size.id}}" name="size" [value]="size.id" [(ngModel)]="sizeSelected" />
-
+                            <div *ngFor="let size of sizes" class="size-wrapper">
+                                <input class="input-size" type="radio" id="size{{size.id}}" name="size" [value]="size.id" [(ngModel)]="sizeSelected" />
+                                <label class="label-size" for="size{{size.id}}">{{size.name}}</label>
                             </div>
                             <div class="button-actions">
-                                <button (click)="addToCart()">
-                                    <span>MUA NGAY</span>
-                                    <span>Giao hàng miễn phí tận nơi</span>
+                                <button class="mt-4" (click)="addToCart()">
+                                    <span>Thêm vào giỏ</span>
+                                    <!-- <span>Giao hàng miễn phí tận nơi</span> -->
                                 </button>
                             </div>
 

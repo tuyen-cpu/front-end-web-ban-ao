@@ -14,6 +14,7 @@ import { Product } from 'src/app/model/product.model';
 import { ProductService } from 'src/app/service/product.service';
 import { ProductPopupComponent } from '../product-popup/product-popup.component';
 import { debounceTime } from 'rxjs';
+import { GroupProduct } from 'src/app/model/group-product.model';
 
 @Component({
   selector: 'app-list-product',
@@ -28,7 +29,7 @@ export class ListProductComponent implements OnInit {
   params: any = {};
   private sort = 'default';
 
-  public products: Product[] = [];
+  public groupProducts: GroupProduct[] = [];
   public view_list = false;
   isLoading: boolean = false;
 
@@ -41,13 +42,13 @@ export class ListProductComponent implements OnInit {
     step: 1,
     noSwitching: true,
     getPointerColor: (value: number): string => {
-      return '#008744';
+      return '#000';
     },
     translate: (value: number): string => {
       return '';
     },
     getSelectionBarColor: (value: number): string => {
-      return '#008744';
+      return '#000';
     },
   };
   productItem!: Product;
@@ -118,8 +119,30 @@ export class ListProductComponent implements OnInit {
       //default
       if (res['size'] === undefined) {
         this.size = 3;
+        if (!this.categoryId) {
+          this.getProducts({
+            size: this.size,
+            page: this.page,
+          });
+        } else {
+          this.getProductByCategoryId(+this.categoryId, {
+            size: this.size,
+            page: this.page,
+          });
+        }
       } else {
         this.size = res['size'];
+        if (!this.categoryId) {
+          this.getProducts({
+            size: this.size,
+            page: this.page,
+          });
+        } else {
+          this.getProductByCategoryId(+this.categoryId, {
+            size: this.size,
+            page: this.page,
+          });
+        }
       }
 
       // if (res['size'] === undefined) {
@@ -147,8 +170,7 @@ export class ListProductComponent implements OnInit {
     this.productService
       .getGroupProduct(para.page, para.size)
       .subscribe((resp) => {
-        console.log(resp.data);
-        this.products = resp.data.content;
+        this.groupProducts = resp.data.content;
         this.totalPages = resp.data.totalPages;
         this.isLoading = false;
       });
@@ -159,12 +181,12 @@ export class ListProductComponent implements OnInit {
       .getGroupProductByCategoryId(id, para.page, para.size)
       .subscribe((resp) => {
         console.log(resp.data);
-        this.products = resp.data.content;
+        this.groupProducts = resp.data.content;
         this.totalPages = resp.data.totalPages;
         this.isLoading = false;
       });
   }
-  openDialogProduct(product: Product): void {
+  openDialogProduct(product: GroupProduct): void {
     const dialogRef = this.dialog.open(ProductPopupComponent, {
       width: '970px',
       data: product,

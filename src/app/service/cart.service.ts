@@ -19,7 +19,7 @@ export class CartService {
 
   public getCart() {
     //update price of items
-    this.updatePriceCartItems();
+    // this.updatePriceCartItems();
     this.cart.next(this.cartItemList);
     return this.cart.asObservable();
   }
@@ -34,21 +34,24 @@ export class CartService {
     let existItem: boolean = false;
     this.cartItemList.map((itemCart: CartItem, index: number) => {
       if (itemCart.id === item.id) {
-        this.productService.getQuantityProductById(item.id).subscribe({
-          next: (res) => {
-            let maxQuantity = res;
-            itemCart.quantity += item.quantity;
-            if (maxQuantity < itemCart.quantity) {
-              itemCart.quantity = maxQuantity;
-            }
-            this.cart.next(this.cartItemList);
-            this.storageService.saveCartItemList(this.cartItemList);
-            return;
-          },
-          error: (err) => {
-            console.log(err);
-          },
-        });
+        itemCart.quantity += item.quantity;
+        this.cart.next(this.cartItemList);
+        this.storageService.saveCartItemList(this.cartItemList);
+        // this.productService.getQuantityProductById(item.id).subscribe({
+        //   next: (res) => {
+        //     let maxQuantity = res;
+        //     itemCart.quantity += item.quantity;
+        //     if (maxQuantity < itemCart.quantity) {
+        //       itemCart.quantity = maxQuantity;
+        //     }
+        //     this.cart.next(this.cartItemList);
+        //     this.storageService.saveCartItemList(this.cartItemList);
+        //     return;
+        //   },
+        //   error: (err) => {
+        //     console.log(err);
+        //   },
+        // });
         existItem = true;
       }
     });
@@ -62,20 +65,24 @@ export class CartService {
   public updateCartItem(itemId: number, quantity: number) {
     this.cartItemList.map((itemCart: CartItem, index: number) => {
       if (itemCart.id === itemId) {
-        this.productService.getQuantityProductById(itemId).subscribe({
-          next: (res) => {
-            let maxQuantity = res;
-            itemCart.quantity = quantity;
-            if (maxQuantity < quantity) {
-              itemCart.quantity = maxQuantity;
-            }
-            this.cart.next(this.cartItemList);
-            this.storageService.saveCartItemList(this.cartItemList);
-          },
-          error: (err) => {
-            console.log(err);
-          },
-        });
+        console.group(quantity);
+        itemCart.quantity = quantity;
+        this.cart.next(this.cartItemList);
+        this.storageService.saveCartItemList(this.cartItemList);
+        // this.productService.getQuantityProductById(itemId).subscribe({
+        //   next: (res) => {
+        //     let maxQuantity = res;
+        //     itemCart.quantity = quantity;
+        //     if (maxQuantity < quantity) {
+        //       itemCart.quantity = maxQuantity;
+        //     }
+        //     this.cart.next(this.cartItemList);
+        //     this.storageService.saveCartItemList(this.cartItemList);
+        //   },
+        //   error: (err) => {
+        //     console.log(err);
+        //   },
+        // });
       }
     });
   }
@@ -92,34 +99,32 @@ export class CartService {
 
   public removeAllCartItems() {
     this.storageService.removeCartItemList();
-    this.cartItemList=[];
+    this.cartItemList = [];
     this.cart.next(this.cartItemList);
   }
-
 
   public hasCartItems(): boolean {
     let list: CartItem[] = [];
     this.cart.subscribe((data) => {
       list = data;
-      return (list.length > 0 ? true : false)
+      return list.length > 0 ? true : false;
     });
-    return (list.length > 0 ? true : false)
+    return list.length > 0 ? true : false;
   }
 
-  public updatePriceCartItems(){
+  public updatePriceCartItems() {
     this.cartItemList.map((itemCart: CartItem, index: number) => {
       this.productService.getPriceProductById(itemCart.id).subscribe({
-        next: res =>{
+        next: (res) => {
           let outputPrice = res;
           itemCart.price = outputPrice;
         },
-        error: err => {
+        error: (err) => {
           console.log(err);
-        }
+        },
       });
       this.cart.next(this.cartItemList);
       this.storageService.saveCartItemList(this.cartItemList);
     });
   }
-
 }

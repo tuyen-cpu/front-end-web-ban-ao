@@ -53,6 +53,7 @@ export class HeaderComponent implements OnInit, AfterViewInit, OnDestroy {
 
   //cart
   public cartItems: CartItem[] = [];
+  totalQuantity: number = 0;
   public totalCart: number = 0;
   constructor(
     private cdRef: ChangeDetectorRef,
@@ -99,6 +100,11 @@ export class HeaderComponent implements OnInit, AfterViewInit, OnDestroy {
   public loadListCartItem() {
     this.cartService.getCart().subscribe((res) => {
       this.cartItems = res;
+      console.log(res);
+      this.totalQuantity = this.cartItems.reduce(
+        (previousValue, currentValue) => previousValue + currentValue.quantity,
+        0
+      );
       this.totalCart = this.cartItems.reduce(
         (previousValue, currentValue) =>
           previousValue + currentValue.quantity * currentValue.price,
@@ -253,13 +259,13 @@ export class HeaderComponent implements OnInit, AfterViewInit, OnDestroy {
     if (e.value <= 0) {
       e.value = 1;
     }
-    let quantity = e.value;
+    let quantity = +e.value;
     this.cartService.updateCartItem(id, quantity);
   }
 
   increaseQuantity(e: any, id: number): void {
     e.value = ++e.value;
-    let quantity = e.value;
+    let quantity = +e.value;
     this.cartService.updateCartItem(id, quantity);
     this.productService.getQuantityProductById(id).subscribe({
       next: (res) => {

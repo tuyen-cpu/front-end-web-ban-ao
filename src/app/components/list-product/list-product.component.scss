@@ -54,7 +54,7 @@ a {
                         padding: 0;
                         text-align: center;
                         line-height: 55px;
-                        background: #008744;
+                        background: #000;
                         color: #fff;
                         border-bottom-right-radius: 3px;
                         border-top-right-radius: 3px;
@@ -91,7 +91,7 @@ a {
                         }
                         input[type=checkbox] {
                             margin: 10px;
-                            accent-color: #008744;
+                            accent-color: #000;
                         }
                     }
                 }
@@ -102,7 +102,7 @@ a {
                     width: calc(100% - 14px);
                     margin-left: 7px;
                     .ngx-slider-pointer {
-                        background-color: #008744;
+                        background-color: #000;
                     }
                 }
                 .price-input {
@@ -123,7 +123,7 @@ a {
                     .filter-price {
                         line-height: 30px;
                         font-weight: 400;
-                        background: #008744;
+                        background: #000;
                         color: #fff;
                         border-radius: 3px;
                         font-size: 14px;
@@ -134,8 +134,8 @@ a {
                         cursor: pointer;
                         &:hover {
                             background: #fff;
-                            color: #008744;
-                            border: 1px solid #008744;
+                            color: #000;
+                            border: 1px solid #000;
                         }
                     }
                 }
@@ -170,8 +170,8 @@ a {
                             &.active,
                             &:hover {
                                 color: #fff;
-                                border: 1px solid #008744;
-                                background: #008744;
+                                border: 1px solid #000;
+                                background: #000;
                                 border: none;
                                 border-radius: 3px;
                             }
@@ -232,7 +232,7 @@ a {
                                     border-right: none;
                                     border-left: none;
                                     &:hover {
-                                        color: #008744;
+                                        color: #000;
                                     }
                                 }
                             }
@@ -306,7 +306,7 @@ a {
                             a {
                                 color: #444;
                                 &:hover {
-                                    color: #008744;
+                                    color: #000;
                                 }
                             }
                         }
@@ -318,7 +318,7 @@ a {
                                 font-size: 24px;
                                 font-weight: 700;
                                 font-family: arial, sans-serif;
-                                color: #008744;
+                                color: #000;
                                 display: block;
                                 padding-right: 20px;
                             }
@@ -346,7 +346,7 @@ a {
                                 line-height: 34px;
                                 border-radius: 3px;
                                 color: #fff;
-                                background: #008744;
+                                background: #000;
                                 margin-right: 2px;
                                 padding: 0;
                                 display: inline;
@@ -370,7 +370,7 @@ a {
                                 padding: 10px;
                                 border-radius: 3px;
                                 text-align: center;
-                                background: #008744;
+                                background: #000;
                                 display: inline;
                                 margin-left: 5px;
                                 i.material-icons {
@@ -404,7 +404,7 @@ a {
             padding: 8px 16px;
             text-decoration: none;
             &.active {
-                background-color: #008744;
+                background-color: #000;
                 color: white;
             }
             &:hover:not(.active) {
