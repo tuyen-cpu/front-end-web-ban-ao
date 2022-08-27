@@ -17,4 +17,7 @@ export class BulletService {
   update(bullet: any): Observable<ResponseObject> {
     return this.http.put<ResponseObject>(this.REST_API + '/update', bullet);
   }
+  add(bullet: any): Observable<ResponseObject> {
+    return this.http.post<ResponseObject>(this.REST_API + '/add', bullet);
+  }
 }

@@ -51,7 +51,7 @@ export class DetailProductComponent implements OnInit {
   public groupProduct: GroupProduct = { name: ' ', products: [] };
   public quantity = 1;
   sizeSelected: number = 1;
-
+  desc = '';
   // public textFull = false;
   public number_star = 0;
   public openFormReview = false;
@@ -106,6 +106,7 @@ export class DetailProductComponent implements OnInit {
       next: (response) => {
         this.groupProduct = response.data;
         console.log(this.groupProduct);
+        this.desc = response.data.description;
         if (this.groupProduct.products) {
           this.groupProduct.products.forEach((product: any) => {
             this.sizes.push({ id: product.sizeId, name: product.sizeName });

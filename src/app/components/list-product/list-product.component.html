@@ -5,7 +5,7 @@
     <div fxFlex="87" fxFlex.sm="98" fxFlex.xs="97">
 
         <div class="list-product" fxLayout="row wrap " fxLayoutAlign="space-around  start">
-
+            <!--
             <div fxFlex="25" fxHide.sm fxHide.xs>
                 <div class="filter">
 
@@ -27,26 +27,10 @@
                         </div>
                     </div>
 
-                    <!-- <div class="item" *ngFor="let attribute of attributes">
-                        <div class="title">
-                            {{attribute.name}}
-                        </div>
-                        <div class="content">
-                            <ul>
-                                <li class="filter-item" *ngFor="let v of attribute.values">
-                                    <label>
-                                        <input (change)="attributesChange($event,attribute.name)"  type="checkbox"  [value]="v" >
-                                        {{v}}
-                                    </label>
-                                </li>
-                            </ul>
-                        </div>
-                    </div> -->
-
                 </div>
-            </div>
+            </div> -->
 
-            <div fxFlex="75" fxFlex.sm="100" fxFlex.xs="100">
+            <div fxFlex="100" fxFlex.sm="100" fxFlex.xs="100">
                 <section class="main-container collection">
                     <div class="category-products products">
                         <div class="sortPagiBar" *ngIf="groupProducts.length!==0">

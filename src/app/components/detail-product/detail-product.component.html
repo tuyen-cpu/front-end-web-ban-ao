@@ -96,11 +96,9 @@
                     <div class="title">Mô tả sản phẩm</div>
                     <div class="content">
                         <div class="product-info">
-                            <div id="show-less">
-                                {{groupProduct.description}}
-                                <!-- <p>
-                                    <strong>{{groupProduct.name}}</strong> {{groupProduct.description}}
-                                </p> -->
+                            <div id="show-less" [innerHTML]="groupProduct.description">
+
+
                                 <!-- <p>
                                     <img *ngIf="groupProduct.urlImage==null||groupProduct.urlImage.length==0" style="width: 100%;" src="http://localhost:3000/FileUpload/files/image.jpg" alt="Photo of a Shiba Inu">
                                     <img *ngIf="groupProduct.urlImage!=null||groupProduct.urlImage.length > 0" style="width: 100%" src="{{'http://localhost:3000/FileUpload/files/'+groupProduct.urlImage[groupProduct.urlImage.length-1]}}" alt="Photo of a Shiba Inu">

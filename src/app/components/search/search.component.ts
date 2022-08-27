@@ -13,7 +13,7 @@ import { Product } from 'src/app/model/product.model';
 export class SearchComponent implements OnInit {
   keySearch!: string | null;
   currentPage: number = 1;
-  size: number = 5;
+  size: number = 10;
   totalPages!: number;
   groupProducts: GroupProduct[] = [];
   constructor(
@@ -35,7 +35,7 @@ export class SearchComponent implements OnInit {
         this.currentPage = res['currentPage'] - 1;
       }
       if (res['size'] === undefined) {
-        this.size = 5;
+        this.size = 10;
       } else {
         this.size = res['size'];
       }

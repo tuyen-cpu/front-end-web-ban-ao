@@ -90,20 +90,22 @@ export class HeaderComponent implements OnInit, AfterViewInit, OnDestroy {
     //this.currentUser = this.storageService.getUser();
     this.storageService.currentUser.subscribe((data) => {
       this.currentUser = data;
+      if (this.currentUser) {
+        this.bulletService.getByUserId(this.currentUser.id).subscribe({
+          next: (res) => {
+            this.bulletins = res.data;
+          },
+          error: (err) => {
+            alert(err.message);
+          },
+        });
+      }
     });
 
     //load cart Items
     this.loadListCartItem();
 
     this.loadIsAdmin();
-    this.bulletService.getByUserId(this.currentUser.id).subscribe({
-      next: (res) => {
-        this.bulletins = res.data;
-      },
-      error: (err) => {
-        alert(err.message);
-      },
-    });
   }
 
   public loadIsAdmin() {

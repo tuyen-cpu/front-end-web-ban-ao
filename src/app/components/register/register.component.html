@@ -1,5 +1,5 @@
-
-<app-breadcrumb [name] = "'Đăng ký tài khoản'"></app-breadcrumb>
+<app-breadcrumb [name]="'Đăng ký tài khoản'">
+</app-breadcrumb>
 
 <div class="form-container" fxLayout="row" fxLayoutAlign="center center" [ngClass]="{'loading-bg': displayLoading}">
     <div class="plr-15" fxFlex="87" fxFlex.sm="98" fxFlex.xs="97">
@@ -7,34 +7,34 @@
             <a href="#">Đăng kí tài khoản</a>
         </h2>
         <p class="notice-form">Nếu chưa có tài khoản, vui lòng đăng kí tại đây</p>
-        <div class="alert alert-warning message" *ngIf="submitted && isSignUpFailed" >
+        <div class="alert alert-warning message" *ngIf="submitted && isSignUpFailed">
             <strong>Đăng kí không thành công!</strong> <br> Đã xảy ra lỗi!<br />{{ errorMessage }}
         </div>
-        <div class="alert-success" *ngIf="submitted && isSuccessful" >
+        <div class="alert-success" *ngIf="submitted && isSuccessful">
             <strong>Đăng kí thành công!</strong>
         </div>
-        <form [formGroup]="registerForm" class="form" (ngSubmit)="onSubmit()" >
+        <form [formGroup]="registerForm" class="form" (ngSubmit)="onSubmit()">
             <div fxLayout="row wrap" fxLayoutAlign="center center">
                 <div class="form-group" fxFlex="50%" fxFlex.xs="100%" fxFlex.sm="100%">
                     <label for="username">
                        Tên tài khoản *
                     </label>
-                    <input id="username" type="text" formControlName="username" class="form-control" [(ngModel)]="username"  (input)="checkUsername(username)">
-                    <div *ngIf=" f['username'].errors?.['required'] && f['username'].touched 
+                    <input id="username" type="text" formControlName="username" class="form-control" [(ngModel)]="username" (input)="checkUsername(username)">
+                    <div *ngIf=" f['username'].errors?.['required'] && f['username'].touched
                     ||  f['username'].errors?.['required'] && submitted" class="alert">*Tên tài khoản bắt buộc phải nhập</div>
                     <div class="alert" *ngIf="existUsername">Tên tài khoản này đã tồn tại</div>
                 </div>
-    
+
                 <div class="form-group" fxFlex="50%" fxFlex.xs="100%" fxFlex.sm="100%">
                     <label for="email">
                         Email *
                     </label>
-                    <input id="email" type="email" formControlName="email" class="form-control" [(ngModel)]="email"  (input)="checkEmail(email)">
+                    <input id="email" type="email" formControlName="email" class="form-control" [(ngModel)]="email" (input)="checkEmail(email)">
                     <div *ngIf=" f['email'].errors?.['required'] && f['email'].touched
                     || f['email'].errors?.['required'] && submitted" class="alert">*Email bắt buộc phải nhập</div>
                     <div *ngIf=" f['email'].errors?.['email']" class="alert">*Email không hợp lệ</div>
                     <div class="alert" *ngIf="existEmail">Email này đã tồn tại</div>
-                </div >
+                </div>
                 <div class="form-group" fxFlex="50%" fxFlex.xs="100%" fxFlex.sm="100%">
                     <label for="password">
                         Mật khẩu*
@@ -44,7 +44,7 @@
                     || f['password'].errors?.['required'] && submitted" class="alert">*Mật khẩu bắt buộc phải nhập</div>
                     <div *ngIf=" f['password'].errors?.['minlength']" class="alert">*Mật khẩu phải có ít nhất 6 kí tự</div>
                     <div *ngIf=" f['password'].errors?.['maxLength']" class="alert">*Mật khẩu phải chỉ tối đa 40 kí tự</div>
-    
+
                 </div>
                 <div class="form-group" fxFlex="50%" fxFlex.xs="100%" fxFlex.sm="100%">
                     <label for="rePassword">
@@ -52,12 +52,12 @@
                     </label>
                     <input id="rePassword" type="password" formControlName="rePassword" class="form-control">
                     <!-- <div *ngIf=" f['rePassword'].errors?.['required'] && f['rePassword'].touched" class="alert">Bắt buộc nhập lại mật khẩu</div> -->
-                    <div *ngIf="f['rePassword'].errors?.['required'] && f['rePassword'].touched || f['rePassword'].errors?.['required'] && submitted || registerForm.value?.password !=  registerForm.value?.rePassword && f['rePassword'].touched 
-                    "  class="alert">*Mật khẩu nhập lại không hợp lệ
+                    <div *ngIf="f['rePassword'].errors?.['required'] && f['rePassword'].touched || f['rePassword'].errors?.['required'] && submitted || registerForm.value?.password !=  registerForm.value?.rePassword && f['rePassword'].touched
+                    " class="alert">*Mật khẩu nhập lại không hợp lệ
                     </div>
                 </div>
                 <div fxFlex="100%" class="form-buttons">
-                    <button class="button" type="submit" [disabled]="hideDisableSubmit()">Đăng kí</button>
+                    <button class="button" type="submit" pButton pRipple label="Đăng kí" icon="pi pi-check" class="p-button-text" [loading]="isLoading" [disabled]="hideDisableSubmit()"></button>
                     <a routerLink="/login" routerLinkActive="active">Đăng nhập</a>
                 </div>
             </div>
@@ -68,11 +68,10 @@
 <p-dialog header="Loading" [(visible)]="displayLoading" [modal]="true" [style]="{width: '500px'}" [draggable]="false" [resizable]="false">
     <p-progressBar mode="indeterminate" [style]="{'height': '6px'}"></p-progressBar>
 </p-dialog>
-<p-dialog header="Thông báo" [(visible)]="displayModal" [modal]="true" [style]="{width: '500px'}"
-    [draggable]="false" [resizable]="false">
+<p-dialog header="Thông báo" [(visible)]="displayModal" [modal]="true" [style]="{width: '500px'}" [draggable]="false" [resizable]="false">
     <p class="m-0">Đăng kí thành công</p>
-        <ng-template pTemplate="footer">
-            <button pButton pRipple type="button" label="Đăng nhập" (click)="openLogin()" class="p-button-success"></button>
-            <button pButton pRipple type="button" label="Ok" (click)="displayModal=false" class="p-button-info"></button>
-        </ng-template>
-</p-dialog>  
+    <ng-template pTemplate="footer">
+        <button pButton pRipple type="button" label="Đăng nhập" (click)="openLogin()" class="p-button-success"></button>
+        <button pButton pRipple type="button" label="Ok" (click)="displayModal=false" class="p-button-info"></button>
+    </ng-template>
+</p-dialog>

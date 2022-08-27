@@ -24,7 +24,7 @@ import { GroupProduct } from 'src/app/model/group-product.model';
 export class ListProductComponent implements OnInit {
   public categoryId!: string;
   page: number = 1;
-  size: number = 8;
+  size: number = 12;
   totalPages!: number;
   params: any = {};
   private sort = 'default';
@@ -82,7 +82,7 @@ export class ListProductComponent implements OnInit {
 
   onPageChange(event: any) {
     this.params['page'] = event.page + 1;
-    this.params['size'] = 8;
+    this.params['size'] = 12;
     this.changeUrl();
   }
 
@@ -117,7 +117,7 @@ export class ListProductComponent implements OnInit {
       }
       //default
       if (res['size'] === undefined) {
-        this.size = 8;
+        this.size = 12;
         if (!this.categoryId) {
           this.getProducts({
             size: this.size,
